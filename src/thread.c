@@ -3,20 +3,12 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include "thread.h"
-
+#include "network.h"
 thread_t threads[WORKER_NUM];
 
 static void *worker_loop(void *arg);
 
-static void handleIO(thread_t *thread,int count);
-
-static void handleWrite(struct kevent *event);
-
-static void handleRead(struct kevent *event);
-
-static void handleNotify(struct kevent *event);
-
-static void add_event(int fd,int16_t flag,thread_t*t);
+extern event_operation_t event_operation;
 
 void start_workers(){
   int i=0;
@@ -41,72 +33,33 @@ void start_workers(){
 
 void *worker_loop(void *arg){
     thread_t* t=(thread_t *)arg;
-    int notifyfd=t->pipe_channel->workerfd;
-    int kqueuefd=kqueue();
-    if(kqueuefd==-1){
-      printf("create thread kqueue error");
-      exit(0);
-    }
-    t->kqueuefd=kqueuefd;
-    add_event(t->pipe_channel->workerfd,EVFILT_READ,t); 
+    event_context_t ec;
+    int notify_fd=t->pipe_channel->workerfd;
+    event_operation.init_event(&ec);
+    event_operation.register_event(notify_fd,EVFILT_READ,&ec,t);
     while(1){
-        int ret = kevent(kqueuefd, NULL, 0, t->events, MAX_EVENT_COUNT, NULL);        
-        if(ret==-1){
-           printf("kevent error");
-           exit(0);
-        }else if(ret==0){
-           continue;
-        }
-        handleIO(t,ret);
+       event_operation.process_event(&ec);    
     }
 }
 
-static void add_event(int fd,int16_t flag,thread_t* t){
-    struct kevent event;
-    EV_SET(&event,fd,flag,EV_ADD,0,0,t);
-    kevent(t->kqueuefd,&event,1,NULL,0,NULL);
+
+void handle_write(int fd){
 }
 
-static void handleIO(thread_t *thread,int count){
-  int i=0;
-  struct kevent *events=thread->events;
-  for(;i<count;i++){
-    int sockfd= events[i].ident; 
-    int data = events[i].data;
-    if(sockfd==thread->pipe_channel->workerfd){
-        handleNotify(&events[i]);
-    }else{
-        if(events[i].filter==EVFILT_READ){
-            handleRead(&events[i]);
-        }else if(events[i].filter==EVFILT_WRITE){
-            handleWrite(&events[i]);
-        }
-    }
-  }
-}
-
-static void handleWrite(struct kevent *event){
-}
-
-static void handleRead(struct kevent *event){
-    
-    int fd=event->ident;
+void handle_read(int fd){
     char buf[10];
     read(fd,buf,10);
     puts(buf);
 }
 
-static void handleNotify(struct kevent *event){
-   int fd=event->ident;
-   thread_t *thread=event->udata;
-   int availble=event->data;
-   char *notify_buf=(char*)malloc(32);
+void handle_notify(int fd,event_context_t *ec,thread_t *t){
+  char *notify_buf=(char*)malloc(32);
    read(fd,notify_buf,32);
    switch(notify_buf[0]){
     case 'c':
       //int fd=0;
       sscanf(notify_buf+1, "%d", &fd);
-      add_event(fd,EVFILT_READ,thread);
+      event_operation.register_event(fd,EVFILT_READ,ec,t);
    }
    free(notify_buf);
 }

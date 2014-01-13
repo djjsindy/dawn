@@ -95,7 +95,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_dawn_OBJECTS = dawn-main.$(OBJEXT) dawn-thread.$(OBJEXT)
+am_dawn_OBJECTS = dawn-main.$(OBJEXT) dawn-thread.$(OBJEXT) \
+	dawn-kqueue.$(OBJEXT)
 dawn_OBJECTS = $(am_dawn_OBJECTS)
 dawn_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
@@ -176,12 +177,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /Users/jianjundeng/Doom/missing aclocal-1.14
+ACLOCAL = ${SHELL} /Users/jianjundeng/dawn/missing aclocal-1.14
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /Users/jianjundeng/Doom/missing autoconf
-AUTOHEADER = ${SHELL} /Users/jianjundeng/Doom/missing autoheader
-AUTOMAKE = ${SHELL} /Users/jianjundeng/Doom/missing automake-1.14
+AUTOCONF = ${SHELL} /Users/jianjundeng/dawn/missing autoconf
+AUTOHEADER = ${SHELL} /Users/jianjundeng/dawn/missing autoheader
+AUTOMAKE = ${SHELL} /Users/jianjundeng/dawn/missing automake-1.14
 AWK = awk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -206,7 +207,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /Users/jianjundeng/Doom/missing makeinfo
+MAKEINFO = ${SHELL} /Users/jianjundeng/dawn/missing makeinfo
 MKDIR_P = ./install-sh -c -d
 OBJEXT = o
 PACKAGE = dawn
@@ -221,10 +222,10 @@ SET_MAKE =
 SHELL = /bin/sh
 STRIP = 
 VERSION = 1.0
-abs_builddir = /Users/jianjundeng/Doom
-abs_srcdir = /Users/jianjundeng/Doom
-abs_top_builddir = /Users/jianjundeng/Doom
-abs_top_srcdir = /Users/jianjundeng/Doom
+abs_builddir = /Users/jianjundeng/dawn
+abs_srcdir = /Users/jianjundeng/dawn
+abs_top_builddir = /Users/jianjundeng/dawn
+abs_top_srcdir = /Users/jianjundeng/dawn
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -243,7 +244,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /Users/jianjundeng/Doom/install-sh
+install_sh = ${SHELL} /Users/jianjundeng/dawn/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -263,7 +264,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-dawn_SOURCES = src/main.c src/thread.c src/thread.h
+dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c
 dawn_CPPFLAGS = -I src/
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -372,6 +373,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/dawn-kqueue.Po
 include ./$(DEPDIR)/dawn-main.Po
 include ./$(DEPDIR)/dawn-thread.Po
 
@@ -416,6 +418,20 @@ dawn-thread.obj: src/thread.c
 #	$(AM_V_CC)source='src/thread.c' object='dawn-thread.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-thread.obj `if test -f 'src/thread.c'; then $(CYGPATH_W) 'src/thread.c'; else $(CYGPATH_W) '$(srcdir)/src/thread.c'; fi`
+
+dawn-kqueue.o: src/kqueue.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-kqueue.o -MD -MP -MF $(DEPDIR)/dawn-kqueue.Tpo -c -o dawn-kqueue.o `test -f 'src/kqueue.c' || echo '$(srcdir)/'`src/kqueue.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-kqueue.Tpo $(DEPDIR)/dawn-kqueue.Po
+#	$(AM_V_CC)source='src/kqueue.c' object='dawn-kqueue.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-kqueue.o `test -f 'src/kqueue.c' || echo '$(srcdir)/'`src/kqueue.c
+
+dawn-kqueue.obj: src/kqueue.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-kqueue.obj -MD -MP -MF $(DEPDIR)/dawn-kqueue.Tpo -c -o dawn-kqueue.obj `if test -f 'src/kqueue.c'; then $(CYGPATH_W) 'src/kqueue.c'; else $(CYGPATH_W) '$(srcdir)/src/kqueue.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-kqueue.Tpo $(DEPDIR)/dawn-kqueue.Po
+#	$(AM_V_CC)source='src/kqueue.c' object='dawn-kqueue.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-kqueue.obj `if test -f 'src/kqueue.c'; then $(CYGPATH_W) 'src/kqueue.c'; else $(CYGPATH_W) '$(srcdir)/src/kqueue.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
