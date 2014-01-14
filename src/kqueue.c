@@ -1,10 +1,14 @@
 #include "network.h"
 #include "thread.h"
+#include <stdio.h>
 #include <sys/event.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 #define MAX_EVENT_COUNT 1024
 
 static void kqueue_init_event(event_context_t *ec);
@@ -19,6 +23,7 @@ static void kqueue_process_listen_event(event_context_t *ec);
 
 static void kqueue_process_event(event_context_t *ec);
 
+
 extern int worker_index;
 
 char notify_buf[32];
@@ -26,6 +31,10 @@ char notify_buf[32];
 extern int server_sock_fd;
 
 extern thread_t threads[WORKER_NUM];
+
+const struct timespec ts={1,0};
+
+extern int set_noblocking(int fd);
 
 event_operation_t event_operation={
   kqueue_init_event,
@@ -39,8 +48,8 @@ event_operation_t event_operation={
 static void kqueue_init_event(event_context_t *ec){ 
   int kq = kqueue();
   if (kq == -1) {
-    perror("创建kqueue出错!\n");
-    exit(1);
+    printf("create kqueue error\n");
+    exit(0);
   }
   ec->fd=kq;
   struct kevent events[MAX_EVENT_COUNT];
@@ -64,9 +73,9 @@ static void kqueue_del_event(int fd,int flag){
 }
 
 static void kqueue_process_listen_event(event_context_t *ec){
-  int ret = kevent(ec->fd, NULL, 0, (struct kevent *)ec->events,MAX_EVENT_COUNT , NULL);
+  int ret = kevent(ec->fd, NULL, 0, (struct kevent *)ec->events,MAX_EVENT_COUNT , &ts);
   if (ret < 0) {
-    printf("kevent 出错!\n");
+    printf("kevent create error\n");
     return;
   }else if(ret == 0){
     return;
@@ -78,6 +87,10 @@ static void kqueue_process_listen_event(event_context_t *ec){
       struct sockaddr_in client_address;
       socklen_t address_len;
       int client_socket_fd = accept(server_sock_fd, (struct sockaddr *)&client_address, &address_len);
+      if(set_noblocking(client_socket_fd)<0){
+         printf("set no blocking error");
+         exit(0);
+      }
       *notify_buf='c';
       sprintf(notify_buf+1,"%d",client_socket_fd);
       thread_t *t=&threads[worker_index];
@@ -93,10 +106,7 @@ static void kqueue_process_listen_event(event_context_t *ec){
 
 
 static void kqueue_process_event(event_context_t *ec){
-  struct timeval tv;
-  tv.tv_sec = 1;
-  tv.tv_usec = 0;
-  int ret = kevent(ec->fd, NULL, 0, (struct kevent *)ec->events, MAX_EVENT_COUNT, &tv);
+  int ret = kevent(ec->fd, NULL, 0, (struct kevent *)ec->events, MAX_EVENT_COUNT, &ts);
   if(ret==-1){
     printf("kevent error");
     exit(0);

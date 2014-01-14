@@ -53,11 +53,10 @@ void handle_read(int fd){
 }
 
 void handle_notify(int fd,event_context_t *ec,thread_t *t){
-  char *notify_buf=(char*)malloc(32);
+   char *notify_buf=(char*)malloc(32);
    read(fd,notify_buf,32);
    switch(notify_buf[0]){
     case 'c':
-      //int fd=0;
       sscanf(notify_buf+1, "%d", &fd);
       event_operation.register_event(fd,EVFILT_READ,ec,t);
    }

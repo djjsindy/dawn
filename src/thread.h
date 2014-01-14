@@ -16,14 +16,13 @@ typedef struct pipe_channel_s pipe_channel_t;
 struct thread_s{
   pipe_channel_t *pipe_channel;
   int kqueuefd;
-  struct kevent events[MAX_EVENT_COUNT]; 
 };
 
 typedef struct thread_s thread_t;
 
 void start_workers();
  
-void handle_notify(int fd,event_context_t*ec,thread_t *t);
+void handle_notify(int fd,event_context_t *ec,thread_t *t);
 
 void handle_read(int fd);
 

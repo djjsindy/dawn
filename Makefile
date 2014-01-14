@@ -96,7 +96,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_dawn_OBJECTS = dawn-main.$(OBJEXT) dawn-thread.$(OBJEXT) \
-	dawn-kqueue.$(OBJEXT)
+	dawn-kqueue.$(OBJEXT) dawn-fdop.$(OBJEXT)
 dawn_OBJECTS = $(am_dawn_OBJECTS)
 dawn_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
@@ -264,7 +264,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c
+dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c
 dawn_CPPFLAGS = -I src/
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -373,6 +373,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/dawn-fdop.Po
 include ./$(DEPDIR)/dawn-kqueue.Po
 include ./$(DEPDIR)/dawn-main.Po
 include ./$(DEPDIR)/dawn-thread.Po
@@ -432,6 +433,20 @@ dawn-kqueue.obj: src/kqueue.c
 #	$(AM_V_CC)source='src/kqueue.c' object='dawn-kqueue.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-kqueue.obj `if test -f 'src/kqueue.c'; then $(CYGPATH_W) 'src/kqueue.c'; else $(CYGPATH_W) '$(srcdir)/src/kqueue.c'; fi`
+
+dawn-fdop.o: src/fdop.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-fdop.o -MD -MP -MF $(DEPDIR)/dawn-fdop.Tpo -c -o dawn-fdop.o `test -f 'src/fdop.c' || echo '$(srcdir)/'`src/fdop.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-fdop.Tpo $(DEPDIR)/dawn-fdop.Po
+#	$(AM_V_CC)source='src/fdop.c' object='dawn-fdop.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-fdop.o `test -f 'src/fdop.c' || echo '$(srcdir)/'`src/fdop.c
+
+dawn-fdop.obj: src/fdop.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-fdop.obj -MD -MP -MF $(DEPDIR)/dawn-fdop.Tpo -c -o dawn-fdop.obj `if test -f 'src/fdop.c'; then $(CYGPATH_W) 'src/fdop.c'; else $(CYGPATH_W) '$(srcdir)/src/fdop.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-fdop.Tpo $(DEPDIR)/dawn-fdop.Po
+#	$(AM_V_CC)source='src/fdop.c' object='dawn-fdop.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-fdop.obj `if test -f 'src/fdop.c'; then $(CYGPATH_W) 'src/fdop.c'; else $(CYGPATH_W) '$(srcdir)/src/fdop.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

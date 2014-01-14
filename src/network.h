@@ -24,5 +24,4 @@ struct event_operation_s{
 
 typedef struct event_operation_s event_operation_t;
 
-
 #endif
