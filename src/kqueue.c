@@ -26,7 +26,7 @@ static void kqueue_process_event(event_context_t *ec);
 
 extern int worker_index;
 
-char notify_buf[32];
+char notify_buf[16];
 
 extern int server_sock_fd;
 
@@ -96,6 +96,7 @@ static void kqueue_process_listen_event(event_context_t *ec){
       thread_t *t=&threads[worker_index];
       int fd=t->pipe_channel->masterfd;
       write(fd,notify_buf,strlen(notify_buf));
+      memset(notify_buf,0,sizeof(notify_buf));
       worker_index++;
       if(worker_index==WORKER_NUM){
         worker_index=0;
