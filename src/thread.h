@@ -4,6 +4,7 @@
 #include <sys/event.h>
 #include <sys/time.h>
 #include "network.h"
+#include "queue.h"
 #define WORKER_NUM 8
 #define MAX_EVENT_COUNT 1024
 #define NOTIFY_BUF_SIZE 32
@@ -18,7 +19,7 @@ typedef struct pipe_channel_s pipe_channel_t;
 struct thread_s{
   pipe_channel_t *pipe_channel;
   int kqueuefd;
-
+  queue_t *newconn;
 };
 
 typedef struct thread_s thread_t;

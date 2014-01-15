@@ -96,7 +96,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_dawn_OBJECTS = dawn-main.$(OBJEXT) dawn-thread.$(OBJEXT) \
-	dawn-kqueue.$(OBJEXT) dawn-fdop.$(OBJEXT)
+	dawn-kqueue.$(OBJEXT) dawn-fdop.$(OBJEXT) dawn-queue.$(OBJEXT)
 dawn_OBJECTS = $(am_dawn_OBJECTS)
 dawn_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
@@ -264,7 +264,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c
+dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c src/queue.h src/queue.c
 dawn_CPPFLAGS = -I src/
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -376,6 +376,7 @@ distclean-compile:
 include ./$(DEPDIR)/dawn-fdop.Po
 include ./$(DEPDIR)/dawn-kqueue.Po
 include ./$(DEPDIR)/dawn-main.Po
+include ./$(DEPDIR)/dawn-queue.Po
 include ./$(DEPDIR)/dawn-thread.Po
 
 .c.o:
@@ -447,6 +448,20 @@ dawn-fdop.obj: src/fdop.c
 #	$(AM_V_CC)source='src/fdop.c' object='dawn-fdop.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-fdop.obj `if test -f 'src/fdop.c'; then $(CYGPATH_W) 'src/fdop.c'; else $(CYGPATH_W) '$(srcdir)/src/fdop.c'; fi`
+
+dawn-queue.o: src/queue.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-queue.o -MD -MP -MF $(DEPDIR)/dawn-queue.Tpo -c -o dawn-queue.o `test -f 'src/queue.c' || echo '$(srcdir)/'`src/queue.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-queue.Tpo $(DEPDIR)/dawn-queue.Po
+#	$(AM_V_CC)source='src/queue.c' object='dawn-queue.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-queue.o `test -f 'src/queue.c' || echo '$(srcdir)/'`src/queue.c
+
+dawn-queue.obj: src/queue.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-queue.obj -MD -MP -MF $(DEPDIR)/dawn-queue.Tpo -c -o dawn-queue.obj `if test -f 'src/queue.c'; then $(CYGPATH_W) 'src/queue.c'; else $(CYGPATH_W) '$(srcdir)/src/queue.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-queue.Tpo $(DEPDIR)/dawn-queue.Po
+#	$(AM_V_CC)source='src/queue.c' object='dawn-queue.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-queue.obj `if test -f 'src/queue.c'; then $(CYGPATH_W) 'src/queue.c'; else $(CYGPATH_W) '$(srcdir)/src/queue.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

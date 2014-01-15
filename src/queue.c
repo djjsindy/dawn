@@ -31,7 +31,7 @@ void push(queue_t *q,void *data){
   pthread_mutex_unlock(q->mutex);
 }
 
-void* peek(queue_t *q){
+void* pop(queue_t *q){
   pthread_mutex_lock(q->mutex);
   if(q->head==NULL){
     return 0;

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "thread.h"
 #include "network.h"
+#include "queue.h"
 thread_t threads[WORKER_NUM];
 
 static void *worker_loop(void *arg);
@@ -14,6 +15,7 @@ void start_workers(){
   int i=0;
   for(;i<WORKER_NUM;i++){
      threads[i].pipe_channel=(pipe_channel_t*)malloc(sizeof(pipe_channel_t*));
+     threads[i].newconn=init_queue();
      pipe_channel_t *p=threads[i].pipe_channel;
      if(p==NULL){
         printf("create pipe channel error\n");
@@ -53,12 +55,10 @@ void handle_read(int fd){
 }
 
 void handle_notify(int fd,event_context_t *ec,thread_t *t){
-   char *notify_buf=(char*)malloc(32);
-   read(fd,notify_buf,32);
+   char notify_buf[1];
+   read(fd,notify_buf,1);
    switch(notify_buf[0]){
     case 'c':
-      sscanf(notify_buf+1, "%d", &fd);
-      event_operation.register_event(fd,EVFILT_READ,ec,t);
+      event_operation.register_event(*(int *)pop(t->newconn),EVFILT_READ,ec,t);
    }
-   free(notify_buf);
 }
