@@ -264,7 +264,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c src/queue.h src/queue.c
+dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c src/queue.h src/queue.c src/connection.h
 dawn_CPPFLAGS = -I src/
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am

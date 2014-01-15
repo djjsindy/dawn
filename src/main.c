@@ -11,16 +11,11 @@
 #include "thread.h"
 #include "network.h"
 
-#define SERVER_PORT 11332
-#define BUFFER_SIZE 1024
+#define SERVER_PORT 10000
 #define BACKLOG 50
-int worker_index=0;
-
 static void start_listen();
 
 int server_sock_fd;
-
-extern event_operation_t event_operation;
 
 int main (int argc, const char * argv[])
 {

@@ -1,8 +1,6 @@
 #ifndef QUEUE_H
 #define QUEUE_H
-#include <unistd.h>
 #include <pthread.h>
-#include <stdlib.h>
 struct queue_item_s{
   void *data;
   struct queue_item_s *next;

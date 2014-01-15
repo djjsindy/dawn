@@ -1,6 +1,4 @@
 #include "queue.h"
-#include <stdio.h>
-#include <pthread.h>
 #include <stdlib.h>
 queue_t *init_queue(){
   queue_t *q=(queue_t *)malloc(sizeof(queue_t));
