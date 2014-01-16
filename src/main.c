@@ -9,7 +9,6 @@
 #include <string.h>
 #include <unistd.h>
 #include "thread.h"
-#include "network.h"
 
 #define SERVER_PORT 10000
 #define BACKLOG 50

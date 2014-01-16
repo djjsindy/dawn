@@ -16,8 +16,8 @@ void start_workers(){
   int i=0;
   for(;i<WORKER_NUM;i++){
     threads[i].pipe_channel=(pipe_channel_t*)malloc(sizeof(pipe_channel_t));
-    threads[i].newconn=init_queue();
     pipe_channel_t *p=threads[i].pipe_channel;
+    threads[i].queue=init_queue();
     if(p==NULL){
       printf("create pipe channel error\n");
       exit(0);
@@ -39,10 +39,11 @@ void *worker_loop(void *arg){
   event_context_t ec;
   int notify_fd=t->pipe_channel->workerfd;
   event_operation.init_event(&ec);
-  t->kqueuefd=ec.fd;
-  event_operation.register_event(notify_fd,READ,t,t);
+  ec.worker_fd=notify_fd;
+  ec.queue=t->queue;
+  event_operation.register_event(notify_fd,READ,&ec,t);
   while(1){
-    event_operation.process_event(&ec,t);    
+    event_operation.process_event(&ec);    
   }
 }
 
@@ -57,15 +58,15 @@ void handle_read(connection_t *conn){
   puts(buf);
 }
 
-void handle_notify(int fd,thread_t *t){
+void handle_notify(int fd,event_context_t *ec){
   char notify_buf[1];
   read(fd,notify_buf,1);
   switch(notify_buf[0]){
     case 'c':
       {
         connection_t *co=(connection_t *)malloc(sizeof(connection_t));
-        co->fd=*(int *)pop(t->newconn);
-        event_operation.register_event(co->fd,READ,t,co);
+        co->fd=*(int *)pop(ec->queue);
+        event_operation.register_event(co->fd,READ,ec,co);
         break;
       }
   }

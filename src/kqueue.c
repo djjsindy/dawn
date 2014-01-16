@@ -1,4 +1,5 @@
 #include "network.h"
+#include "thread.h"
 #include <stdio.h>
 #include <sys/event.h>
 #include <sys/types.h>
@@ -12,7 +13,7 @@
 
 static void kqueue_init_event(event_context_t *ec);
 
-static void kqueue_register_event(int fd,enum EVENT event,thread_t *t,void *data);
+static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,void *data);
 
 static void kqueue_add_listen_event(event_context_t *ec);
 
@@ -20,7 +21,7 @@ static void kqueue_del_event(int fd,enum EVENT event);
 
 static void kqueue_process_listen_event(event_context_t *ec);
 
-static void kqueue_process_event(event_context_t *ec,thread_t *t);
+static void kqueue_process_event(event_context_t *ec);
 
 extern int worker_index;
 
@@ -52,7 +53,7 @@ static void kqueue_init_event(event_context_t *ec){
   ec->events=&events;
 }
 
-static void kqueue_register_event(int fd,enum EVENT event,thread_t *t,void *data){
+static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
   struct kevent kev;
   switch(event){
     case READ:
@@ -62,7 +63,7 @@ static void kqueue_register_event(int fd,enum EVENT event,thread_t *t,void *data
        EV_SET(&kev,fd,EVFILT_WRITE,EV_ADD,0,0,data);
        break;
   }
-  kevent(t->kqueuefd,&kev,1,NULL,0,NULL);
+  kevent(ec->fd,&kev,1,NULL,0,NULL);
 }
 
 static void kqueue_add_listen_event(event_context_t *ec){
@@ -94,7 +95,7 @@ static void kqueue_process_listen_event(event_context_t *ec){
       }
       char notify_buf='c';
       thread_t *t=&threads[worker_index];
-      push(t->newconn,&client_socket_fd);
+      push(t->queue,&client_socket_fd);
       int fd=t->pipe_channel->masterfd;
       write(fd,&notify_buf,1);
       worker_index++;
@@ -106,7 +107,7 @@ static void kqueue_process_listen_event(event_context_t *ec){
 } 
 
 
-static void kqueue_process_event(event_context_t *ec,thread_t *t){
+static void kqueue_process_event(event_context_t *ec){
   int ret = kevent(ec->fd, NULL, 0, (struct kevent *)ec->events, MAX_EVENT_COUNT, &ts);
   if(ret==-1){
     printf("kevent error");
@@ -118,8 +119,8 @@ static void kqueue_process_event(event_context_t *ec,thread_t *t){
   struct kevent *events=ec->events;
   for(;i<ret;i++){
     int sockfd= events[i].ident; 
-    if(sockfd==t->pipe_channel->workerfd){
-      handle_notify(sockfd,t);
+    if(sockfd==ec->worker_fd){
+      handle_notify(sockfd,ec);
     }else{
       connection_t *conn=(connection_t *)events[i].udata;
       if(events[i].filter==EVFILT_READ){
