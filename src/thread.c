@@ -19,7 +19,11 @@ static void *worker_loop(void *arg);
 
 static connection_t* init_connection();
 
-extern int parse_command(buffer_t *buf,connection_t *conn);
+static void reset_connection(connection_t *t);
+
+extern int parse_command(connection_t *conn);
+
+extern int process_command(connection_t *conn);
 
 void start_workers(){
   int i=0;
@@ -62,14 +66,27 @@ void handle_write(connection_t *conn){
 
 void handle_read(connection_t *conn){
   buffer_t *rbuf=conn->rbuf;
-  int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->current);
+  int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
   rbuf->limit=rbuf->current+count;
-  if(conn->read_process!=READ_COMMAND_END){
-    int result=parse_command(rbuf,conn);
-    if(!result)
+  int result;
+  while(1){
+    if(conn->read_process!=READ_COMMAND_END){
+      result=parse_command(conn);
+      if(result==AGAIN){
+        reset(rbuf);
+        return;
+      }
+      else if(result==DATA_OK){
+        reset_connection(conn);
+        continue;
+      }
+    }
+    result=process_command(conn);
+    if(result==AGAIN){
+      reset(rbuf);
       return;
+    }    
   }
-  process_command(rbuf,conn);
 }
 
 void handle_notify(int fd,event_context_t *ec){
@@ -78,7 +95,7 @@ void handle_notify(int fd,event_context_t *ec){
   switch(notify_buf[0]){
     case 'c':
       {
-        connection *co=init_connection();
+        connection_t *co=init_connection();
         co->fd=*(int *)pop(ec->queue);
         event_operation.register_event(co->fd,READ,ec,co);
         break;
@@ -86,11 +103,19 @@ void handle_notify(int fd,event_context_t *ec){
   }
 }
 
+static void reset_connection(connection_t *conn){
+   reset_char(conn->key);
+   reset_char(conn->command);
+   reset_char(conn->num);
+   conn->last_bytes=0;
+   conn->read_process=READ_COMMAND;
+}
+
 static connection_t* init_connection(){
   connection_t *co=(connection_t *)malloc(sizeof(connection_t));
   co->rbuf=alloc_buffer(READ_BUF_SIZE);
   co->wbuf=alloc_buffer(WRITE_BUF_SIZE);
-  co->read_status=READ_COMMAND;
+  co->read_process=READ_COMMAND;
   co->command=init_char(COMMAND_SIZE);
   co->key=init_char(KEY_SIZE);
   co->num=init_char(NUM_SIZE);

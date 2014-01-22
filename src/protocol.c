@@ -1,10 +1,20 @@
 #include "buffer.h"
 #include "dy_char.h"
-static void process_set(buffer_t *t,connection_t *conn);
+#include "hash.h"
+#include "queue.h"
+#include "thread.h"
+#include "item.h"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+extern hash_t* hash;
 
-static void process_get(buffer_t *t,connection_t *conn);
+static int process_set(connection_t *conn);
 
-int parse_command(buffer_t *buf,connection_t *conn){
+static int process_get(connection_t *conn);
+
+int parse_command(connection_t *conn){
+  buffer_t *buf=conn->rbuf;
   while(buf->current<=buf->limit){
     char c=*(buf->data+buf->current);
     switch(conn->read_process){
@@ -29,41 +39,71 @@ int parse_command(buffer_t *buf,connection_t *conn){
           conn->read_process=READ_EXPIRE_TIME;
         }
         break;
-        case READ_EXPIRE_TIME:
-        if(c=' '){
+      case READ_EXPIRE_TIME:
+        if(c==' '){
           conn->read_process=READ_BYTE_NUM;
         }
         break;
       case READ_BYTE_NUM:
         if(c=='\r'){
           conn->read_process=READ_COMMAND_LAST;
+          sprintf(conn->num,"%d",conn->last_bytes);
         }else{
           add_char(conn->num,c);
         }
         break;
       case READ_COMMAND_LAST:
-        if(c='\n'){
+        if(c=='\n'){
           conn->read_process=READ_COMMAND_END;
-          return 1;
+          return COMMAND_OK;
         }
         break;
+      case READ_TERMINAL:
+        if(c=='\r')
+          conn->read_process=READ_DATA_END;
+        break;
+      case READ_DATA_END:
+        if(c=='\n')
+          return DATA_OK;
     }
     buf->current+=1;
   }
-  compact(buf);
+  return AGAIN;
+}
+
+int process_command(connection_t *conn){
+  if(strcmp(conn->command->data,"set")==0)
+      return process_set(conn);
+  else if(strcmp(conn->command->data,"get")==0)
+      return process_get(conn);
+}
+static int process_get(connection_t *conn){
   return 0;
 }
 
-void process_command(buffer_t *b,connection_t *conn){
-  switch(conn->command->data){
-    case "set":
-      process_set(b,conn);
-      break;
-    case "get":
-      process_get(b,conn);
+static int process_set(connection_t *conn){
+  buffer_t *b=conn->rbuf;
+  char* key=conn->key->data;
+  queue_t *q=(queue_t *)get(key,hash);
+  if(q==NULL){
+    q=init_queue();
+    put(key,q,hash);
+  } 
+  int count=b->limit-b->current; 
+  int fill;
+  int result;
+  item_t *i=init_item();
+  if(count>conn->last_bytes){
+    fill=conn->last_bytes;
+    i->end=1;
+    conn->read_process=READ_TERMINAL;
+    result=OK;
+  }else{
+    fill=b->limit-b->current;
+    result=AGAIN;
   }
-}
-
-static void process_set(buffer_t *t,connection_t *conn){
-  
+  char *c=(char *)malloc(fill);
+  memcpy(c,b->data,fill);
+  push(q,c);
+  return result;
 }

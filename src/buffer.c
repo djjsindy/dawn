@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "buffer.h"
 
 buffer_t* alloc_buffer(int size){
@@ -15,10 +17,17 @@ buffer_t* alloc_buffer(int size){
   b->size=size;
   b->current=0;
   b->limit=0;
+  return b;
 }
 
 void compact(buffer_t *t){
-  memset(t->data,t->data+current,t->limit-t->current);
+  memcpy(t->data,t->data+t->current,t->limit-t->current);
   t->limit-=t->current;
   t->current=0;
+}
+
+void reset(buffer_t *t){
+  memset(t->data,0,t->size);
+  t->current=0;
+  t->limit=0;
 }

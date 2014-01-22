@@ -1,3 +1,5 @@
+#ifndef CHAR_H
+#define CHAR_H
 struct char_s{
   char *data;
   int size;
@@ -11,3 +13,6 @@ char_t *init_char(int size);
 void add_char(char_t *t,char c);
 
 void add_terminal(char_t *t);
+
+void reset_char(char_t *t);
+#endif

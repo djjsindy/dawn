@@ -96,7 +96,10 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_dawn_OBJECTS = dawn-main.$(OBJEXT) dawn-thread.$(OBJEXT) \
-	dawn-kqueue.$(OBJEXT) dawn-fdop.$(OBJEXT) dawn-queue.$(OBJEXT)
+	dawn-kqueue.$(OBJEXT) dawn-fdop.$(OBJEXT) dawn-queue.$(OBJEXT) \
+	dawn-item.$(OBJEXT) dawn-hash.$(OBJEXT) \
+	dawn-protocol.$(OBJEXT) dawn-dy_char.$(OBJEXT) \
+	dawn-buffer.$(OBJEXT)
 dawn_OBJECTS = $(am_dawn_OBJECTS)
 dawn_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
@@ -264,8 +267,8 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c src/queue.h src/queue.c src/connection.h
-dawn_CPPFLAGS = -I src/
+dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c src/queue.h src/queue.c src/connection.h src/item.h src/item.c src/hash.h src/hash.c src/protocol.c src/dy_char.h src/dy_char.c src/buffer.h src/buffer.c
+dawn_CPPFLAGS = -I src/ 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -373,9 +376,14 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/dawn-buffer.Po
+include ./$(DEPDIR)/dawn-dy_char.Po
 include ./$(DEPDIR)/dawn-fdop.Po
+include ./$(DEPDIR)/dawn-hash.Po
+include ./$(DEPDIR)/dawn-item.Po
 include ./$(DEPDIR)/dawn-kqueue.Po
 include ./$(DEPDIR)/dawn-main.Po
+include ./$(DEPDIR)/dawn-protocol.Po
 include ./$(DEPDIR)/dawn-queue.Po
 include ./$(DEPDIR)/dawn-thread.Po
 
@@ -462,6 +470,76 @@ dawn-queue.obj: src/queue.c
 #	$(AM_V_CC)source='src/queue.c' object='dawn-queue.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-queue.obj `if test -f 'src/queue.c'; then $(CYGPATH_W) 'src/queue.c'; else $(CYGPATH_W) '$(srcdir)/src/queue.c'; fi`
+
+dawn-item.o: src/item.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-item.o -MD -MP -MF $(DEPDIR)/dawn-item.Tpo -c -o dawn-item.o `test -f 'src/item.c' || echo '$(srcdir)/'`src/item.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-item.Tpo $(DEPDIR)/dawn-item.Po
+#	$(AM_V_CC)source='src/item.c' object='dawn-item.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-item.o `test -f 'src/item.c' || echo '$(srcdir)/'`src/item.c
+
+dawn-item.obj: src/item.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-item.obj -MD -MP -MF $(DEPDIR)/dawn-item.Tpo -c -o dawn-item.obj `if test -f 'src/item.c'; then $(CYGPATH_W) 'src/item.c'; else $(CYGPATH_W) '$(srcdir)/src/item.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-item.Tpo $(DEPDIR)/dawn-item.Po
+#	$(AM_V_CC)source='src/item.c' object='dawn-item.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-item.obj `if test -f 'src/item.c'; then $(CYGPATH_W) 'src/item.c'; else $(CYGPATH_W) '$(srcdir)/src/item.c'; fi`
+
+dawn-hash.o: src/hash.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-hash.o -MD -MP -MF $(DEPDIR)/dawn-hash.Tpo -c -o dawn-hash.o `test -f 'src/hash.c' || echo '$(srcdir)/'`src/hash.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-hash.Tpo $(DEPDIR)/dawn-hash.Po
+#	$(AM_V_CC)source='src/hash.c' object='dawn-hash.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-hash.o `test -f 'src/hash.c' || echo '$(srcdir)/'`src/hash.c
+
+dawn-hash.obj: src/hash.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-hash.obj -MD -MP -MF $(DEPDIR)/dawn-hash.Tpo -c -o dawn-hash.obj `if test -f 'src/hash.c'; then $(CYGPATH_W) 'src/hash.c'; else $(CYGPATH_W) '$(srcdir)/src/hash.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-hash.Tpo $(DEPDIR)/dawn-hash.Po
+#	$(AM_V_CC)source='src/hash.c' object='dawn-hash.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-hash.obj `if test -f 'src/hash.c'; then $(CYGPATH_W) 'src/hash.c'; else $(CYGPATH_W) '$(srcdir)/src/hash.c'; fi`
+
+dawn-protocol.o: src/protocol.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-protocol.o -MD -MP -MF $(DEPDIR)/dawn-protocol.Tpo -c -o dawn-protocol.o `test -f 'src/protocol.c' || echo '$(srcdir)/'`src/protocol.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-protocol.Tpo $(DEPDIR)/dawn-protocol.Po
+#	$(AM_V_CC)source='src/protocol.c' object='dawn-protocol.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-protocol.o `test -f 'src/protocol.c' || echo '$(srcdir)/'`src/protocol.c
+
+dawn-protocol.obj: src/protocol.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-protocol.obj -MD -MP -MF $(DEPDIR)/dawn-protocol.Tpo -c -o dawn-protocol.obj `if test -f 'src/protocol.c'; then $(CYGPATH_W) 'src/protocol.c'; else $(CYGPATH_W) '$(srcdir)/src/protocol.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-protocol.Tpo $(DEPDIR)/dawn-protocol.Po
+#	$(AM_V_CC)source='src/protocol.c' object='dawn-protocol.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-protocol.obj `if test -f 'src/protocol.c'; then $(CYGPATH_W) 'src/protocol.c'; else $(CYGPATH_W) '$(srcdir)/src/protocol.c'; fi`
+
+dawn-dy_char.o: src/dy_char.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-dy_char.o -MD -MP -MF $(DEPDIR)/dawn-dy_char.Tpo -c -o dawn-dy_char.o `test -f 'src/dy_char.c' || echo '$(srcdir)/'`src/dy_char.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-dy_char.Tpo $(DEPDIR)/dawn-dy_char.Po
+#	$(AM_V_CC)source='src/dy_char.c' object='dawn-dy_char.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-dy_char.o `test -f 'src/dy_char.c' || echo '$(srcdir)/'`src/dy_char.c
+
+dawn-dy_char.obj: src/dy_char.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-dy_char.obj -MD -MP -MF $(DEPDIR)/dawn-dy_char.Tpo -c -o dawn-dy_char.obj `if test -f 'src/dy_char.c'; then $(CYGPATH_W) 'src/dy_char.c'; else $(CYGPATH_W) '$(srcdir)/src/dy_char.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-dy_char.Tpo $(DEPDIR)/dawn-dy_char.Po
+#	$(AM_V_CC)source='src/dy_char.c' object='dawn-dy_char.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-dy_char.obj `if test -f 'src/dy_char.c'; then $(CYGPATH_W) 'src/dy_char.c'; else $(CYGPATH_W) '$(srcdir)/src/dy_char.c'; fi`
+
+dawn-buffer.o: src/buffer.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-buffer.o -MD -MP -MF $(DEPDIR)/dawn-buffer.Tpo -c -o dawn-buffer.o `test -f 'src/buffer.c' || echo '$(srcdir)/'`src/buffer.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-buffer.Tpo $(DEPDIR)/dawn-buffer.Po
+#	$(AM_V_CC)source='src/buffer.c' object='dawn-buffer.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-buffer.o `test -f 'src/buffer.c' || echo '$(srcdir)/'`src/buffer.c
+
+dawn-buffer.obj: src/buffer.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-buffer.obj -MD -MP -MF $(DEPDIR)/dawn-buffer.Tpo -c -o dawn-buffer.obj `if test -f 'src/buffer.c'; then $(CYGPATH_W) 'src/buffer.c'; else $(CYGPATH_W) '$(srcdir)/src/buffer.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-buffer.Tpo $(DEPDIR)/dawn-buffer.Po
+#	$(AM_V_CC)source='src/buffer.c' object='dawn-buffer.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-buffer.obj `if test -f 'src/buffer.c'; then $(CYGPATH_W) 'src/buffer.c'; else $(CYGPATH_W) '$(srcdir)/src/buffer.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

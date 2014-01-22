@@ -12,4 +12,6 @@ typedef struct buffer_s buffer_t;
 buffer_t *alloc_buffer(int size);
 
 void compact(buffer_t *b);
+
+void reset(buffer_t *b);
 #endif

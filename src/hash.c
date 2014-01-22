@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "hash.h"
 #define INIT_SIZE 4
 static void expand_hash(hash_t* hash);
@@ -25,7 +26,11 @@ hash_t* init_hash(){
   return h;
 }
 
-void put(char *key,char *data,hash_t *hash){
+void put(char *key,void *data,hash_t *hash){
+  void *d=get(key,hash);
+  if(d!=NULL){
+    return;
+  }
   pthread_mutex_lock(hash->mutex);
   float factor=hash->num/hash->size;
   if(factor>0.75f){
@@ -46,7 +51,7 @@ void put(char *key,char *data,hash_t *hash){
   pthread_mutex_unlock(hash->mutex);
 }
 
-char* get(char* key,hash_t *hash){
+void* get(char* key,hash_t *hash){
   pthread_mutex_lock(hash->mutex);
   int index=cal_hash(key)%hash->size;
   hash_element_t *e=hash->elements[index];
@@ -60,6 +65,26 @@ char* get(char* key,hash_t *hash){
   }
   pthread_mutex_unlock(hash->mutex);
   return result;
+}
+
+void delete(char* key,hash_t *hash){ 
+  pthread_mutex_lock(hash->mutex);
+  int index=cal_hash(key)%hash->size;
+  hash_element_t *e=hash->elements[index];
+  hash_element_t *prev;
+  while(e!=NULL){
+    if(strcmp(e->key,key)==0){
+      break;
+    }
+    prev=e;
+    e=e->next;
+  }
+  if(prev==NULL){
+    hash->elements[index]=e->next;
+  }else{
+    prev->next=e->next;
+  }
+  pthread_mutex_unlock(hash->mutex);
 }
 
 static void expand_hash(hash_t *hash){
