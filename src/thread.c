@@ -62,6 +62,35 @@ void *worker_loop(void *arg){
 
 
 void handle_write(connection_t *conn){
+  char *target=conn->w_data;
+  while(1){
+    if(target==NULL){
+      target=pop(conn->w_queue);
+    } 
+    if(target==NULL){
+      event_operation.del_event(conn->fd,WRITE);
+    }
+    buffer_t *wbuf=conn->wbuf;
+    int avilable=wbuf->size-wbuf->limit;
+    int copy=sizeof(target)-conn->w_index;
+    if(avilable<copy){
+      copy=avilable;
+    }
+    memcpy(wbuf->data,wbuf->limit,copy);
+    conn->w_index+=copy;
+    wbuf->limit+=copy;
+    if(has_space(wbuf)){
+      target=NULL;
+      conn->w_index=0;
+    }else{
+      int count=write(conn->fd,wbuf->data+wbuf->current,wbuf->limit-wbuf->current);
+      wbuf->current+=count;
+      compact(wbuf);
+      if(count<wbuf->limit-wbuf->current){
+        return;
+      }    
+    }
+  }
 }
 
 void handle_read(connection_t *conn){
@@ -104,11 +133,11 @@ void handle_notify(int fd,event_context_t *ec){
 }
 
 static void reset_connection(connection_t *conn){
-   reset_char(conn->key);
-   reset_char(conn->command);
-   reset_char(conn->num);
-   conn->last_bytes=0;
-   conn->read_process=READ_COMMAND;
+  reset_char(conn->key);
+  reset_char(conn->command);
+  reset_char(conn->num);
+  conn->last_bytes=0;
+  conn->read_process=READ_COMMAND;
 }
 
 static connection_t* init_connection(){
@@ -119,5 +148,8 @@ static connection_t* init_connection(){
   co->command=init_char(COMMAND_SIZE);
   co->key=init_char(KEY_SIZE);
   co->num=init_char(NUM_SIZE);
+  co->wq=init_queue();
+  co->w_index=0;
+  co->w_limit=0;
   return co;
 }

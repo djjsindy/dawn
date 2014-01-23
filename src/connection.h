@@ -26,6 +26,9 @@ struct connection_s{
   int fd;
   buffer_t *rbuf;
   buffer_t *wbuf;
+  queue_t *w_queue;
+  char *w_data;
+  int w_index;
   char_t *command;
   char_t *key;
   char_t *num;

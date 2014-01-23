@@ -32,3 +32,7 @@ void reset(buffer_t *t){
   t->current=0;
   t->limit=0;
 }
+
+int has_space(buffer_t *t){
+  return t->limit<t->size;
+}

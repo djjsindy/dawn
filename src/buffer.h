@@ -14,4 +14,6 @@ buffer_t *alloc_buffer(int size);
 void compact(buffer_t *b);
 
 void reset(buffer_t *b);
+
+int has_space(buffer_t *b);
 #endif
