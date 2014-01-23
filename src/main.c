@@ -17,7 +17,6 @@ static void start_listen();
 int server_sock_fd;
 
 hash_t *hash;
-
 int main (int argc, const char * argv[])
 {
   start_workers();

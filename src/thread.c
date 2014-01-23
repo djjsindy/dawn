@@ -82,8 +82,8 @@ void handle_read(connection_t *conn){
       }
     }
     result=process_command(conn);
+    compact(rbuf);
     if(result==AGAIN){
-      reset(rbuf);
       return;
     }    
   }

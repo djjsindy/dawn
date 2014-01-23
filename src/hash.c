@@ -55,7 +55,7 @@ void* get(char* key,hash_t *hash){
   pthread_mutex_lock(hash->mutex);
   int index=cal_hash(key)%hash->size;
   hash_element_t *e=hash->elements[index];
-  char *result;
+  void *result=NULL;
   while(e!=NULL){
     if(strcmp(e->key,key)==0){
       result=e->data;
@@ -88,7 +88,7 @@ void delete(char* key,hash_t *hash){
 }
 
 static void expand_hash(hash_t *hash){
-  hash_element_t **temp=(hash_element_t *)malloc(sizeof(hash_element_t *)*(hash->size*2));
+  hash_element_t **temp=(hash_element_t **)malloc(sizeof(hash_element_t *)*(hash->size*2));
   int index=0;
   for(;index<hash->size;index++){
     hash_element_t *element=hash->elements[index];
@@ -106,9 +106,10 @@ static void expand_hash(hash_t *hash){
 
 static unsigned long cal_hash(char *key){
   int index=0;
+  int length=(int)strlen(key);
   unsigned long hash;
-  while(*(key+index)!='\0'){
-    hash=+*(key+index);
+  while(index<length){
+    hash+=*(key+index);
     index++;
   }
   return hash;

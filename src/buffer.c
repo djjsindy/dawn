@@ -21,6 +21,7 @@ buffer_t* alloc_buffer(int size){
 }
 
 void compact(buffer_t *t){
+  memset(t->data,0,t->current);
   memcpy(t->data,t->data+t->current,t->limit-t->current);
   t->limit-=t->current;
   t->current=0;

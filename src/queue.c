@@ -5,6 +5,8 @@ queue_t *init_queue(){
   pthread_mutex_t mutex;
   pthread_mutex_init(&mutex, NULL);
   q->mutex=&mutex;
+  q->head=NULL;
+  q->tail=NULL;
   return q;
 }
 
