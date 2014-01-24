@@ -2,6 +2,7 @@
 #define CONNECTION_H
 #include "buffer.h"
 #include "dy_char.h"
+#include "network.h"
 #define READ_BUF_SIZE 1024
 #define WRITE_BUF_SIZE 1024
 
@@ -45,6 +46,7 @@ struct connection_s{
   int fd;
   buffer_t *rbuf;
   buffer_t *wbuf;
+  event_context_t *ec;
   write_context_t *wc;
   read_context_t *rc;  
 };

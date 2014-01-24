@@ -4,15 +4,22 @@
 #include "queue.h"
 #include "thread.h"
 #include "item.h"
+#include "network.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+char *response="STORED\r\n";
 
 static int process_set(connection_t *conn);
 
 static int process_get(connection_t *conn);
 
+static void write_set_response(connection_t *conn);
+
 extern hash_t *hash;
+
+extern event_operation_t event_operation;
 
 int parse_command(connection_t *conn){
   read_context_t *rc=conn->rc;
@@ -119,6 +126,7 @@ static int process_set(connection_t *conn){
     i->end=1;
     rc->read_process=READ_TERMINAL;
     result=CONTINUE;
+    write_set_response(conn);
   }else{
     fill=b->limit-b->current;
     result=AGAIN;
@@ -128,4 +136,11 @@ static int process_set(connection_t *conn){
   push(q,c);
   b->current+=fill;
   return result;
+}
+
+static void write_set_response(connection_t *conn){
+  char *c=(char *)malloc(8);
+  memcpy(c,response,8);
+  push(conn->wc->w_queue,c);
+  event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }

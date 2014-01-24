@@ -21,6 +21,8 @@ static connection_t* init_connection();
 
 static void reset_read_context(read_context_t *rc);
 
+static int no_block_write(int fd,buffer_t *wbuf);
+
 extern int parse_command(connection_t *conn);
 
 extern int process_command(connection_t *conn);
@@ -64,34 +66,58 @@ void *worker_loop(void *arg){
 int handle_write(connection_t *conn){
   write_context_t *wc=conn->wc;
   char *target=wc->w_data;
+  buffer_t *wbuf=conn->wbuf;
+  int result;
+  //每次写数据都是先发到w_queue中，写的时候先pop
   while(1){
     if(target==NULL){
       target=pop(wc->w_queue);
     } 
+    //如果w_data和队列中没有，表示没有写的数据了
     if(target==NULL){
-      return 0;
+      //如果还有数据没写完，继续写
+      if(has_remaining(wbuf)){
+        return no_block_write(conn->fd,wbuf);
+      }
+      return 1;
     }
-    buffer_t *wbuf=conn->wbuf;
+    //计算最多容量
     int avilable=wbuf->size-wbuf->limit;
+    //计算数据量
     int copy=sizeof(target)-wc->w_index;
     if(avilable<copy){
       copy=avilable;
     }
-    memcpy(wbuf->data,wbuf->limit,copy);
+    //开始copy
+    memcpy(wbuf->data+wbuf->limit,target+wc->w_index,copy);
+    //更新指针
     wc->w_index+=copy;
     wbuf->limit+=copy;
+    //如果wbuf还有空间，先不write，继续填充wbuf
     if(has_space(wbuf)){
+      free(target);
       target=NULL;
       wc->w_index=0;
     }else{
-      int count=write(conn->fd,wbuf->data+wbuf->current,wbuf->limit-wbuf->current);
-      wbuf->current+=count;
-      compact(wbuf);
-      if(count<wbuf->limit-wbuf->current){
-        return 1;
-      }    
+      //wbuf满了，开始write
+      int result=no_block_write(conn->fd,wbuf);
+      //如果没写完，返回等待写事件，否则继续填充wbuf
+      if(!result){
+        return 0;
+      }
     }
   }
+}
+
+static int no_block_write(int fd,buffer_t *wbuf){
+   int count=write(fd,wbuf->data+wbuf->current,wbuf->limit-wbuf->current);
+   wbuf->current+=count;
+   compact(wbuf);
+      //如果count比预期要小，说明不能再写了
+   if(count<wbuf->limit-wbuf->current){
+        return 0;
+   } 
+   return 1;
 }
 
 void handle_read(connection_t *conn){
@@ -144,6 +170,7 @@ void handle_notify(int fd,event_context_t *ec){
     case 'c':
       {
         connection_t *co=init_connection();
+        co->ec=ec;
         co->fd=*(int *)pop(ec->queue);
         event_operation.register_event(co->fd,READ,ec,co);
         break;
