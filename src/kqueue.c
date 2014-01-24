@@ -17,7 +17,7 @@ static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,vo
 
 static void kqueue_add_listen_event(event_context_t *ec);
 
-static void kqueue_del_event(int fd,enum EVENT event);
+static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec);
 
 static void kqueue_process_listen_event(event_context_t *ec);
 
@@ -71,14 +71,14 @@ static void kqueue_add_listen_event(event_context_t *ec){
   EV_SET(&event, ec->listen_fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
   kevent(ec->fd, &event, 1, NULL, 0, NULL); 
 }
-static void kqueue_del_event(int fd,enum EVENT event){
+static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec){
   struct kevent kev;
   switch(event){
     case READ:
-       EV_SET(&kev,fd,EVFILT_READ,EV_DELETE,0,0,data);
+       EV_SET(&kev,fd,EVFILT_READ,EV_DELETE,0,0,NULL);
        break;
     case WRITE:
-       EV_SET(&kev,fd,EVFILT_WRITE,EV_DELETE,0,0,data);
+       EV_SET(&kev,fd,EVFILT_WRITE,EV_DELETE,0,0,NULL);
        break;
   }
   kevent(ec->fd,&kev,1,NULL,0,NULL);
@@ -136,7 +136,10 @@ static void kqueue_process_event(event_context_t *ec){
       if(events[i].filter==EVFILT_READ){
         handle_read(conn);
       }else if(events[i].filter==EVFILT_WRITE){
-        handle_write(conn);
+        int result=handle_write(conn);
+        if(!result){
+          event_operation.del_event(sockfd,WRITE,ec);
+        }
       }
     }
   }

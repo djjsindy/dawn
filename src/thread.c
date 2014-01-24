@@ -19,7 +19,7 @@ static void *worker_loop(void *arg);
 
 static connection_t* init_connection();
 
-static void reset_connection(connection_t *t);
+static void reset_read_context(read_context_t *rc);
 
 extern int parse_command(connection_t *conn);
 
@@ -61,33 +61,34 @@ void *worker_loop(void *arg){
 }
 
 
-void handle_write(connection_t *conn){
-  char *target=conn->w_data;
+int handle_write(connection_t *conn){
+  write_context_t *wc=conn->wc;
+  char *target=wc->w_data;
   while(1){
     if(target==NULL){
-      target=pop(conn->w_queue);
+      target=pop(wc->w_queue);
     } 
     if(target==NULL){
-      event_operation.del_event(conn->fd,WRITE);
+      return 0;
     }
     buffer_t *wbuf=conn->wbuf;
     int avilable=wbuf->size-wbuf->limit;
-    int copy=sizeof(target)-conn->w_index;
+    int copy=sizeof(target)-wc->w_index;
     if(avilable<copy){
       copy=avilable;
     }
     memcpy(wbuf->data,wbuf->limit,copy);
-    conn->w_index+=copy;
+    wc->w_index+=copy;
     wbuf->limit+=copy;
     if(has_space(wbuf)){
       target=NULL;
-      conn->w_index=0;
+      wc->w_index=0;
     }else{
       int count=write(conn->fd,wbuf->data+wbuf->current,wbuf->limit-wbuf->current);
       wbuf->current+=count;
       compact(wbuf);
       if(count<wbuf->limit-wbuf->current){
-        return;
+        return 1;
       }    
     }
   }
@@ -95,26 +96,44 @@ void handle_write(connection_t *conn){
 
 void handle_read(connection_t *conn){
   buffer_t *rbuf=conn->rbuf;
-  int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
-  rbuf->limit=rbuf->current+count;
-  int result;
   while(1){
-    if(conn->read_process!=READ_COMMAND_END){
-      result=parse_command(conn);
-      if(result==AGAIN){
-        reset(rbuf);
-        return;
-      }
-      else if(result==DATA_OK){
-        reset_connection(conn);
-        continue;
-      }
-    }
-    result=process_command(conn);
-    compact(rbuf);
-    if(result==AGAIN){
+    int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
+    int read_all=rbuf->size-rbuf->limit;
+    if(count==-1){
+      printf("read error");
       return;
-    }    
+    }
+    rbuf->limit=rbuf->current+count;
+    int result;
+    //表示还有数据需要处理
+    while(has_remaining(rbuf)){
+      //command还未接收处理完
+      if(conn->rc->read_process!=READ_COMMAND_END){
+        //接收处理command
+        result=parse_command(conn);
+        //表示command行没有接收全部，read没有read完全
+        if(result==AGAIN){
+          reset(rbuf);
+          break;
+        }
+        //一个command处理完毕，清除connection中的状态
+        else if(result==OK){
+          reset_read_context(conn->rc);
+          continue;
+        }
+      }
+      //处理command操作
+      result=process_command(conn);
+      //不管什么结果都收紧buf，去掉已经处理完成的数据，重置指针
+      compact(rbuf);
+      if(result==AGAIN){
+        break;
+      }    
+    }
+    //如果本次read接收的数据小于预期，那么说明不用再次read了，os缓冲已经没有数据了，否则需要再次read，继续取数据
+    if(count<read_all){
+      return ;
+    }
   }
 }
 
@@ -132,24 +151,28 @@ void handle_notify(int fd,event_context_t *ec){
   }
 }
 
-static void reset_connection(connection_t *conn){
-  reset_char(conn->key);
-  reset_char(conn->command);
-  reset_char(conn->num);
-  conn->last_bytes=0;
-  conn->read_process=READ_COMMAND;
+static void reset_read_context(read_context_t *rc){
+  reset_char(rc->key);
+  reset_char(rc->command);
+  reset_char(rc->num);
+  rc->last_bytes=0;
+  rc->read_process=READ_COMMAND;
 }
 
 static connection_t* init_connection(){
   connection_t *co=(connection_t *)malloc(sizeof(connection_t));
   co->rbuf=alloc_buffer(READ_BUF_SIZE);
   co->wbuf=alloc_buffer(WRITE_BUF_SIZE);
-  co->read_process=READ_COMMAND;
-  co->command=init_char(COMMAND_SIZE);
-  co->key=init_char(KEY_SIZE);
-  co->num=init_char(NUM_SIZE);
-  co->wq=init_queue();
-  co->w_index=0;
-  co->w_limit=0;
+  read_context_t *rc=(read_context_t *)malloc(sizeof(read_context_t));
+  co->rc=rc;
+  rc->read_process=READ_COMMAND;
+  rc->command=init_char(COMMAND_SIZE);
+  rc->key=init_char(KEY_SIZE);
+  rc->num=init_char(NUM_SIZE);
+  rc->last_bytes=0;
+  write_context_t *wc=(write_context_t *)malloc(sizeof(write_context_t));
+  co->wc=wc;
+  wc->w_queue=init_queue();
+  wc->w_index=0;
   return co;
 }

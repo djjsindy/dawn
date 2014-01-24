@@ -16,4 +16,6 @@ void compact(buffer_t *b);
 void reset(buffer_t *b);
 
 int has_space(buffer_t *b);
+
+int has_remaining(buffer_t *b);
 #endif

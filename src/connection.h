@@ -7,8 +7,8 @@
 
 #define AGAIN 0
 #define COMMAND_OK 1
-#define DATA_OK 2
-#define OK 3
+#define OK 2
+#define CONTINUE 3
 
 enum PARSE_STATUS{
   READ_COMMAND,
@@ -19,21 +19,34 @@ enum PARSE_STATUS{
   READ_COMMAND_LAST,
   READ_COMMAND_END,
   READ_TERMINAL,
-  READ_DATA_END
+  READ_DATA_END,
+  END
 };
 
-struct connection_s{
-  int fd;
-  buffer_t *rbuf;
-  buffer_t *wbuf;
-  queue_t *w_queue;
-  char *w_data;
-  int w_index;
+struct read_context_s{ 
   char_t *command;
   char_t *key;
   char_t *num;
   int last_bytes;
   enum PARSE_STATUS read_process;
+};
+
+typedef struct read_context_s read_context_t;
+
+struct write_context_s{
+  queue_t *w_queue;
+  char *w_data;
+  int w_index;
+};
+
+typedef struct write_context_s write_context_t;
+
+struct connection_s{
+  int fd;
+  buffer_t *rbuf;
+  buffer_t *wbuf;
+  write_context_t *wc;
+  read_context_t *rc;  
 };
 
 typedef struct connection_s connection_t;

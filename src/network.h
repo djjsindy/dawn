@@ -20,7 +20,7 @@ struct event_operation_s{
 
    void (*add_listen_event)(event_context_t *ec);
 
-   void (*del_event)(int fd,enum EVENT event);
+   void (*del_event)(int fd,enum EVENT event,event_context_t *ec);
    
    void (*process_listen_event)(event_context_t *ec);
 
