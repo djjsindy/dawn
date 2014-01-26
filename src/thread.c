@@ -79,7 +79,7 @@ int handle_write(connection_t *conn){
       if(has_remaining(wbuf)){
         return no_block_write(conn->fd,wbuf);
       }
-      return 1;
+      return OK;
     }
     //计算最多容量
     int avilable=wbuf->size-wbuf->limit;
@@ -103,7 +103,7 @@ int handle_write(connection_t *conn){
       int result=no_block_write(conn->fd,wbuf);
       //如果没写完，返回等待写事件，否则继续填充wbuf
       if(!result){
-        return 0;
+        return ENOUGH;
       }
     }
   }
@@ -115,9 +115,9 @@ static int no_block_write(int fd,buffer_t *wbuf){
    compact(wbuf);
       //如果count比预期要小，说明不能再写了
    if(count<wbuf->limit-wbuf->current){
-        return 0;
+        return ENOUGH;
    } 
-   return 1;
+   return CONTINUE;
 }
 
 void handle_read(connection_t *conn){
@@ -145,17 +145,19 @@ void handle_read(connection_t *conn){
         //一个command处理完毕，清除connection中的状态
         else if(result==OK){
           reset_read_context(conn->rc);
+          compact(rbuf);
           continue;
         }
       }
       //处理command操作
       result=process_command(conn);
       //不管什么结果都收紧buf，去掉已经处理完成的数据，重置指针
-      compact(rbuf);
       if(result==AGAIN){
+        reset(rbuf);
         break;
       }    
     }
+    reset(rbuf);
     //如果本次read接收的数据小于预期，那么说明不用再次read了，os缓冲已经没有数据了，否则需要再次read，继续取数据
     if(count<read_all){
       return ;

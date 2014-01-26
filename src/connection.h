@@ -5,12 +5,13 @@
 #include "network.h"
 #define READ_BUF_SIZE 1024
 #define WRITE_BUF_SIZE 1024
-
+//read status
 #define AGAIN 0
 #define COMMAND_OK 1
 #define OK 2
 #define CONTINUE 3
-
+//write status
+#define ENOUGH 4
 enum PARSE_STATUS{
   READ_COMMAND,
   READ_KEY,

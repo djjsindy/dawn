@@ -102,7 +102,19 @@ int process_command(connection_t *conn){
   }
 }
 static int process_get(connection_t *conn){
-  return 0;
+  read_context_t *rc=conn->rc;
+  queue_t *q=(queue_t *)get(rc->key->data,hash);
+  while(1){
+    item_t *i=(item_t *)pop(q);
+    if(i==NULL)
+      break;
+    push(conn->wc->w_queue,i->data);
+    if(i->end==1)
+      break;
+  }
+  event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
+  rc->read_process=END;
+  return CONTINUE;
 }
 
 static int process_set(connection_t *conn){
@@ -116,8 +128,10 @@ static int process_set(connection_t *conn){
   queue_t *q=(queue_t *)get(key,hash);
   if(q==NULL){
     q=init_queue();
-    put(key,q,hash);
-  } 
+    char *q_name=(char *)malloc(strlen(key));
+    strcpy(q_name,key);
+    put(q_name,q,hash);
+  }  
   int fill;
   int result;
   item_t *i=init_item();
@@ -133,7 +147,8 @@ static int process_set(connection_t *conn){
   }
   char *c=(char *)malloc(fill);
   memcpy(c,b->data+b->current,fill);
-  push(q,c);
+  i->data=c;
+  push(q,i);
   b->current+=fill;
   return result;
 }

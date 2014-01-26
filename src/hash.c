@@ -7,6 +7,8 @@ static void expand_hash(hash_t* hash);
 
 static unsigned long cal_hash(char *key);
 
+static void* none_lock_get(char *key,hash_t *hash);
+
 hash_t* init_hash(){
   hash_t *h=(hash_t*)malloc(sizeof(hash_t));
   if(h==NULL){
@@ -27,11 +29,11 @@ hash_t* init_hash(){
 }
 
 void put(char *key,void *data,hash_t *hash){
-  void *d=get(key,hash);
+  pthread_mutex_lock(hash->mutex);
+  void *d=none_lock_get(key,hash);
   if(d!=NULL){
     return;
   }
-  pthread_mutex_lock(hash->mutex);
   float factor=hash->num/hash->size;
   if(factor>0.75f){
     expand_hash(hash);
@@ -56,7 +58,7 @@ void* get(char* key,hash_t *hash){
   int index=cal_hash(key)%hash->size;
   hash_element_t *e=hash->elements[index];
   void *result=NULL;
-  while(e!=NULL){
+  while(e!=NULL){    
     if(strcmp(e->key,key)==0){
       result=e->data;
       break;
@@ -64,6 +66,20 @@ void* get(char* key,hash_t *hash){
     e=e->next;
   }
   pthread_mutex_unlock(hash->mutex);
+  return result;
+}
+
+static void* none_lock_get(char *key,hash_t *hash){
+  int index=cal_hash(key)%hash->size;
+  hash_element_t *e=hash->elements[index];
+  void *result=NULL;
+  while(e!=NULL){
+    if(strcmp(e->key,key)==0){
+      result=e->data;
+      break;
+    }
+    e=e->next;
+  }
   return result;
 }
 
