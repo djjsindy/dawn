@@ -137,7 +137,7 @@ static void kqueue_process_event(event_context_t *ec){
         handle_read(conn);
       }else if(events[i].filter==EVFILT_WRITE){
         int result=handle_write(conn);
-        if(result==OK||result==CONTINUE){
+        if(result==OK){
           event_operation.del_event(sockfd,WRITE,ec);
         }
       }

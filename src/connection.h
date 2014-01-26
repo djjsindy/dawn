@@ -9,9 +9,8 @@
 #define AGAIN 0
 #define COMMAND_OK 1
 #define OK 2
-#define CONTINUE 3
 //write status
-#define ENOUGH 4
+#define ENOUGH 3
 enum PARSE_STATUS{
   READ_COMMAND,
   READ_KEY,
@@ -20,10 +19,7 @@ enum PARSE_STATUS{
   READ_BYTE_NUM,
   READ_COMMAND_LAST,
   READ_COMMAND_END,
-  READ_TERMINAL,
-  READ_DATA_END,
-  END
-};
+ };
 
 struct read_context_s{ 
   char_t *command;

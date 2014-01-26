@@ -23,9 +23,6 @@ extern event_operation_t event_operation;
 
 int parse_command(connection_t *conn){
   read_context_t *rc=conn->rc;
-  if(rc->read_process==END){
-    return OK;
-  }
   buffer_t *buf=conn->rbuf;
   while(buf->current<buf->limit){
     char c=*(buf->data+buf->current);
@@ -75,16 +72,6 @@ int parse_command(connection_t *conn){
         }
         break;
       case READ_COMMAND_END:
-      case END:
-        break;
-      case READ_TERMINAL:
-        if(c=='\r')
-          rc->read_process=READ_DATA_END;
-        break;
-      case READ_DATA_END:
-        if(c=='\n'){
-          return OK;
-        }
         break;
     }
   }
@@ -113,8 +100,7 @@ static int process_get(connection_t *conn){
       break;
   }
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
-  rc->read_process=END;
-  return CONTINUE;
+  return OK;
 }
 
 static int process_set(connection_t *conn){
@@ -136,10 +122,9 @@ static int process_set(connection_t *conn){
   int result;
   item_t *i=init_item();
   if(count-2>=rc->last_bytes){
-    fill=rc->last_bytes;
+    fill=rc->last_bytes+2;
     i->end=1;
-    rc->read_process=READ_TERMINAL;
-    result=CONTINUE;
+    result=OK;
     write_set_response(conn);
   }else{
     fill=b->limit-b->current;

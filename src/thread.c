@@ -117,7 +117,7 @@ static int no_block_write(int fd,buffer_t *wbuf){
    if(count<wbuf->limit-wbuf->current){
         return ENOUGH;
    } 
-   return CONTINUE;
+   return OK;
 }
 
 void handle_read(connection_t *conn){
@@ -134,19 +134,13 @@ void handle_read(connection_t *conn){
     //表示还有数据需要处理
     while(has_remaining(rbuf)){
       //command还未接收处理完
-      if(conn->rc->read_process!=READ_COMMAND_END){
+      if(conn->rc->read_process<READ_COMMAND_END){
         //接收处理command
         result=parse_command(conn);
         //表示command行没有接收全部，read没有read完全
         if(result==AGAIN){
           reset(rbuf);
           break;
-        }
-        //一个command处理完毕，清除connection中的状态
-        else if(result==OK){
-          reset_read_context(conn->rc);
-          compact(rbuf);
-          continue;
         }
       }
       //处理command操作
@@ -155,7 +149,10 @@ void handle_read(connection_t *conn){
       if(result==AGAIN){
         reset(rbuf);
         break;
-      }    
+      }else{
+        reset_read_context(conn->rc);
+        //compact(rbuf);
+      }   
     }
     reset(rbuf);
     //如果本次read接收的数据小于预期，那么说明不用再次read了，os缓冲已经没有数据了，否则需要再次read，继续取数据
