@@ -84,7 +84,7 @@ int handle_write(connection_t *conn){
     //计算最多容量
     int avilable=wbuf->size-wbuf->limit;
     //计算数据量
-    int copy=sizeof(target)-wc->w_index;
+    int copy=strlen(target)-wc->w_index;
     if(avilable<copy){
       copy=avilable;
     }

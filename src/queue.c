@@ -49,4 +49,8 @@ void* pop(queue_t *q){
   return data;
 }
 
+void destroy_queue(queue_t *q){
+  free(q->mutex);
+  free(q);
+}
 

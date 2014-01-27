@@ -21,4 +21,6 @@ queue_t* init_queue();
 void push(queue_t *q,void *data);
 
 void* pop(queue_t *q);
+
+void destroy_queue(queue_t *q);
 #endif

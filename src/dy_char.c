@@ -50,3 +50,18 @@ void reset_char(char_t *t){
   t->size=0;
   t->current=0;
 }
+
+
+void add_chars(char_t *t,char *cs){
+  int size=sizeof(cs);
+  int index=0;
+  while(index<size){
+    add_char(t,*(cs+index));
+    index++;
+  }
+}
+
+void destrory_char(char_t *t){
+  free(t->data);
+  free(t);
+}
