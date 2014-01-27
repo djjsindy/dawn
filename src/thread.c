@@ -124,11 +124,11 @@ void handle_read(connection_t *conn){
   buffer_t *rbuf=conn->rbuf;
   while(1){
     int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
-    int read_all=rbuf->size-rbuf->limit;
-    if(count==-1){
-      printf("read error");
+    if(count<=0){
+      printf("read error\n");
       return;
     }
+    int read_all=rbuf->size-rbuf->limit;
     rbuf->limit=rbuf->current+count;
     int result;
     //表示还有数据需要处理
