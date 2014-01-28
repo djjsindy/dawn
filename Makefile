@@ -99,7 +99,7 @@ am_dawn_OBJECTS = dawn-main.$(OBJEXT) dawn-thread.$(OBJEXT) \
 	dawn-kqueue.$(OBJEXT) dawn-fdop.$(OBJEXT) dawn-queue.$(OBJEXT) \
 	dawn-item.$(OBJEXT) dawn-hash.$(OBJEXT) \
 	dawn-protocol.$(OBJEXT) dawn-dy_char.$(OBJEXT) \
-	dawn-buffer.$(OBJEXT)
+	dawn-buffer.$(OBJEXT) dawn-connection.$(OBJEXT)
 dawn_OBJECTS = $(am_dawn_OBJECTS)
 dawn_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
@@ -267,7 +267,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c src/queue.h src/queue.c src/connection.h src/item.h src/item.c src/hash.h src/hash.c src/protocol.c src/dy_char.h src/dy_char.c src/buffer.h src/buffer.c
+dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c src/queue.h src/queue.c src/connection.h src/item.h src/item.c src/hash.h src/hash.c src/protocol.c src/dy_char.h src/dy_char.c src/buffer.h src/buffer.c src/connection.c
 dawn_CPPFLAGS = -I src/ 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -377,6 +377,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/dawn-buffer.Po
+include ./$(DEPDIR)/dawn-connection.Po
 include ./$(DEPDIR)/dawn-dy_char.Po
 include ./$(DEPDIR)/dawn-fdop.Po
 include ./$(DEPDIR)/dawn-hash.Po
@@ -540,6 +541,20 @@ dawn-buffer.obj: src/buffer.c
 #	$(AM_V_CC)source='src/buffer.c' object='dawn-buffer.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-buffer.obj `if test -f 'src/buffer.c'; then $(CYGPATH_W) 'src/buffer.c'; else $(CYGPATH_W) '$(srcdir)/src/buffer.c'; fi`
+
+dawn-connection.o: src/connection.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-connection.o -MD -MP -MF $(DEPDIR)/dawn-connection.Tpo -c -o dawn-connection.o `test -f 'src/connection.c' || echo '$(srcdir)/'`src/connection.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-connection.Tpo $(DEPDIR)/dawn-connection.Po
+#	$(AM_V_CC)source='src/connection.c' object='dawn-connection.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-connection.o `test -f 'src/connection.c' || echo '$(srcdir)/'`src/connection.c
+
+dawn-connection.obj: src/connection.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-connection.obj -MD -MP -MF $(DEPDIR)/dawn-connection.Tpo -c -o dawn-connection.obj `if test -f 'src/connection.c'; then $(CYGPATH_W) 'src/connection.c'; else $(CYGPATH_W) '$(srcdir)/src/connection.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-connection.Tpo $(DEPDIR)/dawn-connection.Po
+#	$(AM_V_CC)source='src/connection.c' object='dawn-connection.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-connection.obj `if test -f 'src/connection.c'; then $(CYGPATH_W) 'src/connection.c'; else $(CYGPATH_W) '$(srcdir)/src/connection.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

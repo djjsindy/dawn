@@ -102,15 +102,17 @@ static int process_get(connection_t *conn){
   int first=1;
   while(1){
     item_t *i=(item_t *)pop(q);
-    if(i==NULL)
+    if(i==NULL){
       break;
+    }
     if(first){    
       push(conn->wc->w_queue,fill_get_response_header(rc->key->data,i->size));
       first=0;
     }
     push(conn->wc->w_queue,i->data);
-    if(i->end==1)
+    if(i->end==1){
       break;
+    }
   }
   push(conn->wc->w_queue,fill_get_response_footer());
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
@@ -147,8 +149,10 @@ static int process_set(connection_t *conn){
     result=AGAIN;
     rc->last_bytes-=fill;
   }
-  char *c=(char *)malloc(fill);
+  char *c=(char *)malloc(fill+1);
+  memset(c,0,fill);
   memcpy(c,b->data+b->current,fill);
+  *(c+fill)='\0';
   i->data=c;
   push(q,i);
   b->current+=fill;
@@ -165,7 +169,9 @@ static void write_set_response(connection_t *conn){
 static char* fill_get_response_header(char *key,int bytes){
   char *s=(char *)malloc(20);
   sprintf(s,"%d",bytes);
-  char *c=(char *)malloc(6+strlen(key)+3+strlen(s)+2);
+  int length=6+strlen(key)+3+strlen(s)+3;
+  char *c=(char *)malloc(length);
+  memset(c,0,length);
   int index=0;
   memcpy(c,first_get_response,6);
   index+=6;
@@ -175,8 +181,9 @@ static char* fill_get_response_header(char *key,int bytes){
   index+=3;
   memcpy(c+index,s,strlen(s));
   index+=strlen(s);
-  memcpy(c+index,"\r\n",2);
+  memcpy(c+index,"\r\n\0",3);
   free(s);
+  //printf("header:%s\n",strlen(c));
   return c;
 }
 

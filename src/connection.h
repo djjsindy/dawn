@@ -3,8 +3,8 @@
 #include "buffer.h"
 #include "dy_char.h"
 #include "network.h"
-#define READ_BUF_SIZE 1024
-#define WRITE_BUF_SIZE 1024
+#define READ_BUF_SIZE 1024*4
+#define WRITE_BUF_SIZE 1024*4
 //read status
 #define AGAIN 0
 #define COMMAND_OK 1
@@ -49,6 +49,13 @@ struct connection_s{
 };
 
 typedef struct connection_s connection_t;
+
+
+void reset_read_context(read_context_t *rc);
+
+connection_t* init_connection();
+
+void cancel_connection(connection_t *conn);
 #endif
 
 

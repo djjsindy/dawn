@@ -61,7 +61,7 @@ void add_chars(char_t *t,char *cs){
   }
 }
 
-void destrory_char(char_t *t){
+void destroy_char(char_t *t){
   free(t->data);
   free(t);
 }

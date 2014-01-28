@@ -20,23 +20,28 @@ buffer_t* alloc_buffer(int size){
   return b;
 }
 
-void compact(buffer_t *t){
-  memset(t->data,0,t->current);
-  memcpy(t->data,t->data+t->current,t->limit-t->current);
-  t->limit-=t->current;
-  t->current=0;
+void compact(buffer_t *b){
+  memset(b->data,0,b->current);
+  memcpy(b->data,b->data+b->current,b->limit-b->current);
+  b->limit-=b->current;
+  b->current=0;
 }
 
-void reset(buffer_t *t){
-  memset(t->data,0,t->size);
-  t->current=0;
-  t->limit=0;
+void reset(buffer_t *b){
+  memset(b->data,0,b->size);
+  b->current=0;
+  b->limit=0;
 }
 
-int has_space(buffer_t *t){
-  return t->limit<t->size;
+int has_space(buffer_t *b){
+  return b->limit<b->size;
 }
 
-int has_remaining(buffer_t *t){
-  return t->current<t->limit;
+int has_remaining(buffer_t *b){
+  return b->current<b->limit;
+}
+
+void destroy_buffer(buffer_t *b){
+  free(b->data);
+  free(b);
 }

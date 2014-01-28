@@ -3,23 +3,17 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
+#include "connection.h"
 #include "thread.h"
 #include "network.h"
 #include "buffer.h"
 #include "dy_char.h"
 
-#define KEY_SIZE 16
-#define COMMAND_SIZE 16
-#define NUM_SIZE 16
 thread_t threads[WORKER_NUM];
 
 int worker_index=0;
 
 static void *worker_loop(void *arg);
-
-static connection_t* init_connection();
-
-static void reset_read_context(read_context_t *rc);
 
 static int no_block_write(int fd,buffer_t *wbuf);
 
@@ -124,8 +118,11 @@ void handle_read(connection_t *conn){
   buffer_t *rbuf=conn->rbuf;
   while(1){
     int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
-    if(count<=0){
+    if(count<0){
       printf("read error\n");
+      return;
+    }else if(count==0){
+      cancel_connection(conn);
       return;
     }
     int read_all=rbuf->size-rbuf->limit;
@@ -177,28 +174,4 @@ void handle_notify(int fd,event_context_t *ec){
   }
 }
 
-static void reset_read_context(read_context_t *rc){
-  reset_char(rc->key);
-  reset_char(rc->command);
-  reset_char(rc->num);
-  rc->last_bytes=0;
-  rc->read_process=READ_COMMAND;
-}
 
-static connection_t* init_connection(){
-  connection_t *co=(connection_t *)malloc(sizeof(connection_t));
-  co->rbuf=alloc_buffer(READ_BUF_SIZE);
-  co->wbuf=alloc_buffer(WRITE_BUF_SIZE);
-  read_context_t *rc=(read_context_t *)malloc(sizeof(read_context_t));
-  co->rc=rc;
-  rc->read_process=READ_COMMAND;
-  rc->command=init_char(COMMAND_SIZE);
-  rc->key=init_char(KEY_SIZE);
-  rc->num=init_char(NUM_SIZE);
-  rc->last_bytes=0;
-  write_context_t *wc=(write_context_t *)malloc(sizeof(write_context_t));
-  co->wc=wc;
-  wc->w_queue=init_queue();
-  wc->w_index=0;
-  return co;
-}
