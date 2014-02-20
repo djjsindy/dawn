@@ -21,7 +21,9 @@ static void free_chunk(mem_chunk_t *chunk);
 
 static void update_child_flag(buddy_t *buddy,int index,int flag);
 
-static void update_buddy_flag(buddy_t *buddy,int index,int flag);
+static void update_buddy_flag_inuse(buddy_t *buddy,int index,int flag);
+
+static void update_buddy_flag_unuse(buddy_t *buddy,int index,int flag);
 
 mem_pool_t* init_mem_pool(){
   mem_pool_t* pool=(mem_pool_t *)malloc(sizeof(mem_pool_t));
@@ -71,16 +73,36 @@ static void* get_buddy_mem(buddy_t *buddy,int level){
   chunk->buddy=buddy;
   chunk->is_direct=0;
   chunk->level=level;
-  update_buddy_flag(buddy,index,0);
+  update_buddy_flag_inuse(buddy,index,-1);
   update_buddy_max(buddy);
   return USER_MEM(chunk);
 }
-static void update_buddy_flag(buddy_t *buddy,int index,int flag){
+static void update_buddy_flag_unuse(buddy_t *buddy,int index,int flag){
+  int parent;
+  int source=index;
+  while((parent=(index-1)>>1)>=0){
+    if(buddy->flags[parent]==flag){
+      break;
+    }else{
+      if(parent*2+1==index&&buddy->flags[parent*2+2]==flag){
+        buddy->flags[parent]=flag;
+      }else if(parent*2+2==index&&buddy->flags[parent*2+1]==flag){
+        buddy->flags[parent]=flag;
+      }else{
+        break;
+      }
+    }
+    index=parent;
+  }
+  update_child_flag(buddy,source,flag);
+}
+
+static void update_buddy_flag_inuse(buddy_t *buddy,int index,int flag){
 
   //update parent flag
   int parent=(index-1)>>1;
   while(parent>=0){
-    if(buddy->flags[parent]==0){
+    if(buddy->flags[parent]==-flag){
       break;
     }else{    
       buddy->flags[parent]=flag;
@@ -106,7 +128,7 @@ static void update_buddy_max(buddy_t *buddy){
     int j=pow(2,i)-1;
     int k=pow(2,i+1)-1;
     while(j<k){
-      if(buddy->flags[j]!=0){
+      if(buddy->flags[j]!=-1){
         buddy->max=buddy->size>>i;
         return;
       }
@@ -189,15 +211,7 @@ static void free_chunk(mem_chunk_t *chunk){
   int origin_index=bin_index(buddy->max,buddy->size);
   int diff=((void*)chunk - buddy->base)/(buddy->size>>chunk->level);
   int index=pow(2,chunk->level)-1+diff;
-  buddy->flags[index]=1;
-  while(index!=0){
-    index/=2;
-    if(buddy->flags[index]==1){
-      break;
-    }else{
-      buddy->flags[index]=1;
-    }
-  }
+  update_buddy_flag_unuse(buddy,index,1);  
   update_buddy_max(buddy);
   if(max!=buddy->max){
     adjust_bin(buddy,origin_index);
