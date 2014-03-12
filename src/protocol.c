@@ -183,7 +183,6 @@ static char* fill_get_response_header(char *key,int bytes){
   index+=strlen(s);
   memcpy(c+index,"\r\n\0",3);
   free(s);
-  //printf("header:%s\n",strlen(c));
   return c;
 }
 

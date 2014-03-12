@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include "connection.h"
 #include "thread.h"
 #include "network.h"
@@ -119,7 +120,8 @@ void handle_read(connection_t *conn){
   while(1){
     int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
     if(count<0){
-      printf("read error\n");
+      printf("read error %d\n",errno);
+
       return;
     }else if(count==0){
       cancel_connection(conn);
