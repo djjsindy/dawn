@@ -41,7 +41,7 @@ struct buddy_s{
   /**
    * 具有相同max的buddy的双向链表
    */
-  list_head_t *list;
+  list_head_t list;
   /**
    * buddy 的标志位
    */
@@ -98,7 +98,7 @@ struct mem_direct_chunk_s{
   /**
    * 直接malloc分配的内存，建立双链表的目的是为了free的时候，快速移除链表。这链表为了再destory_pool的时候释放空间
    */
-  list_head_t *list;
+  list_head_t list;
    
   int is_direct;
 };

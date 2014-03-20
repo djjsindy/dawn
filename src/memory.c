@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include <math.h>
 #include "memory.h"
 static void* get_available(void **bin,int size,int bin_size);
@@ -54,8 +55,8 @@ static void free_direct_list(list_head_t *head){
   list_head_t *next=head->next;
   while(next!=head){
     mem_direct_chunk_t *chunk=(mem_direct_chunk_t *)next;
-    next=chunk->list->next;
-    free(chunk->list);
+    next=chunk->list.next;
+    free(&(chunk->list));
     free(chunk);
   }
 }
@@ -70,8 +71,8 @@ static void free_buddy_bin(void **bin){
     list_head_t *next=head->next;
     while(next!=head){
       buddy_t *buddy=(buddy_t *)next;
-      next=buddy->list->next;
-      free(buddy->list);
+      next=buddy->list.next;
+      free(&(buddy->list));
       free(buddy->base);
     }
     free(head);
@@ -105,7 +106,7 @@ static buddy_t* init_buddy(int size){
   void *mem=malloc(size);
   buddy->base=mem;
   buddy->size=size;
-  buddy->list=(list_head_t *)malloc(sizeof(list_head_t));
+  buddy->max=size;
   return buddy;
 }
 
@@ -183,7 +184,7 @@ static void update_child_flag(buddy_t *buddy,int index,int flag){
 
 static void update_buddy_max(buddy_t *buddy){
   int level=0;
-  while(level<=DEFAULT_LEVEL){
+  while(level<DEFAULT_LEVEL){
     int start=LEVEL_START(level);
     int end=LEVEL_END(level);
     while(start<=end){
@@ -219,10 +220,12 @@ static void* get_available(void **bin,int size,int bin_size){
   int level=bin_index(size,bin_size);
   buddy_t *buddy;
   int test=level;
-  while(test<DEFAULT_LEVEL-1){
-    buddy=(buddy_t *)*(bin+test);
-    if(buddy!=NULL)
+  while(test<=DEFAULT_LEVEL){
+    list_head_t *head=(list_head_t *)*(bin+test);
+    if(head!=NULL&&!list_is_empty(head)){
+      buddy=list_entry(head->next,buddy_t,list);
       break;
+    }
     test++;
   }
   if(buddy==NULL){
@@ -231,10 +234,10 @@ static void* get_available(void **bin,int size,int bin_size){
     *(bin+level)=new_head;
     buddy=init_buddy(bin_size);
     buddy->bin=bin;
-    list_add_data(buddy->list,new_head,new_head->next);
+    list_add_data(&buddy->list,new_head,new_head->next);
   }
   int max=buddy->max;
-  void* result=get_buddy_mem(buddy,DEFAULT_LEVEL-level-1);
+  void* result=get_buddy_mem(buddy,DEFAULT_LEVEL-level);
   if(max!=buddy->max){
     adjust_bin(buddy,level);
   }
@@ -243,21 +246,21 @@ static void* get_available(void **bin,int size,int bin_size){
 
 static void adjust_bin(buddy_t *buddy,int index){
   //delete from origin buddy list
-  list_del_data(buddy->list->prev,buddy->list->next);
+  list_del_data(buddy->list.prev,buddy->list.next);
   //add buddy to new list
   int new_index=bin_index(buddy->max,buddy->size);
-  list_head_t *head;
-  if(buddy->bin+new_index==NULL){
+  list_head_t *head=*(buddy->bin+new_index);
+  if(*(buddy->bin+new_index)==NULL){
     head=(list_head_t *)malloc(sizeof(list_head_t));
+    init_list(head);
     *(buddy->bin+new_index)=head;
   }
-  list_add_data(buddy->list,head->prev,head->next);
+  list_add_data(&buddy->list,head,head->next);
 }
 
 static void* direct_alloc(list_head_t *list, int size){
   mem_direct_chunk_t *chunk=(mem_direct_chunk_t *)malloc(size);
-  chunk->list=(list_head_t *)malloc(sizeof(list_head_t));
-  list_add_data(chunk->list,list->prev,list->next);
+  list_add_data(&chunk->list,list,list->next);
   return USER_DIRECT_MEM(chunk);
 }
 
@@ -265,8 +268,8 @@ void free_mem(void *mem){
   int flag=*(FLAG_MEM(mem));
   if(flag){
     mem_direct_chunk_t *chunk=CHUNK_DIRECT_MEM(mem);
-    list_del_data(chunk->list->prev,chunk->list->next); 
-    free(chunk->list);
+    list_del_data(chunk->list.prev,chunk->list.next); 
+    free(&(chunk->list));
     free(chunk);
   }else{
     mem_buddy_chunk_t *chunk=CHUNK_BUDDY_MEM(mem);
