@@ -1,3 +1,4 @@
+#include "list.h"
 #define DEFAULT_LEVEL 7
 #define DEFAULT_FLAG_NUM (2<<DEFAULT_LEVEL)-1
 #define SMALL_THRESHOLD 1<<10
@@ -38,6 +39,10 @@
 
 struct buddy_s{
   /**
+   * 具有相同max的buddy的双向链表
+   */
+  list_head_t *list;
+  /**
    * buddy 的标志位
    */
   int flags[DEFAULT_FLAG_NUM];
@@ -51,13 +56,6 @@ struct buddy_s{
    * buddy初始空间的大小
    */
   int size;
-  
-  /**
-   * 具有相同max的buddy的双向链表
-   */
-  struct buddy_s *next;
-
-  struct buddy_s *prev;
 
   /**
    * buddy 分配空间的启示地址
@@ -100,10 +98,8 @@ struct mem_direct_chunk_s{
   /**
    * 直接malloc分配的内存，建立双链表的目的是为了free的时候，快速移除链表。这链表为了再destory_pool的时候释放空间
    */
-  struct mem_direct_chunk_s *next;
-  
-  struct mem_direct_chunk_s *prev;
-
+  list_head_t *list;
+   
   int is_direct;
 };
 
@@ -116,7 +112,7 @@ typedef struct mem_direct_chunk_s mem_direct_chunk_t;
 struct mem_pool_s{
   void** small_bin;
   void** big_bin;
-  void** direct_bin;
+  list_head_t* direct_head;
 };
 
 typedef struct mem_pool_s mem_pool_t;

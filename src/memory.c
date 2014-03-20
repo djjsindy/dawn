@@ -15,7 +15,7 @@ static void update_buddy_max(buddy_t *buddy);
 
 static void adjust_bin(buddy_t *buddy,int origin_index);
 
-static void* direct_alloc(void **bin,int size);
+static void* direct_alloc(list_head_t *head,int size);
 
 static void free_buddy_chunk(mem_buddy_chunk_t *chunk);
 
@@ -27,7 +27,7 @@ static void update_buddy_flag_unuse(buddy_t *buddy,int index);
 
 static void free_buddy_bin(void **bin);
 
-static void free_direct_bin(void **bin);
+static void free_direct_list(list_head_t *head);
 
 static int decide_real_size(int size);
 
@@ -35,7 +35,8 @@ mem_pool_t* init_mem_pool(){
   mem_pool_t* pool=(mem_pool_t *)malloc(sizeof(mem_pool_t));
   pool->small_bin=(void **)malloc(sizeof(void*)*(DEFAULT_LEVEL+1));
   pool->big_bin=(void **)malloc(sizeof(void*)*(DEFAULT_LEVEL+1));
-  pool->direct_bin=(void **)malloc(sizeof(void*));
+  pool->direct_head=(list_head_t *)malloc(sizeof(list_head_t));
+  init_list(pool->direct_head);
   return pool;
 }
 
@@ -44,33 +45,36 @@ void destroy_mem_pool(mem_pool_t *pool){
   free(pool->small_bin); 
   free_buddy_bin(pool->big_bin);
   free(pool->big_bin);
-  free_direct_bin(pool->direct_bin);
-  free(pool->direct_bin);
+  free_direct_list(pool->direct_head);
+  free(pool->direct_head);
   free(pool);
 }
 
-static void free_direct_bin(void **bin){
-  mem_direct_chunk_t *chunk=(mem_direct_chunk_t *)(*bin);
-  while(chunk!=NULL){
-    mem_direct_chunk_t *temp=chunk;
-    chunk=chunk->next;
-    free(temp);
+static void free_direct_list(list_head_t *head){
+  list_head_t *next=head->next;
+  while(next!=head){
+    mem_direct_chunk_t *chunk=(mem_direct_chunk_t *)next;
+    next=chunk->list->next;
+    free(chunk->list);
+    free(chunk);
   }
 }
 
 static void free_buddy_bin(void **bin){
   int b_index=0;
   while(b_index<=DEFAULT_LEVEL){
-    buddy_t *buddy=(buddy_t *)*(bin+b_index);
-    if(buddy==NULL){
+    list_head_t *head=(list_head_t *)*(bin+b_index);
+    if(list_is_empty(head)){
       continue;
     }
-    while(buddy!=NULL){
+    list_head_t *next=head->next;
+    while(next!=head){
+      buddy_t *buddy=(buddy_t *)next;
+      next=buddy->list->next;
+      free(buddy->list);
       free(buddy->base);
-      buddy_t *temp=buddy;
-      buddy=buddy->next;
-      free(temp);
     }
+    free(head);
     b_index++;
   }
 }
@@ -82,7 +86,7 @@ void* alloc_mem(mem_pool_t *pool,int size){
   }else if(real_size<=BIG_THRESHOLD){
     return get_available(pool->big_bin,real_size,BIG_THRESHOLD);
   }else{
-    return direct_alloc(pool->direct_bin,real_size);
+    return direct_alloc(pool->direct_head,real_size);
   }
 }
 
@@ -101,6 +105,7 @@ static buddy_t* init_buddy(int size){
   void *mem=malloc(size);
   buddy->base=mem;
   buddy->size=size;
+  buddy->list=(list_head_t *)malloc(sizeof(list_head_t));
   return buddy;
 }
 
@@ -215,14 +220,18 @@ static void* get_available(void **bin,int size,int bin_size){
   buddy_t *buddy;
   int test=level;
   while(test<DEFAULT_LEVEL-1){
-    buddy=(buddy_t*)*(bin+test);
+    buddy=(buddy_t *)*(bin+test);
     if(buddy!=NULL)
       break;
     test++;
   }
   if(buddy==NULL){
+    list_head_t *new_head=(list_head_t *)malloc(sizeof(list_head_t));
+    init_list(new_head);
+    *(bin+level)=new_head;
     buddy=init_buddy(bin_size);
     buddy->bin=bin;
+    list_add_data(buddy->list,new_head,new_head->next);
   }
   int max=buddy->max;
   void* result=get_buddy_mem(buddy,DEFAULT_LEVEL-level-1);
@@ -232,27 +241,23 @@ static void* get_available(void **bin,int size,int bin_size){
   return result;
 }
 
-static void adjust_bin(buddy_t *buddy,int origin_index){
-  buddy_t **b=&buddy;
-  *b=buddy->next;
-  if(buddy->next!=NULL){
-    buddy->next->prev=buddy->prev;
+static void adjust_bin(buddy_t *buddy,int index){
+  //delete from origin buddy list
+  list_del_data(buddy->list->prev,buddy->list->next);
+  //add buddy to new list
+  int new_index=bin_index(buddy->max,buddy->size);
+  list_head_t *head;
+  if(buddy->bin+new_index==NULL){
+    head=(list_head_t *)malloc(sizeof(list_head_t));
+    *(buddy->bin+new_index)=head;
   }
-  int index=bin_index(buddy->max,buddy->size);
-  buddy_t* temp=*(buddy->bin+index);
-  *(buddy->bin+index)=buddy;
-  buddy->prev=NULL;
-  buddy->next=temp;
+  list_add_data(buddy->list,head->prev,head->next);
 }
 
-static void* direct_alloc(void**bin, int size){
+static void* direct_alloc(list_head_t *list, int size){
   mem_direct_chunk_t *chunk=(mem_direct_chunk_t *)malloc(size);
-  mem_direct_chunk_t *top=(mem_direct_chunk_t *)*bin;
-  chunk->next=top;
-  if(top){
-    top->prev=chunk;
-  }
-  *bin=chunk;
+  chunk->list=(list_head_t *)malloc(sizeof(list_head_t));
+  list_add_data(chunk->list,list->prev,list->next);
   return USER_DIRECT_MEM(chunk);
 }
 
@@ -260,11 +265,8 @@ void free_mem(void *mem){
   int flag=*(FLAG_MEM(mem));
   if(flag){
     mem_direct_chunk_t *chunk=CHUNK_DIRECT_MEM(mem);
-    mem_direct_chunk_t **t=&chunk;
-    *t=chunk->next;
-    if(chunk->next!=NULL){
-      chunk->next->prev=chunk->prev;
-    }
+    list_del_data(chunk->list->prev,chunk->list->next); 
+    free(chunk->list);
     free(chunk);
   }else{
     mem_buddy_chunk_t *chunk=CHUNK_BUDDY_MEM(mem);
