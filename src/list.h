@@ -1,22 +1,21 @@
+#ifndef LIST_H
+#define LIST_H
+
 struct list_head_s{
   struct list_head_s *next,*prev;
-}
+};
 
 typedef struct list_head_s list_head_t;
 
-#define INIT_LIST(list_head) do{
-   list_head->next=list_head;
-   list_head->prev=list_head;
-}while(0) 
 
-#define LIST_ADD_DATA(new,prev,next) do{
-  new->next=next;
-  next->prev=new;
-  new->prev=prev;
-  prev->next=new;
-}while(0)
+void init_list(list_head_t *head);
 
-#define LIST_DEL_DATA(prev,next) do{
-  prev->next=next;
-  next->prev=prev;
-}while(0)
+
+void list_add_data(list_head_t *n,list_head_t *next,list_head_t *prev);
+
+
+void list_del_data(list_head_t *prev,list_head_t *next);
+
+
+int list_is_empty(list_head_t *head);
+#endif
