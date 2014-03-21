@@ -65,7 +65,7 @@ struct buddy_s{
   /**
    * buddy 所属于的bin
    */ 
-  void **bin;
+  list_head_t **bin;
 };
 
 typedef struct buddy_s buddy_t;
@@ -110,9 +110,9 @@ typedef struct mem_direct_chunk_s mem_direct_chunk_t;
  * 如果请求小于BIG_THRESHOLD的时候，请求big_bin容器，对于大于BIG_THRESHOLD的请求，直接malloc分配
  */
 struct mem_pool_s{
-  void** small_bin;
-  void** big_bin;
-  list_head_t* direct_head;
+  list_head_t **small_bin;
+  list_head_t **big_bin;
+  list_head_t direct_head;
 };
 
 typedef struct mem_pool_s mem_pool_t;
@@ -123,4 +123,4 @@ void* alloc_mem(mem_pool_t *pool,int size);
 
 void free_mem(void *mem);
 
-void destory_mem_pool(mem_pool_t *pool);
+void destroy_mem_pool(mem_pool_t *pool);
