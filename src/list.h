@@ -8,17 +8,27 @@ struct list_head_s{
 
 typedef struct list_head_s list_head_t;
 
+struct list_entry_s{
+  void* p;
+  list_head_t list;
+};
+
+typedef struct list_entry_s list_entry_t;
 
 void init_list(list_head_t *head);
 
 
-void list_add_data(list_head_t *n,list_head_t *next,list_head_t *prev);
+void list_add_data(list_head_t *n,list_head_t *prev,list_head_t *next);
 
 
-void list_del_data(list_head_t *prev,list_head_t *next);
+list_head_t* list_del_data(list_head_t *prev,list_head_t *next);
 
 
 int list_is_empty(list_head_t *head);
+
+void list_add_pointer(void *p,list_head_t *prev,list_head_t *next);
+
+void* list_del_pointer(list_head_t *prev,list_head_t *next);
 
 #define offsetof(type, member)  (size_t)(&((type*)0)->member)
  

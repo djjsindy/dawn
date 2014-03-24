@@ -57,7 +57,6 @@ void *worker_loop(void *arg){
   }
 }
 
-
 int handle_write(connection_t *conn){
   write_context_t *wc=conn->wc;
   char *target=wc->w_data;
@@ -105,14 +104,14 @@ int handle_write(connection_t *conn){
 }
 
 static int no_block_write(int fd,buffer_t *wbuf){
-   int count=write(fd,wbuf->data+wbuf->current,wbuf->limit-wbuf->current);
-   wbuf->current+=count;
-   compact(wbuf);
-      //如果count比预期要小，说明不能再写了
-   if(count<wbuf->limit-wbuf->current){
-        return ENOUGH;
-   } 
-   return OK;
+  int count=write(fd,wbuf->data+wbuf->current,wbuf->limit-wbuf->current);
+  wbuf->current+=count;
+  compact(wbuf);
+  //如果count比预期要小，说明不能再写了
+  if(count<wbuf->limit-wbuf->current){
+    return ENOUGH;
+  } 
+  return OK;
 }
 
 void handle_read(connection_t *conn){
@@ -175,5 +174,3 @@ void handle_notify(int fd,event_context_t *ec){
       }
   }
 }
-
-

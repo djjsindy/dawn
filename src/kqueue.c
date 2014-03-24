@@ -57,11 +57,11 @@ static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,vo
   struct kevent kev;
   switch(event){
     case READ:
-       EV_SET(&kev,fd,EVFILT_READ,EV_ADD,0,0,data);
-       break;
+      EV_SET(&kev,fd,EVFILT_READ,EV_ADD,0,0,data);
+      break;
     case WRITE:
-       EV_SET(&kev,fd,EVFILT_WRITE,EV_ADD,0,0,data);
-       break;
+      EV_SET(&kev,fd,EVFILT_WRITE,EV_ADD,0,0,data);
+      break;
   }
   kevent(ec->fd,&kev,1,NULL,0,NULL);
 }
@@ -75,11 +75,11 @@ static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec){
   struct kevent kev;
   switch(event){
     case READ:
-       EV_SET(&kev,fd,EVFILT_READ,EV_DELETE,0,0,NULL);
-       break;
+      EV_SET(&kev,fd,EVFILT_READ,EV_DELETE,0,0,NULL);
+      break;
     case WRITE:
-       EV_SET(&kev,fd,EVFILT_WRITE,EV_DELETE,0,0,NULL);
-       break;
+      EV_SET(&kev,fd,EVFILT_WRITE,EV_DELETE,0,0,NULL);
+      break;
   }
   kevent(ec->fd,&kev,1,NULL,0,NULL);
 }
@@ -100,8 +100,8 @@ static void kqueue_process_listen_event(event_context_t *ec){
       socklen_t address_len;
       int client_socket_fd = accept(server_sock_fd, (struct sockaddr *)&client_address, &address_len);
       if(set_noblocking(client_socket_fd)<0){
-         printf("set no blocking error");
-         exit(0);
+        printf("set no blocking error");
+        exit(0);
       }
       char notify_buf='c';
       thread_t *t=&threads[worker_index];
@@ -145,6 +145,3 @@ static void kqueue_process_event(event_context_t *ec){
   }
 
 }
-
-
-

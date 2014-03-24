@@ -4,7 +4,6 @@
 #include <inttypes.h>
 #include <math.h>
 #include "memory.h"
-#include "malloc.h"
 static void* get_available(list_head_t **bin,int size,int bin_size);
 
 static int bin_index(int size,int bin_size);
@@ -37,10 +36,10 @@ static void init_pool_list(list_head_t **base,int num);
 
 mem_pool_t* init_mem_pool(){
   int num=DEFAULT_LEVEL+1;
-  mem_pool_t* pool=(mem_pool_t *)my_malloc(sizeof(mem_pool_t));
-  pool->small_bin=(list_head_t **)my_malloc(sizeof(list_head_t *)*(num));
+  mem_pool_t* pool=(mem_pool_t *)malloc(sizeof(mem_pool_t));
+  pool->small_bin=(list_head_t **)malloc(sizeof(list_head_t *)*(num));
   init_pool_list(pool->small_bin,num);
-  pool->big_bin=(list_head_t **)my_malloc(sizeof(list_head_t *)*(num));
+  pool->big_bin=(list_head_t **)malloc(sizeof(list_head_t *)*(num));
   init_pool_list(pool->big_bin,num);
   init_list(&(pool->direct_head));
   return pool;
@@ -49,7 +48,7 @@ mem_pool_t* init_mem_pool(){
 static void init_pool_list(list_head_t **base,int num){
   int index=0;
   for(;index<num;index++){
-    list_head_t *head=(list_head_t *)my_malloc(sizeof(list_head_t));
+    list_head_t *head=(list_head_t *)malloc(sizeof(list_head_t));
     init_list(head);
     *(base+index)=head;
   }
@@ -109,12 +108,12 @@ static int decide_real_size(int size){
 }
 
 static buddy_t* init_buddy(int size){
-  buddy_t *buddy=(buddy_t *)my_malloc(sizeof(buddy_t));
+  buddy_t *buddy=(buddy_t *)malloc(sizeof(buddy_t));
   int i=0;
   for(;i<sizeof(buddy->flags)/sizeof(int);i++){
     buddy->flags[i]=1;
   }
-  void *mem=my_malloc(size);
+  void *mem=malloc(size);
   buddy->base=mem;
   buddy->size=size;
   buddy->max=size;

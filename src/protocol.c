@@ -116,7 +116,7 @@ static int process_get(connection_t *conn){
   }
   push(conn->wc->w_queue,fill_get_response_footer());
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
-  //destroy_queue(t);
+  destroy_queue(t);
   return OK;
 }
 

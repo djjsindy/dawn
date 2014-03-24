@@ -53,4 +53,3 @@ void destroy_queue(queue_t *q){
   free(q->mutex);
   free(q);
 }
-

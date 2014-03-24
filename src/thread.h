@@ -9,14 +9,14 @@
 #define NOTIFY_BUF_SIZE 32
 
 struct pipe_channel_s{
-  int masterfd;
-  int workerfd;
+    int masterfd;
+      int workerfd;
 };
 
 typedef struct pipe_channel_s pipe_channel_t;
 struct thread_s{
-  pipe_channel_t *pipe_channel;
-  queue_t *queue;
+    pipe_channel_t *pipe_channel;
+      queue_t *queue;
 };
 
 typedef struct thread_s thread_t;
