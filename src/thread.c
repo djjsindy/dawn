@@ -9,6 +9,7 @@
 #include "network.h"
 #include "buffer.h"
 #include "dy_char.h"
+#include "memory.h"
 
 thread_t threads[WORKER_NUM];
 
@@ -18,16 +19,46 @@ static void *worker_loop(void *arg);
 
 static int no_block_write(int fd,buffer_t *wbuf);
 
+static void init_thread(thread_t *t);
+
 extern int parse_command(connection_t *conn);
 
 extern int process_command(connection_t *conn);
 
+pthread_key_t key;
+
 void start_workers(){
+  pthread_key_create(&key,NULL);
+  mem_pool_t *pool=init_mem_pool();
+  pthread_setspecific(key,(void*)pool);
   int i=0;
   for(;i<WORKER_NUM;i++){
-    threads[i].pipe_channel=(pipe_channel_t*)malloc(sizeof(pipe_channel_t));
-    pipe_channel_t *p=threads[i].pipe_channel;
-    threads[i].queue=init_queue();
+    pthread_t tid=0;
+    pthread_create(&tid,NULL,worker_loop,threads+i);
+  }
+}
+
+void *worker_loop(void *arg){
+  mem_pool_t *pool=init_mem_pool();
+  pthread_setspecific(key,(void *)pool);
+  thread_t* t=(thread_t *)arg;
+  init_thread(t);
+  event_context_t ec;
+  int notify_fd=t->pipe_channel->workerfd;
+  event_operation.init_event(&ec);
+  ec.worker_fd=notify_fd;
+  ec.queue=t->queue;
+  event_operation.register_event(notify_fd,READ,&ec,t);
+  while(1){
+    event_operation.process_event(&ec);    
+  }
+}
+
+static void init_thread(thread_t *t){
+    mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+    t->pipe_channel=(pipe_channel_t*)alloc_mem(pool,sizeof(pipe_channel_t));
+    pipe_channel_t *p=t->pipe_channel;
+    t->queue=init_queue();
     if(p==NULL){
       printf("create pipe channel error\n");
       exit(0);
@@ -39,22 +70,6 @@ void start_workers(){
     }
     p->masterfd=fd[1];
     p->workerfd=fd[0];
-    pthread_t tid=0;
-    pthread_create(&tid,NULL,worker_loop,threads+i);
-  }
-}
-
-void *worker_loop(void *arg){
-  thread_t* t=(thread_t *)arg;
-  event_context_t ec;
-  int notify_fd=t->pipe_channel->workerfd;
-  event_operation.init_event(&ec);
-  ec.worker_fd=notify_fd;
-  ec.queue=t->queue;
-  event_operation.register_event(notify_fd,READ,&ec,t);
-  while(1){
-    event_operation.process_event(&ec);    
-  }
 }
 
 int handle_write(connection_t *conn){
@@ -89,7 +104,7 @@ int handle_write(connection_t *conn){
     wbuf->limit+=copy;
     //如果wbuf还有空间，先不write，继续填充wbuf
     if(has_space(wbuf)){
-      free(target);
+      free_mem(target);
       target=NULL;
       wc->w_index=0;
     }else{

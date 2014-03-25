@@ -1,18 +1,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
+#include "memory.h"
 #include "dy_char.h"
+
+extern pthread_key_t key;
+
 void add_terminal(char_t *t);
 
 static void expand_char(char_t *t);
 
 char_t *init_char(int size){
-  char_t *t=(char_t *)malloc(sizeof(char_t));
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+  char_t *t=(char_t *)alloc_mem(pool,sizeof(char_t));
   if(t==NULL){
     printf("alloc char error\n");
     exit(0);
   }
-  t->data=(char *)malloc(size);
+  t->data=(char *)alloc_mem(pool,size);
   if(t->data==NULL){
     printf("alloc char data error\n");
     exit(0);
@@ -38,10 +44,11 @@ void add_terminal(char_t *t){
   t->current+=1;
 }
 static void expand_char(char_t *t){
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   int size=t->size;
-  char *temp=(char *)malloc(size*2);
+  char *temp=(char *)alloc_mem(pool,size*2);
   memcpy(temp,t->data,size);
-  free(t->data);
+  free_mem(t->data);
   t->data=temp;
 }
 
@@ -62,6 +69,6 @@ void add_chars(char_t *t,char *cs){
 }
 
 void destroy_char(char_t *t){
-  free(t->data);
-  free(t);
+  free_mem(t->data);
+  free_mem(t);
 }

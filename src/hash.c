@@ -1,21 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
+#include "memory.h"
 #include "hash.h"
 #define INIT_SIZE 4
+
+extern pthread_key_t key;
+
 static void expand_hash(hash_t* hash);
 
-static unsigned long cal_hash(char *key);
+static unsigned long cal_hash(char *k);
 
 static void* none_lock_get(char *key,hash_t *hash);
 
 hash_t* init_hash(){
-  hash_t *h=(hash_t*)malloc(sizeof(hash_t));
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+  hash_t *h=(hash_t*)alloc_mem(pool,sizeof(hash_t));
   if(h==NULL){
     printf("alloc hash error\n");
     exit(0);
   }
-  h->elements=(hash_element_t **)malloc(sizeof(hash_element_t *)*INIT_SIZE);
+  h->elements=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*INIT_SIZE);
   if(h->elements==NULL){
     printf("alloc hash elements error\n");
     exit(0);
@@ -28,9 +34,10 @@ hash_t* init_hash(){
   return h;
 }
 
-void put(char *key,void *data,hash_t *hash){
+void put(char *k,void *data,hash_t *hash){
   pthread_mutex_lock(hash->mutex);
-  void *d=none_lock_get(key,hash);
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+  void *d=none_lock_get(k,hash);
   if(d!=NULL){
     return;
   }
@@ -38,13 +45,13 @@ void put(char *key,void *data,hash_t *hash){
   if(factor>0.75f){
     expand_hash(hash);
   }
-  int index=cal_hash(key)%hash->size;
-  hash_element_t *nelement=(hash_element_t *)malloc(sizeof(hash_element_t));
+  int index=cal_hash(k)%hash->size;
+  hash_element_t *nelement=(hash_element_t *)alloc_mem(pool,sizeof(hash_element_t));
   if(nelement==NULL){
     printf("alloc new element error\n");
     exit(0);
   }
-  nelement->key=key;
+  nelement->key=k;
   nelement->data=data;
   hash_element_t *next=hash->elements[index];
   hash->elements[index]=nelement;
@@ -104,7 +111,8 @@ void delete(char* key,hash_t *hash){
 }
 
 static void expand_hash(hash_t *hash){
-  hash_element_t **temp=(hash_element_t **)malloc(sizeof(hash_element_t *)*(hash->size*2));
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+  hash_element_t **temp=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*(hash->size*2));
   int index=0;
   for(;index<hash->size;index++){
     hash_element_t *element=hash->elements[index];
@@ -115,7 +123,7 @@ static void expand_hash(hash_t *hash){
       element=element->next; 
     }
   }
-  free(hash->elements);
+  free_mem(hash->elements);
   hash->elements=temp;
   hash->size*=2;
 }

@@ -2,14 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "buffer.h"
+#include "memory.h"
+#include <pthread.h>
+
+extern pthread_key_t key;
 
 buffer_t* alloc_buffer(int size){
-  buffer_t *b=(buffer_t *)malloc(sizeof(buffer_t));
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+  buffer_t *b=(buffer_t *)alloc_mem(pool,sizeof(buffer_t));
   if(b==NULL){
     printf("alloc buffer error");
     exit(1);
   }
-  b->data=(char *)malloc(size);
+  b->data=(char *)alloc_mem(pool,size);
   if(b->data==NULL){
     printf("alloc buffer error");
     exit(1);
@@ -42,6 +47,6 @@ int has_remaining(buffer_t *b){
 }
 
 void destroy_buffer(buffer_t *b){
-  free(b->data);
-  free(b);
+  free_mem(b->data);
+  free_mem(b);
 }

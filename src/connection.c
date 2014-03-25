@@ -4,10 +4,14 @@
 #include "buffer.h"
 #include "item.h"
 #include "queue.h"
+#include "memory.h"
+#include <pthread.h>
 #include <stdlib.h>
 #define KEY_SIZE 16
 #define COMMAND_SIZE 16
 #define NUM_SIZE 16
+
+extern pthread_key_t key;
 
 static void destroy_connection(connection_t *conn);
 
@@ -20,17 +24,18 @@ void reset_read_context(read_context_t *rc){
 }
 
 connection_t* init_connection(){
-  connection_t *co=(connection_t *)malloc(sizeof(connection_t));
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+  connection_t *co=(connection_t *)alloc_mem(pool,sizeof(connection_t));
   co->rbuf=alloc_buffer(READ_BUF_SIZE);
   co->wbuf=alloc_buffer(WRITE_BUF_SIZE);
-  read_context_t *rc=(read_context_t *)malloc(sizeof(read_context_t));
+  read_context_t *rc=(read_context_t *)alloc_mem(pool,sizeof(read_context_t));
   co->rc=rc;
   rc->read_process=READ_COMMAND;
   rc->command=init_char(COMMAND_SIZE);
   rc->key=init_char(KEY_SIZE);
   rc->num=init_char(NUM_SIZE);
   rc->last_bytes=0;
-  write_context_t *wc=(write_context_t *)malloc(sizeof(write_context_t));
+  write_context_t *wc=(write_context_t *)alloc_mem(pool,sizeof(write_context_t));
   co->wc=wc;
   wc->w_queue=init_queue();
   wc->w_index=0;
@@ -46,7 +51,7 @@ static void destroy_connection(connection_t *conn){
   destroy_char(conn->rc->command);
   destroy_char(conn->rc->key);
   destroy_char(conn->rc->num);
-  free(conn->rc);
+  free_mem(conn->rc);
   while(1){
     item_t *i=pop(conn->wc->w_queue);
     if(i==NULL){
@@ -55,8 +60,8 @@ static void destroy_connection(connection_t *conn){
     destroy_item(i);
   }
   destroy_queue(conn->wc->w_queue);
-  free(conn->wc);
+  free_mem(conn->wc);
   destroy_buffer(conn->rbuf);
   destroy_buffer(conn->wbuf);
-  free(conn);
+  free_mem(conn);
 }

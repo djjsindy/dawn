@@ -5,6 +5,8 @@
 #include "thread.h"
 #include "item.h"
 #include "network.h"
+#include "memory.h"
+#include <pthread.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -28,6 +30,8 @@ static char* fill_get_response_footer();
 extern hash_t *hash;
 
 extern event_operation_t event_operation;
+
+extern pthread_key_t key;
 
 int parse_command(connection_t *conn){
   read_context_t *rc=conn->rc;
@@ -120,6 +124,7 @@ static int process_get(connection_t *conn){
 }
 
 static int process_set(connection_t *conn){
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   buffer_t *b=conn->rbuf;
   int count=b->limit-b->current;
   if(count==0){
@@ -130,7 +135,7 @@ static int process_set(connection_t *conn){
   queue_t *q=(queue_t *)get(key,hash);
   if(q==NULL){
     q=init_queue();
-    char *q_name=(char *)malloc(strlen(key));
+    char *q_name=(char *)alloc_mem(pool,strlen(key));
     strcpy(q_name,key);
     put(q_name,q,hash);
   }  
@@ -148,7 +153,7 @@ static int process_set(connection_t *conn){
     result=AGAIN;
     rc->last_bytes-=fill;
   }
-  char *c=(char *)malloc(fill+1);
+  char *c=(char *)alloc_mem(pool,fill+1);
   memset(c,0,fill);
   memcpy(c,b->data+b->current,fill);
   *(c+fill)='\0';
@@ -159,34 +164,37 @@ static int process_set(connection_t *conn){
 }
 
 static void write_set_response(connection_t *conn){
-  char *c=(char *)malloc(8);
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+  char *c=(char *)alloc_mem(pool,8);
   memcpy(c,set_response,8);
   push(conn->wc->w_queue,c);
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }
 
-static char* fill_get_response_header(char *key,int bytes){
-  char *s=(char *)malloc(20);
+static char* fill_get_response_header(char *k,int bytes){
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+  char *s=(char *)alloc_mem(pool,20);
   sprintf(s,"%d",bytes);
-  int length=6+strlen(key)+3+strlen(s)+3;
-  char *c=(char *)malloc(length);
+  int length=6+strlen(k)+3+strlen(s)+3;
+  char *c=(char *)alloc_mem(pool,length);
   memset(c,0,length);
   int index=0;
   memcpy(c,first_get_response,6);
   index+=6;
-  memcpy(c+index,key,strlen(key));
-  index+=strlen(key);
+  memcpy(c+index,k,strlen(k));
+  index+=strlen(k);
   memcpy(c+index," 0 ",3);
   index+=3;
   memcpy(c+index,s,strlen(s));
   index+=strlen(s);
   memcpy(c+index,"\r\n\0",3);
-  free(s);
+  free_mem(s);
   return c;
 }
 
 static char* fill_get_response_footer(){
-  char *c=(char *)malloc(5);
+  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
+  char *c=(char *)alloc_mem(pool,5);
   memcpy(c,end,5);
   return c;
 }

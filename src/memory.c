@@ -47,10 +47,11 @@ mem_pool_t* init_mem_pool(){
 
 static void init_pool_list(list_head_t **base,int num){
   int index=0;
-  for(;index<num;index++){
+  for(;index<num;){
     list_head_t *head=(list_head_t *)malloc(sizeof(list_head_t));
     init_list(head);
     *(base+index)=head;
+    index++;
   }
 }
 
