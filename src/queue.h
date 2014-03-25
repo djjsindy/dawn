@@ -24,4 +24,3 @@ void* pop(queue_t *q);
 
 void destroy_queue(queue_t *q);
 #endif
-#endif

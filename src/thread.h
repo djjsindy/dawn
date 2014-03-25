@@ -1,6 +1,5 @@
 #ifndef THREAD_H
 #define THREAD_H
-
 #include "queue.h"
 #include "connection.h"
 #include "network.h"
@@ -10,13 +9,13 @@
 
 struct pipe_channel_s{
     int masterfd;
-      int workerfd;
+    int workerfd;
 };
 
 typedef struct pipe_channel_s pipe_channel_t;
 struct thread_s{
     pipe_channel_t *pipe_channel;
-      queue_t *queue;
+    queue_t *queue;
 };
 
 typedef struct thread_s thread_t;

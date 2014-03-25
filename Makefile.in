@@ -96,10 +96,12 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_dawn_OBJECTS = dawn-main.$(OBJEXT) dawn-thread.$(OBJEXT) \
-	dawn-kqueue.$(OBJEXT) dawn-fdop.$(OBJEXT) dawn-queue.$(OBJEXT) \
+	dawn-kqueue.$(OBJEXT) dawn-fdop.$(OBJEXT) dawn-list.$(OBJEXT) \
 	dawn-item.$(OBJEXT) dawn-hash.$(OBJEXT) \
 	dawn-protocol.$(OBJEXT) dawn-dy_char.$(OBJEXT) \
-	dawn-buffer.$(OBJEXT) dawn-connection.$(OBJEXT)
+	dawn-buffer.$(OBJEXT) dawn-connection.$(OBJEXT) \
+	dawn-memory.$(OBJEXT) dawn-malloc.$(OBJEXT) \
+	dawn-queue.$(OBJEXT)
 dawn_OBJECTS = $(am_dawn_OBJECTS)
 dawn_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -267,7 +269,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c src/queue.h src/queue.c src/connection.h src/item.h src/item.c src/hash.h src/hash.c src/protocol.c src/dy_char.h src/dy_char.c src/buffer.h src/buffer.c src/connection.c
+dawn_SOURCES = src/main.c src/thread.c src/thread.h src/network.h src/kqueue.c src/fdop.c src/list.h src/list.c src/connection.h src/item.h src/item.c src/hash.h src/hash.c src/protocol.c src/dy_char.h src/dy_char.c src/buffer.h src/buffer.c src/connection.c src/memory.c src/memory.h src/malloc.h src/malloc.c src/queue.h src/queue.c
 dawn_CPPFLAGS = -I src/ 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -383,7 +385,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-hash.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-item.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-kqueue.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-malloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-memory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-protocol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-queue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dawn-thread.Po@am__quote@
@@ -458,19 +463,19 @@ dawn-fdop.obj: src/fdop.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-fdop.obj `if test -f 'src/fdop.c'; then $(CYGPATH_W) 'src/fdop.c'; else $(CYGPATH_W) '$(srcdir)/src/fdop.c'; fi`
 
-dawn-queue.o: src/queue.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-queue.o -MD -MP -MF $(DEPDIR)/dawn-queue.Tpo -c -o dawn-queue.o `test -f 'src/queue.c' || echo '$(srcdir)/'`src/queue.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-queue.Tpo $(DEPDIR)/dawn-queue.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/queue.c' object='dawn-queue.o' libtool=no @AMDEPBACKSLASH@
+dawn-list.o: src/list.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-list.o -MD -MP -MF $(DEPDIR)/dawn-list.Tpo -c -o dawn-list.o `test -f 'src/list.c' || echo '$(srcdir)/'`src/list.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-list.Tpo $(DEPDIR)/dawn-list.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/list.c' object='dawn-list.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-queue.o `test -f 'src/queue.c' || echo '$(srcdir)/'`src/queue.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-list.o `test -f 'src/list.c' || echo '$(srcdir)/'`src/list.c
 
-dawn-queue.obj: src/queue.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-queue.obj -MD -MP -MF $(DEPDIR)/dawn-queue.Tpo -c -o dawn-queue.obj `if test -f 'src/queue.c'; then $(CYGPATH_W) 'src/queue.c'; else $(CYGPATH_W) '$(srcdir)/src/queue.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-queue.Tpo $(DEPDIR)/dawn-queue.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/queue.c' object='dawn-queue.obj' libtool=no @AMDEPBACKSLASH@
+dawn-list.obj: src/list.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-list.obj -MD -MP -MF $(DEPDIR)/dawn-list.Tpo -c -o dawn-list.obj `if test -f 'src/list.c'; then $(CYGPATH_W) 'src/list.c'; else $(CYGPATH_W) '$(srcdir)/src/list.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-list.Tpo $(DEPDIR)/dawn-list.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/list.c' object='dawn-list.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-queue.obj `if test -f 'src/queue.c'; then $(CYGPATH_W) 'src/queue.c'; else $(CYGPATH_W) '$(srcdir)/src/queue.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-list.obj `if test -f 'src/list.c'; then $(CYGPATH_W) 'src/list.c'; else $(CYGPATH_W) '$(srcdir)/src/list.c'; fi`
 
 dawn-item.o: src/item.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-item.o -MD -MP -MF $(DEPDIR)/dawn-item.Tpo -c -o dawn-item.o `test -f 'src/item.c' || echo '$(srcdir)/'`src/item.c
@@ -555,6 +560,48 @@ dawn-connection.obj: src/connection.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/connection.c' object='dawn-connection.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-connection.obj `if test -f 'src/connection.c'; then $(CYGPATH_W) 'src/connection.c'; else $(CYGPATH_W) '$(srcdir)/src/connection.c'; fi`
+
+dawn-memory.o: src/memory.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-memory.o -MD -MP -MF $(DEPDIR)/dawn-memory.Tpo -c -o dawn-memory.o `test -f 'src/memory.c' || echo '$(srcdir)/'`src/memory.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-memory.Tpo $(DEPDIR)/dawn-memory.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/memory.c' object='dawn-memory.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-memory.o `test -f 'src/memory.c' || echo '$(srcdir)/'`src/memory.c
+
+dawn-memory.obj: src/memory.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-memory.obj -MD -MP -MF $(DEPDIR)/dawn-memory.Tpo -c -o dawn-memory.obj `if test -f 'src/memory.c'; then $(CYGPATH_W) 'src/memory.c'; else $(CYGPATH_W) '$(srcdir)/src/memory.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-memory.Tpo $(DEPDIR)/dawn-memory.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/memory.c' object='dawn-memory.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-memory.obj `if test -f 'src/memory.c'; then $(CYGPATH_W) 'src/memory.c'; else $(CYGPATH_W) '$(srcdir)/src/memory.c'; fi`
+
+dawn-malloc.o: src/malloc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-malloc.o -MD -MP -MF $(DEPDIR)/dawn-malloc.Tpo -c -o dawn-malloc.o `test -f 'src/malloc.c' || echo '$(srcdir)/'`src/malloc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-malloc.Tpo $(DEPDIR)/dawn-malloc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/malloc.c' object='dawn-malloc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-malloc.o `test -f 'src/malloc.c' || echo '$(srcdir)/'`src/malloc.c
+
+dawn-malloc.obj: src/malloc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-malloc.obj -MD -MP -MF $(DEPDIR)/dawn-malloc.Tpo -c -o dawn-malloc.obj `if test -f 'src/malloc.c'; then $(CYGPATH_W) 'src/malloc.c'; else $(CYGPATH_W) '$(srcdir)/src/malloc.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-malloc.Tpo $(DEPDIR)/dawn-malloc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/malloc.c' object='dawn-malloc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-malloc.obj `if test -f 'src/malloc.c'; then $(CYGPATH_W) 'src/malloc.c'; else $(CYGPATH_W) '$(srcdir)/src/malloc.c'; fi`
+
+dawn-queue.o: src/queue.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-queue.o -MD -MP -MF $(DEPDIR)/dawn-queue.Tpo -c -o dawn-queue.o `test -f 'src/queue.c' || echo '$(srcdir)/'`src/queue.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-queue.Tpo $(DEPDIR)/dawn-queue.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/queue.c' object='dawn-queue.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-queue.o `test -f 'src/queue.c' || echo '$(srcdir)/'`src/queue.c
+
+dawn-queue.obj: src/queue.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dawn-queue.obj -MD -MP -MF $(DEPDIR)/dawn-queue.Tpo -c -o dawn-queue.obj `if test -f 'src/queue.c'; then $(CYGPATH_W) 'src/queue.c'; else $(CYGPATH_W) '$(srcdir)/src/queue.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dawn-queue.Tpo $(DEPDIR)/dawn-queue.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/queue.c' object='dawn-queue.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(dawn_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dawn-queue.obj `if test -f 'src/queue.c'; then $(CYGPATH_W) 'src/queue.c'; else $(CYGPATH_W) '$(srcdir)/src/queue.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

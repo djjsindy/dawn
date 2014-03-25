@@ -3,6 +3,7 @@
 #include "buffer.h"
 #include "dy_char.h"
 #include "network.h"
+#include "queue.h"
 #define READ_BUF_SIZE 1024*4
 #define WRITE_BUF_SIZE 1024*4
 //read status

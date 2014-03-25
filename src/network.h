@@ -1,6 +1,7 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 #include "list.h"
+#include "queue.h"
 struct event_context_s{
   int fd;
   void *events;

@@ -4,4 +4,3 @@
 void* my_malloc(int size);
 
 #endif
-#endif

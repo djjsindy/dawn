@@ -3,6 +3,7 @@
 #include "dy_char.h"
 #include "buffer.h"
 #include "item.h"
+#include "queue.h"
 #include <stdlib.h>
 #define KEY_SIZE 16
 #define COMMAND_SIZE 16
