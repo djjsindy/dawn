@@ -54,5 +54,6 @@ void* pop(queue_t *q){
 }
 
 void destroy_queue(queue_t *q){
+  pthread_mutex_destroy(q->mutex);
   free_mem(q);
 }

@@ -28,7 +28,6 @@ extern int process_command(connection_t *conn);
 extern mem_pool_t *pool;
 
 void start_workers(){
-  pool=init_mem_pool();
   int i=0;
   for(;i<WORKER_NUM;i++){
     pthread_t tid=0;
@@ -129,10 +128,9 @@ void handle_read(connection_t *conn){
   while(1){
     int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
     if(count<0){
-      printf("read error %d\n",errno);
-
       return;
     }else if(count==0){
+      printf("read count 0\n");
       cancel_connection(conn);
       return;
     }

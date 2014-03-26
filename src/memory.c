@@ -76,6 +76,9 @@ void destroy_mem_pool(mem_pool_t *pool){
   free_buddy_bin(pool->big_bin);
   free(pool->big_bin);
   free_direct_list(&(pool->direct_head));
+  pthread_mutex_destroy(pool->small_mutex);
+  pthread_mutex_destroy(pool->big_mutex);
+  pthread_mutex_destroy(pool->direct_mutex);
   free(pool);
 }
 
