@@ -10,12 +10,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-char *set_response="STORED\r\n";
-
-char *first_get_response="VALUE ";
-
-char *end="END\r\n";
-
 static int process_set(connection_t *conn);
 
 static int process_get(connection_t *conn);
@@ -32,6 +26,24 @@ extern event_operation_t event_operation;
 
 extern mem_pool_t *pool;
 
+static const char space=' ';
+
+static const char special_r='\r';
+
+static const char special_n='\n';
+
+static const char special_end='\0';
+
+static const char *set_response="STORED\r\n";
+
+static const char *first_get_response="VALUE ";
+
+static const char *data_end="END\r\n";
+
+static const char *command_end="\r\n\0";
+
+static const char *middle=" 0 ";
+
 int parse_command(connection_t *conn){
   read_context_t *rc=conn->rc;
   buffer_t *buf=conn->rbuf;
@@ -40,7 +52,7 @@ int parse_command(connection_t *conn){
     buf->current+=1;
     switch(rc->read_process){
       case READ_COMMAND:
-        if(c==' '){
+        if(c==space){
           add_terminal(rc->command);
           rc->read_process=READ_KEY;
         }else{
@@ -48,27 +60,27 @@ int parse_command(connection_t *conn){
         }
         break;
       case READ_KEY:
-        if(c==' '){
+        if(c==space){
           add_terminal(rc->key);
           rc->read_process=READ_FLAG;
-        }else if(c=='\r'){
+        }else if(c==special_r){
           rc->read_process=READ_COMMAND_LAST;
         }else{
           add_char(rc->key,c);
         }
         break;
       case READ_FLAG:
-        if(c==' '){
+        if(c==space){
           rc->read_process=READ_EXPIRE_TIME;
         }
         break;
       case READ_EXPIRE_TIME:
-        if(c==' '){
+        if(c==space){
           rc->read_process=READ_BYTE_NUM;
         }
         break;
       case READ_BYTE_NUM:
-        if(c=='\r'){
+        if(c==special_r){
           add_terminal(rc->num);
           rc->read_process=READ_COMMAND_LAST;
           rc->last_bytes=atoi(rc->num->data);
@@ -77,7 +89,7 @@ int parse_command(connection_t *conn){
         }
         break;
       case READ_COMMAND_LAST:
-        if(c=='\n'){
+        if(c==special_n){
           rc->read_process=READ_COMMAND_END;
           return COMMAND_OK;
         }
@@ -96,9 +108,11 @@ int process_command(connection_t *conn){
     return process_get(conn);
   else{
     printf("unsupport operation\n");
-    exit(0);
+    //todo
+    return OK;
   }
 }
+
 static int process_get(connection_t *conn){
   read_context_t *rc=conn->rc;
   queue_t *q=(queue_t *)get(rc->key->data,hash);
@@ -129,7 +143,7 @@ static int process_set(connection_t *conn){
     return AGAIN;
   }
   read_context_t *rc=conn->rc;
-  char* key=rc->key->data;
+  char *key=rc->key->data;
   queue_t *q=(queue_t *)get(key,hash);
   if(q==NULL){
     q=init_queue();
@@ -154,7 +168,7 @@ static int process_set(connection_t *conn){
   char *c=(char *)alloc_mem(pool,fill+1);
   memset(c,0,fill);
   memcpy(c,b->data+b->current,fill);
-  *(c+fill)='\0';
+  *(c+fill)=special_end;
   i->data=c;
   push(q,i);
   b->current+=fill;
@@ -162,34 +176,41 @@ static int process_set(connection_t *conn){
 }
 
 static void write_set_response(connection_t *conn){
-  char *c=(char *)alloc_mem(pool,8);
-  memcpy(c,set_response,8);
+  char *c=(char *)alloc_mem(pool,strlen(set_response));
+  strcpy(c,set_response);
   push(conn->wc->w_queue,c);
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }
 
-static char* fill_get_response_header(char *k,int bytes){
+static char* fill_get_response_header(char *key,int bytes){
   char *s=(char *)alloc_mem(pool,20);
   sprintf(s,"%d",bytes);
-  int length=6+strlen(k)+3+strlen(s)+3;
+  int first_length=strlen(first_get_response);
+  int key_length=strlen(key);
+  int middle_length=strlen(middle);
+  int s_length=strlen(s);
+  int command_end_length=strlen(command_end);
+  int length=first_length+key_length+middle_length+s_length+command_end_length+1;
   char *c=(char *)alloc_mem(pool,length);
   memset(c,0,length);
   int index=0;
-  memcpy(c,first_get_response,6);
-  index+=6;
-  memcpy(c+index,k,strlen(k));
-  index+=strlen(k);
-  memcpy(c+index," 0 ",3);
-  index+=3;
-  memcpy(c+index,s,strlen(s));
-  index+=strlen(s);
-  memcpy(c+index,"\r\n\0",3);
+  memcpy(c,first_get_response,first_length);
+  index+=first_length;
+  memcpy(c+index,key,key_length);
+  index+=key_length;
+  memcpy(c+index,middle,middle_length);
+  index+=middle_length;
+  memcpy(c+index,s,s_length);
+  index+=s_length;
+  memcpy(c+index,command_end,command_end_length);
+  index+=command_end_length;
+  *(c+index)=special_end;
   free_mem(s);
   return c;
 }
 
 static char* fill_get_response_footer(){
-  char *c=(char *)alloc_mem(pool,5);
-  memcpy(c,end,5);
+  char *c=(char *)alloc_mem(pool,strlen(data_end)+1);
+  strcpy(c,data_end);
   return c;
 }
