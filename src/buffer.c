@@ -5,10 +5,9 @@
 #include "memory.h"
 #include <pthread.h>
 
-extern pthread_key_t key;
+extern mem_pool_t *pool;
 
 buffer_t* alloc_buffer(int size){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   buffer_t *b=(buffer_t *)alloc_mem(pool,sizeof(buffer_t));
   if(b==NULL){
     printf("alloc buffer error");

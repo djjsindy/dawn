@@ -6,7 +6,7 @@
 #include "hash.h"
 #define INIT_SIZE 4
 
-extern pthread_key_t key;
+extern mem_pool_t *pool;
 
 static void expand_hash(hash_t* hash);
 
@@ -15,7 +15,6 @@ static unsigned long cal_hash(char *k);
 static void* none_lock_get(char *key,hash_t *hash);
 
 hash_t* init_hash(){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   hash_t *h=(hash_t*)alloc_mem(pool,sizeof(hash_t));
   if(h==NULL){
     printf("alloc hash error\n");
@@ -36,7 +35,6 @@ hash_t* init_hash(){
 
 void put(char *k,void *data,hash_t *hash){
   pthread_mutex_lock(hash->mutex);
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   void *d=none_lock_get(k,hash);
   if(d!=NULL){
     return;
@@ -111,7 +109,6 @@ void delete(char* key,hash_t *hash){
 }
 
 static void expand_hash(hash_t *hash){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   hash_element_t **temp=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*(hash->size*2));
   int index=0;
   for(;index<hash->size;index++){

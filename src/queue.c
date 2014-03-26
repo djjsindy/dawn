@@ -1,12 +1,10 @@
 #include "queue.h"
 #include "memory.h"
-#include <pthread.h>
 #include <stdlib.h>
 
-extern pthread_key_t key;
+extern mem_pool_t *pool;
 
 queue_t *init_queue(){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   queue_t *q=(queue_t *)alloc_mem(pool,sizeof(queue_t));
   pthread_mutex_t mutex;
   pthread_mutex_init(&mutex, NULL);
@@ -21,7 +19,6 @@ void detroy_queue(queue_t *t){
 
 void push(queue_t *q,void *data){
   pthread_mutex_lock(q->mutex);
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   queue_item_t *item=(queue_item_t *)alloc_mem(pool,sizeof(queue_item_t));
   item->data=data;
   if(q->tail==NULL&&q->head==NULL){

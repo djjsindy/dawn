@@ -25,12 +25,10 @@ extern int parse_command(connection_t *conn);
 
 extern int process_command(connection_t *conn);
 
-pthread_key_t key;
+extern mem_pool_t *pool;
 
 void start_workers(){
-  pthread_key_create(&key,NULL);
-  mem_pool_t *pool=init_mem_pool();
-  pthread_setspecific(key,(void*)pool);
+  pool=init_mem_pool();
   int i=0;
   for(;i<WORKER_NUM;i++){
     pthread_t tid=0;
@@ -39,8 +37,6 @@ void start_workers(){
 }
 
 void *worker_loop(void *arg){
-  mem_pool_t *pool=init_mem_pool();
-  pthread_setspecific(key,(void *)pool);
   thread_t* t=(thread_t *)arg;
   init_thread(t);
   event_context_t ec;
@@ -55,7 +51,6 @@ void *worker_loop(void *arg){
 }
 
 static void init_thread(thread_t *t){
-    mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
     t->pipe_channel=(pipe_channel_t*)alloc_mem(pool,sizeof(pipe_channel_t));
     pipe_channel_t *p=t->pipe_channel;
     t->queue=init_queue();

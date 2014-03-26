@@ -2,11 +2,10 @@
 #include "dy_char.h"
 #include "hash.h"
 #include "queue.h"
-#include "thread.h"
 #include "item.h"
 #include "network.h"
 #include "memory.h"
-#include <pthread.h>
+#include "connection.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -31,7 +30,7 @@ extern hash_t *hash;
 
 extern event_operation_t event_operation;
 
-extern pthread_key_t key;
+extern mem_pool_t *pool;
 
 int parse_command(connection_t *conn){
   read_context_t *rc=conn->rc;
@@ -124,7 +123,6 @@ static int process_get(connection_t *conn){
 }
 
 static int process_set(connection_t *conn){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   buffer_t *b=conn->rbuf;
   int count=b->limit-b->current;
   if(count==0){
@@ -164,7 +162,6 @@ static int process_set(connection_t *conn){
 }
 
 static void write_set_response(connection_t *conn){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   char *c=(char *)alloc_mem(pool,8);
   memcpy(c,set_response,8);
   push(conn->wc->w_queue,c);
@@ -172,7 +169,6 @@ static void write_set_response(connection_t *conn){
 }
 
 static char* fill_get_response_header(char *k,int bytes){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   char *s=(char *)alloc_mem(pool,20);
   sprintf(s,"%d",bytes);
   int length=6+strlen(k)+3+strlen(s)+3;
@@ -193,7 +189,6 @@ static char* fill_get_response_header(char *k,int bytes){
 }
 
 static char* fill_get_response_footer(){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   char *c=(char *)alloc_mem(pool,5);
   memcpy(c,end,5);
   return c;

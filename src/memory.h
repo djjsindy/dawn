@@ -1,4 +1,5 @@
 #include "list.h"
+#include <pthread.h>
 #define DEFAULT_LEVEL 7
 #define DEFAULT_FLAG_NUM (2<<DEFAULT_LEVEL)-1
 #define SMALL_THRESHOLD 1<<10
@@ -113,6 +114,9 @@ struct mem_pool_s{
   list_head_t **small_bin;
   list_head_t **big_bin;
   list_head_t direct_head;
+  pthread_mutex_t *small_mutex;
+  pthread_mutex_t *big_mutex;
+  pthread_mutex_t *direct_mutex;
 };
 
 typedef struct mem_pool_s mem_pool_t;

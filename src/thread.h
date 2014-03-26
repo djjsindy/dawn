@@ -4,8 +4,6 @@
 #include "connection.h"
 #include "network.h"
 #define WORKER_NUM 8
-#define MAX_EVENT_COUNT 1024
-#define NOTIFY_BUF_SIZE 32
 
 struct pipe_channel_s{
     int masterfd;

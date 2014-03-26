@@ -11,7 +11,7 @@
 #define COMMAND_SIZE 16
 #define NUM_SIZE 16
 
-extern pthread_key_t key;
+extern mem_pool_t *pool;
 
 static void destroy_connection(connection_t *conn);
 
@@ -24,7 +24,6 @@ void reset_read_context(read_context_t *rc){
 }
 
 connection_t* init_connection(){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   connection_t *co=(connection_t *)alloc_mem(pool,sizeof(connection_t));
   co->rbuf=alloc_buffer(READ_BUF_SIZE);
   co->wbuf=alloc_buffer(WRITE_BUF_SIZE);

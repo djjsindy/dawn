@@ -5,14 +5,13 @@
 #include "memory.h"
 #include "dy_char.h"
 
-extern pthread_key_t key;
+extern mem_pool_t *pool;
 
 void add_terminal(char_t *t);
 
 static void expand_char(char_t *t);
 
 char_t *init_char(int size){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   char_t *t=(char_t *)alloc_mem(pool,sizeof(char_t));
   if(t==NULL){
     printf("alloc char error\n");
@@ -44,7 +43,6 @@ void add_terminal(char_t *t){
   t->current+=1;
 }
 static void expand_char(char_t *t){
-  mem_pool_t *pool=(mem_pool_t *)pthread_getspecific(key);
   int size=t->size;
   char *temp=(char *)alloc_mem(pool,size*2);
   memcpy(temp,t->data,size);

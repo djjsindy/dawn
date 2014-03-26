@@ -34,6 +34,8 @@ static int decide_real_size(int size);
 
 static void init_pool_list(list_head_t **base,int num);
 
+static void init_pthread_mutex(mem_pool_t *pool);
+
 mem_pool_t* init_mem_pool(){
   int num=DEFAULT_LEVEL+1;
   mem_pool_t* pool=(mem_pool_t *)malloc(sizeof(mem_pool_t));
@@ -42,7 +44,20 @@ mem_pool_t* init_mem_pool(){
   pool->big_bin=(list_head_t **)malloc(sizeof(list_head_t *)*(num));
   init_pool_list(pool->big_bin,num);
   init_list(&(pool->direct_head));
+  init_pthread_mutex(pool);
   return pool;
+}
+
+static void init_pthread_mutex(mem_pool_t *pool){
+  pthread_mutex_t small_mutex;
+  pthread_mutex_init(&small_mutex, NULL);
+  pool->small_mutex=&small_mutex;
+  pthread_mutex_t big_mutex;
+  pthread_mutex_init(&big_mutex, NULL);
+  pool->big_mutex=&big_mutex;
+  pthread_mutex_t direct_mutex;
+  pthread_mutex_init(&direct_mutex, NULL);
+  pool->direct_mutex=&direct_mutex;
 }
 
 static void init_pool_list(list_head_t **base,int num){
@@ -93,13 +108,21 @@ static void free_buddy_bin(list_head_t **bin){
 
 void* alloc_mem(mem_pool_t *pool,int size){
   int real_size=decide_real_size(size);
+  void *p;
   if(real_size<=SMALL_THRESHOLD){
-    return get_available(pool->small_bin,real_size,SMALL_THRESHOLD);
+    pthread_mutex_lock(pool->small_mutex);
+    p=get_available(pool->small_bin,real_size,SMALL_THRESHOLD);
+    pthread_mutex_unlock(pool->small_mutex);
   }else if(real_size<=BIG_THRESHOLD){
-    return get_available(pool->big_bin,real_size,BIG_THRESHOLD);
+    pthread_mutex_lock(pool->big_mutex);
+    p=get_available(pool->big_bin,real_size,BIG_THRESHOLD);
+    pthread_mutex_unlock(pool->big_mutex);
   }else{
-    return direct_alloc(&(pool->direct_head),real_size);
+    pthread_mutex_lock(pool->direct_mutex);
+    p=direct_alloc(&(pool->direct_head),real_size);
+    pthread_mutex_unlock(pool->direct_mutex);
   }
+  return p;
 }
 
 static int decide_real_size(int size){
