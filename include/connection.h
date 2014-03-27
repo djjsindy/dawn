@@ -12,6 +12,7 @@
 #define OK 2
 //write status
 #define ENOUGH 3
+
 enum PARSE_STATUS{
   READ_COMMAND,
   READ_KEY,

@@ -140,7 +140,7 @@ void handle_read(connection_t *conn){
     //表示还有数据需要处理
     while(has_remaining(rbuf)){
       //command还未接收处理完
-      if(conn->rc->read_process<READ_COMMAND_END){
+      if(conn->rc->read_process==READ_COMMAND){
         //接收处理command
         result=parse_command(conn);
         //表示command行没有接收全部，read没有read完全
@@ -157,7 +157,6 @@ void handle_read(connection_t *conn){
         break;
       }else{
         reset_read_context(conn->rc);
-        //compact(rbuf);
       }   
     }
     reset(rbuf);

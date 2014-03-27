@@ -1,24 +1,36 @@
-#include "buffer.h"
-#include "dy_char.h"
-#include "hash.h"
-#include "queue.h"
-#include "item.h"
-#include "network.h"
-#include "memory.h"
-#include "connection.h"
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+  #include "buffer.h"
+  #include "dy_char.h"
+  #include "hash.h"
+  #include "queue.h"
+  #include "item.h"
+  #include "network.h"
+  #include "memory.h"
+  #include "connection.h"
+  #include <string.h>
+  #include <stdlib.h>
+  #include <stdio.h>
 
 static int process_set(connection_t *conn);
 
 static int process_get(connection_t *conn);
+
+static void process_client_error(connection_t *conn,const char *message);
+
+static void process_version(connection_t *conn);
+
+static int parse_set_header(connection_t *conn);
+
+static int parse_get_header(connection_t *conn);
+
+static int process_set_body(connection_t *conn);
 
 static void write_set_response(connection_t *conn);
 
 static char* fill_get_response_header(char *c,int bytes);
 
 static char* fill_get_response_footer();
+
+static void write_null(connection_t *conn,char *key);
 
 extern hash_t *hash;
 
@@ -44,48 +56,125 @@ static const char *command_end="\r\n\0";
 
 static const char *middle=" 0 ";
 
+static const char *client_error="CLIENT_ERROR %s\r\n";
+
+static const char *unsupport_command="unsupport_command";
+
+static const char *version="VERSION 1.0\r\n";
+
+static const char *empty="";
+
 int parse_command(connection_t *conn){
+  int result=AGAIN;
+  read_context_t *rc=conn->rc;
+  buffer_t *buf=conn->rbuf;
+  while(buf->current<buf->limit){
+    char c=*(buf->data+buf->current);
+    buf->current+=1;
+    if(c==space){
+      add_terminal(rc->command);
+      result=OK;
+      break;
+    }else if(c==special_r){
+      add_terminal(rc->command);
+    }else if(c==special_n){
+      result=OK;
+      break;
+    }else{
+      add_char(rc->command,c);     
+    }    
+  }
+  if(strcmp(rc->command->data,"delete")==0||strcmp(rc->command->data,"get")==0||strcmp(rc->command->data,"set")==0){
+    rc->read_process=READ_KEY;
+  }
+  return result;
+}
+
+int process_command(connection_t *conn){
+  int result=OK;
+  char *data=conn->rc->command->data;
+  if(strcmp(data,"get")==0){
+    result=process_get(conn);
+  }else if(strcmp(data,"set")==0){
+    result=process_set(conn);
+  }else if(strcmp(data,"version")==0){
+    process_version(conn);
+  }else{
+   process_client_error(conn,unsupport_command);
+ }
+ return result;
+}
+
+static void process_version(connection_t *conn){
+  char *c=(char *)alloc_mem(pool,strlen(version)+1);
+  strcpy(c,version);
+  push(conn->wc->w_queue,c);
+  event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
+}
+
+static void process_client_error(connection_t *conn,const char *message){
+  int length=strlen(client_error)-2+strlen(message)+1;
+  char *c=(char *)alloc_mem(pool,length);
+  sprintf(c,client_error,message);
+  push(conn->wc->w_queue,c);
+  event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
+}
+
+static int process_get(connection_t *conn){
+  read_context_t *rc=conn->rc;
+  if(rc->read_process!=READ_COMMAND_END){
+    int result=parse_get_header(conn);
+      //表示set command第一行没有read全
+    if(result==AGAIN){
+      return AGAIN;
+    }
+  }
+  char *key=rc->key->data;
+  queue_t *q=(queue_t *)get(key,hash);
+  if(q==NULL){
+    write_null(conn,key);
+  }else{
+    int first=1;
+    while(1){
+      item_t *i=(item_t *)pop(q);
+      if(i==NULL){
+        write_null(conn,key);
+        break;
+      }
+      if(first){    
+        push(conn->wc->w_queue,fill_get_response_header(key,i->size));
+        first=0;
+      }
+      push(conn->wc->w_queue,i->data);
+      if(i->end==1){
+        break;
+      }
+    }
+  }
+  push(conn->wc->w_queue,fill_get_response_footer());
+  event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
+  return OK;
+}
+
+static void write_null(connection_t *conn,char *key){
+  char *s=(char *)alloc_mem(pool,strlen(data_end)+1);
+  strcpy(s,data_end);
+  push(conn->wc->w_queue,s);
+}
+
+static int parse_get_header(connection_t *conn){
   read_context_t *rc=conn->rc;
   buffer_t *buf=conn->rbuf;
   while(buf->current<buf->limit){
     char c=*(buf->data+buf->current);
     buf->current+=1;
     switch(rc->read_process){
-      case READ_COMMAND:
-        if(c==space){
-          add_terminal(rc->command);
-          rc->read_process=READ_KEY;
-        }else{
-          add_char(rc->command,c);     
-        }
-        break;
       case READ_KEY:
-        if(c==space){
+        if(c==special_r){
           add_terminal(rc->key);
-          rc->read_process=READ_FLAG;
-        }else if(c==special_r){
           rc->read_process=READ_COMMAND_LAST;
         }else{
           add_char(rc->key,c);
-        }
-        break;
-      case READ_FLAG:
-        if(c==space){
-          rc->read_process=READ_EXPIRE_TIME;
-        }
-        break;
-      case READ_EXPIRE_TIME:
-        if(c==space){
-          rc->read_process=READ_BYTE_NUM;
-        }
-        break;
-      case READ_BYTE_NUM:
-        if(c==special_r){
-          add_terminal(rc->num);
-          rc->read_process=READ_COMMAND_LAST;
-          rc->last_bytes=atoi(rc->num->data);
-        }else{
-          add_char(rc->num,c);
         }
         break;
       case READ_COMMAND_LAST:
@@ -94,54 +183,33 @@ int parse_command(connection_t *conn){
           return COMMAND_OK;
         }
         break;
-      case READ_COMMAND_END:
-        break;
+      default:
+        break;   
     }
   }
   return AGAIN;
 }
 
-int process_command(connection_t *conn){
-  if(strcmp(conn->rc->command->data,"set")==0)
-    return process_set(conn);
-  else if(strcmp(conn->rc->command->data,"get")==0)
-    return process_get(conn);
-  else{
-    printf("unsupport operation\n");
-    //todo
-    return OK;
-  }
-}
-
-static int process_get(connection_t *conn){
-  read_context_t *rc=conn->rc;
-  queue_t *q=(queue_t *)get(rc->key->data,hash);
-  int first=1;
-  while(1){
-    item_t *i=(item_t *)pop(q);
-    if(i==NULL){
-      break;
-    }
-    if(first){    
-      push(conn->wc->w_queue,fill_get_response_header(rc->key->data,i->size));
-      first=0;
-    }
-    push(conn->wc->w_queue,i->data);
-    if(i->end==1){
-      break;
-    }
-  }
-  push(conn->wc->w_queue,fill_get_response_footer());
-  event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
-  return OK;
-}
-
 static int process_set(connection_t *conn){
+
+  if(conn->rc->read_process!=READ_COMMAND_END){
+    int result=parse_set_header(conn);
+      //表示set command第一行没有read全
+    if(result==AGAIN){
+      return AGAIN;
+    }
+  }
+  return process_set_body(conn);
+
+} 
+static int process_set_body(connection_t *conn){ 
+    //check一下当前buffer数据的剩余多少
   buffer_t *b=conn->rbuf;
   int count=b->limit-b->current;
   if(count==0){
     return AGAIN;
   }
+    //开始存储set数据
   read_context_t *rc=conn->rc;
   char *key=rc->key->data;
   queue_t *q=(queue_t *)get(key,hash);
@@ -152,27 +220,74 @@ static int process_set(connection_t *conn){
     put(q_name,q,hash);
   }  
   int fill=0;
-  int result;
+  int result=AGAIN;
   item_t *i=init_item();
   i->size=rc->last_bytes;
+    //如果当前buffer的数据包含了所有的set数据包括最后的/r/n
   if(count-2>=rc->last_bytes){
     fill=rc->last_bytes+2;
     i->end=1;
     result=OK;
     write_set_response(conn);
   }else{
+      //如果buffer不够了那么先把这部分数据copy出来，放入一个item中
     fill=count;
-    result=AGAIN;
     rc->last_bytes-=fill;
   }
   char *c=(char *)alloc_mem(pool,fill+1);
   memset(c,0,fill);
-  memcpy(c,b->data+b->current,fill);
-  *(c+fill)=special_end;
+  strcpy(c,b->data+b->current);
   i->data=c;
   push(q,i);
   b->current+=fill;
   return result;
+}
+
+static int parse_set_header(connection_t *conn){
+  read_context_t *rc=conn->rc;
+  buffer_t *buf=conn->rbuf;
+  while(buf->current<buf->limit){
+    char c=*(buf->data+buf->current);
+    buf->current+=1;
+    switch(rc->read_process){
+      case READ_KEY:
+      if(c==space){
+        add_terminal(rc->key);
+        rc->read_process=READ_FLAG;
+      }else{
+        add_char(rc->key,c);
+      }
+      break;
+      case READ_FLAG:
+      if(c==space){
+        rc->read_process=READ_EXPIRE_TIME;
+      }
+      break;
+      case READ_EXPIRE_TIME:
+      if(c==space){
+        rc->read_process=READ_BYTE_NUM;
+      }
+      break;
+      case READ_BYTE_NUM:
+      if(c==special_r){
+        add_terminal(rc->num);
+        rc->read_process=READ_COMMAND_LAST;
+        rc->last_bytes=atoi(rc->num->data);
+      }else{
+        add_char(rc->num,c);
+      }
+      break;
+      case READ_COMMAND_LAST:
+      if(c==special_n){
+        rc->read_process=READ_COMMAND_END;
+        return COMMAND_OK;
+      }
+      break;
+      default:
+      break;   
+    }
+  }
+  return AGAIN;
 }
 
 static void write_set_response(connection_t *conn){
