@@ -38,6 +38,21 @@
 
 #define LEVEL_END(level) (pow(2,level+1)-2)
 
+/**
+ * mem pool有两种 buddy容器，当请求小于SMALL_THRESHOLD的时候，请求small_bin容器，然后分配buddy
+ * 如果请求小于BIG_THRESHOLD的时候，请求big_bin容器，对于大于BIG_THRESHOLD的请求，直接malloc分配
+ */
+struct mem_pool_s{
+  list_head_t **small_bin;
+  list_head_t **big_bin;
+  list_head_t direct_head;
+  pthread_mutex_t small_mutex;
+  pthread_mutex_t big_mutex;
+  pthread_mutex_t direct_mutex;
+};
+
+typedef struct mem_pool_s mem_pool_t;
+
 struct buddy_s{
   /**
    * 具有相同max的buddy的双向链表
@@ -67,6 +82,11 @@ struct buddy_s{
    * buddy 所属于的bin
    */ 
   list_head_t **bin;
+
+  /*
+   * buddy属于哪个pool，方便free_mem是挑选合适的mutex
+   */
+  mem_pool_t *pool;
 };
 
 typedef struct buddy_s buddy_t;
@@ -84,6 +104,11 @@ struct mem_buddy_chunk_s{
    * 方便及时找到buddy的flag的层级，然后根据地址offset，来确定具体的flag index
    */
    int level;
+  /**
+   * 方便free的时候找到mutex
+   */
+   mem_pool_t *pool;
+
    /**
    * 标志这段空间是否是malloc直接分配，如果是，释放的时候直接调用free函数
    */
@@ -100,26 +125,21 @@ struct mem_direct_chunk_s{
    * 直接malloc分配的内存，建立双链表的目的是为了free的时候，快速移除链表。这链表为了再destory_pool的时候释放空间
    */
   list_head_t list;
-   
+  
+  /**
+   * 方便free的时候找到mutex
+   */
+  mem_pool_t *pool;
+
+
+  /**
+   * 标志这段空间是否是malloc直接分配，如果是，释放的时候直接调用free函数
+   */ 
   int is_direct;
+
 };
 
 typedef struct mem_direct_chunk_s mem_direct_chunk_t;
-
-/**
- * mem pool有两种 buddy容器，当请求小于SMALL_THRESHOLD的时候，请求small_bin容器，然后分配buddy
- * 如果请求小于BIG_THRESHOLD的时候，请求big_bin容器，对于大于BIG_THRESHOLD的请求，直接malloc分配
- */
-struct mem_pool_s{
-  list_head_t **small_bin;
-  list_head_t **big_bin;
-  list_head_t direct_head;
-  pthread_mutex_t *small_mutex;
-  pthread_mutex_t *big_mutex;
-  pthread_mutex_t *direct_mutex;
-};
-
-typedef struct mem_pool_s mem_pool_t;
 
 mem_pool_t* init_mem_pool();
 

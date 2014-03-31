@@ -15,27 +15,55 @@ thread_t threads[WORKER_NUM];
 
 int worker_index=0;
 
+static pthread_mutex_t init_lock;
+
+static pthread_cond_t init_cond;
+
+static int init_count=0;
+
+extern mem_pool_t *pool;
+
 static void *worker_loop(void *arg);
 
 static int no_block_write(int fd,buffer_t *wbuf);
 
 static void init_thread(thread_t *t);
 
+static void wait_thread_init();
+
+static void register_thread_init();
+
 extern int parse_command(connection_t *conn);
 
 extern int process_command(connection_t *conn);
 
-extern mem_pool_t *pool;
-
 void start_workers(){
+  pthread_mutex_init(&init_lock, NULL);
+  pthread_cond_init(&init_cond, NULL);
   int i=0;
   for(;i<WORKER_NUM;i++){
     pthread_t tid=0;
     pthread_create(&tid,NULL,worker_loop,threads+i);
   }
+  pthread_mutex_lock(&init_lock);
+  wait_thread_init();
+  pthread_mutex_unlock(&init_lock);
 }
 
-void *worker_loop(void *arg){
+static void wait_thread_init(){
+  while (init_count < WORKER_NUM) {
+    pthread_cond_wait(&init_cond, &init_lock);
+  }
+}
+
+static void register_thread_init(){
+  pthread_mutex_lock(&init_lock);
+  init_count++;
+  pthread_cond_signal(&init_cond);
+  pthread_mutex_unlock(&init_lock);
+}
+
+static void *worker_loop(void *arg){
   thread_t* t=(thread_t *)arg;
   init_thread(t);
   event_context_t ec;
@@ -44,6 +72,7 @@ void *worker_loop(void *arg){
   ec.worker_fd=notify_fd;
   ec.queue=t->queue;
   event_operation.register_event(notify_fd,READ,&ec,t);
+  register_thread_init();
   while(1){
     event_operation.process_event(&ec);    
   }
@@ -68,16 +97,15 @@ static void init_thread(thread_t *t){
 
 int handle_write(connection_t *conn){
   write_context_t *wc=conn->wc;
-  char *target=wc->w_data;
   buffer_t *wbuf=conn->wbuf;
   int result;
   //每次写数据都是先发到w_queue中，写的时候先pop
   while(1){
-    if(target==NULL){
-      target=pop(wc->w_queue);
+    if(wc->w_data==NULL){
+      wc->w_data=pop(wc->w_queue);
     } 
     //如果w_data和队列中没有，表示没有写的数据了
-    if(target==NULL){
+    if(wc->w_data==NULL){
       //如果还有数据没写完，继续写
       if(has_remaining(wbuf)){
         return no_block_write(conn->fd,wbuf);
@@ -87,25 +115,28 @@ int handle_write(connection_t *conn){
     //计算最多容量
     int avilable=wbuf->size-wbuf->limit;
     //计算数据量
-    int copy=strlen(target)-wc->w_index;
+    int copy=wc->w_data->c_size-wc->w_index;
     if(avilable<copy){
       copy=avilable;
     }
     //开始copy
-    memcpy(wbuf->data+wbuf->limit,target+wc->w_index,copy);
+    memcpy(wbuf->data+wbuf->limit,wc->w_data->data+wc->w_index,copy);
     //更新指针
     wc->w_index+=copy;
     wbuf->limit+=copy;
-    //如果wbuf还有空间，先不write，继续填充wbuf
-    if(has_space(wbuf)){
-      free_mem(target);
-      target=NULL;
+    if(copy==wc->w_data->c_size){     
+      free_mem(wc->w_data->data);
+      free_mem(wc->w_data);
+      wc->w_data=NULL;
       wc->w_index=0;
-    }else{
+    }
+
+    //如果wbuf还有空间，先不write，继续填充wbuf
+    if(!has_space(wbuf)){
       //wbuf满了，开始write
       int result=no_block_write(conn->fd,wbuf);
       //如果没写完，返回等待写事件，否则继续填充wbuf
-      if(!result){
+      if(result==ENOUGH){
         return ENOUGH;
       }
     }
@@ -113,11 +144,12 @@ int handle_write(connection_t *conn){
 }
 
 static int no_block_write(int fd,buffer_t *wbuf){
-  int count=write(fd,wbuf->data+wbuf->current,wbuf->limit-wbuf->current);
+  int want=wbuf->limit-wbuf->current;
+  int count=write(fd,wbuf->data+wbuf->current,want);
   wbuf->current+=count;
   compact(wbuf);
   //如果count比预期要小，说明不能再写了
-  if(count<wbuf->limit-wbuf->current){
+  if(count<want){
     return ENOUGH;
   } 
   return OK;

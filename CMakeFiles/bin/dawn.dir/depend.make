@@ -3,39 +3,40 @@
 
 CMakeFiles/bin/dawn.dir/src/buffer.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/buffer.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/buffer.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/buffer.o: src/buffer.c
-CMakeFiles/bin/dawn.dir/src/buffer.o: src/memory.h
 
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/connection.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/queue.h
 CMakeFiles/bin/dawn.dir/src/connection.o: src/connection.c
-CMakeFiles/bin/dawn.dir/src/connection.o: src/memory.h
 
 CMakeFiles/bin/dawn.dir/src/dy_char.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/dy_char.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/dy_char.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/dy_char.o: src/dy_char.c
-CMakeFiles/bin/dawn.dir/src/dy_char.o: src/memory.h
 
 CMakeFiles/bin/dawn.dir/src/fdop.o: src/fdop.c
 
 CMakeFiles/bin/dawn.dir/src/hash.o: ./include/hash.h
 CMakeFiles/bin/dawn.dir/src/hash.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/hash.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/hash.o: src/hash.c
-CMakeFiles/bin/dawn.dir/src/hash.o: src/memory.h
 
 CMakeFiles/bin/dawn.dir/src/item.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/item.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/item.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/item.o: src/item.c
-CMakeFiles/bin/dawn.dir/src/item.o: src/memory.h
 
 CMakeFiles/bin/dawn.dir/src/kqueue.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/kqueue.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/kqueue.o: ./include/dy_char.h
+CMakeFiles/bin/dawn.dir/src/kqueue.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/kqueue.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/kqueue.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/kqueue.o: ./include/queue.h
@@ -49,19 +50,20 @@ CMakeFiles/bin/dawn.dir/src/main.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/hash.h
+CMakeFiles/bin/dawn.dir/src/main.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/main.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/queue.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/thread.h
 CMakeFiles/bin/dawn.dir/src/main.o: src/main.c
-CMakeFiles/bin/dawn.dir/src/main.o: src/memory.h
 
 CMakeFiles/bin/dawn.dir/src/malloc.o: ./include/malloc.h
 CMakeFiles/bin/dawn.dir/src/malloc.o: src/malloc.c
 
 CMakeFiles/bin/dawn.dir/src/memory.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/memory.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/memory.o: src/memory.c
-CMakeFiles/bin/dawn.dir/src/memory.o: src/memory.h
 
 CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/connection.h
@@ -69,23 +71,24 @@ CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/hash.h
 CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/queue.h
-CMakeFiles/bin/dawn.dir/src/protocol.o: src/memory.h
 CMakeFiles/bin/dawn.dir/src/protocol.o: src/protocol.c
 
 CMakeFiles/bin/dawn.dir/src/queue.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/queue.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/queue.o: ./include/queue.h
-CMakeFiles/bin/dawn.dir/src/queue.o: src/memory.h
 CMakeFiles/bin/dawn.dir/src/queue.o: src/queue.c
 
 CMakeFiles/bin/dawn.dir/src/thread.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/thread.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/thread.o: ./include/dy_char.h
+CMakeFiles/bin/dawn.dir/src/thread.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/thread.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/thread.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/thread.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/thread.o: ./include/queue.h
 CMakeFiles/bin/dawn.dir/src/thread.o: ./include/thread.h
-CMakeFiles/bin/dawn.dir/src/thread.o: src/memory.h
 CMakeFiles/bin/dawn.dir/src/thread.o: src/thread.c
 

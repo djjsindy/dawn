@@ -5,6 +5,7 @@ struct item_s{
   char *data;
   int end;
   int size;
+  int c_size;
 };
 
 typedef struct item_s item_t;

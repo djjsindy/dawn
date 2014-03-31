@@ -11,19 +11,19 @@ void add_terminal(char_t *t);
 
 static void expand_char(char_t *t);
 
-char_t *init_char(int size){
+char_t *init_char(){
   char_t *t=(char_t *)alloc_mem(pool,sizeof(char_t));
   if(t==NULL){
     printf("alloc char error\n");
     exit(0);
   }
-  t->data=(char *)alloc_mem(pool,size);
+  t->data=(char *)alloc_mem(pool,CHAR_SIZE);
   if(t->data==NULL){
     printf("alloc char data error\n");
     exit(0);
   }
   t->current=0;
-  t->size=size;
+  t->size=CHAR_SIZE;
   return t;
 }
 
@@ -52,7 +52,7 @@ static void expand_char(char_t *t){
 
 void reset_char(char_t *t){
   memset(t->data,0,strlen(t->data));
-  t->size=0;
+  t->size=CHAR_SIZE;
   t->current=0;
 }
 

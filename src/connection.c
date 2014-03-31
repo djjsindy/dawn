@@ -2,14 +2,11 @@
 #include "network.h"
 #include "dy_char.h"
 #include "buffer.h"
-#include "item.h"
 #include "queue.h"
 #include "memory.h"
 #include <pthread.h>
 #include <stdlib.h>
-#define KEY_SIZE 16
-#define COMMAND_SIZE 16
-#define NUM_SIZE 16
+
 
 extern mem_pool_t *pool;
 
@@ -30,9 +27,9 @@ connection_t* init_connection(){
   read_context_t *rc=(read_context_t *)alloc_mem(pool,sizeof(read_context_t));
   co->rc=rc;
   rc->read_process=READ_COMMAND;
-  rc->command=init_char(COMMAND_SIZE);
-  rc->key=init_char(KEY_SIZE);
-  rc->num=init_char(NUM_SIZE);
+  rc->command=init_char();
+  rc->key=init_char();
+  rc->num=init_char();
   rc->last_bytes=0;
   write_context_t *wc=(write_context_t *)alloc_mem(pool,sizeof(write_context_t));
   co->wc=wc;

@@ -26,9 +26,9 @@ static int process_set_body(connection_t *conn);
 
 static void write_set_response(connection_t *conn);
 
-static char* fill_get_response_header(char *c,int bytes);
+static item_t* fill_get_response_header(char *c,int bytes);
 
-static char* fill_get_response_footer();
+static item_t* fill_get_response_footer();
 
 static void write_null(connection_t *conn,char *key);
 
@@ -52,7 +52,7 @@ static const char *first_get_response="VALUE ";
 
 static const char *data_end="END\r\n";
 
-static const char *command_end="\r\n\0";
+static const char *command_end="\r\n";
 
 static const char *middle=" 0 ";
 
@@ -145,21 +145,25 @@ static int process_get(connection_t *conn){
         push(conn->wc->w_queue,fill_get_response_header(key,i->size));
         first=0;
       }
-      push(conn->wc->w_queue,i->data);
+      push(conn->wc->w_queue,i);
       if(i->end==1){
         break;
       }
     }
-  }
-  push(conn->wc->w_queue,fill_get_response_footer());
+    push(conn->wc->w_queue,fill_get_response_footer());
+  } 
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
   return OK;
 }
 
 static void write_null(connection_t *conn,char *key){
-  char *s=(char *)alloc_mem(pool,strlen(data_end)+1);
-  strcpy(s,data_end);
-  push(conn->wc->w_queue,s);
+  int length=strlen(data_end);
+  char *s=(char *)alloc_mem(pool,length);
+  memcpy(s,data_end,length);
+  item_t *i=(item_t *)alloc_mem(pool,length);
+  i->data=s;
+  i->c_size=length;
+  push(conn->wc->w_queue,i);
 }
 
 static int parse_get_header(connection_t *conn){
@@ -222,10 +226,10 @@ static int process_set_body(connection_t *conn){
   int fill=0;
   int result=AGAIN;
   item_t *i=init_item();
-  i->size=rc->last_bytes;
+  i->size=rc->last_bytes-2;
     //如果当前buffer的数据包含了所有的set数据包括最后的/r/n
-  if(count-2>=rc->last_bytes){
-    fill=rc->last_bytes+2;
+  if(count>=rc->last_bytes){
+    fill=rc->last_bytes;
     i->end=1;
     result=OK;
     write_set_response(conn);
@@ -234,10 +238,11 @@ static int process_set_body(connection_t *conn){
     fill=count;
     rc->last_bytes-=fill;
   }
-  char *c=(char *)alloc_mem(pool,fill+1);
+  char *c=(char *)alloc_mem(pool,fill);
   memset(c,0,fill);
-  strcpy(c,b->data+b->current);
+  memcpy(c,b->data+b->current,fill);
   i->data=c;
+  i->c_size=fill;
   push(q,i);
   b->current+=fill;
   return result;
@@ -272,7 +277,7 @@ static int parse_set_header(connection_t *conn){
       if(c==special_r){
         add_terminal(rc->num);
         rc->read_process=READ_COMMAND_LAST;
-        rc->last_bytes=atoi(rc->num->data);
+        rc->last_bytes=atoi(rc->num->data)+2;
       }else{
         add_char(rc->num,c);
       }
@@ -291,13 +296,17 @@ static int parse_set_header(connection_t *conn){
 }
 
 static void write_set_response(connection_t *conn){
-  char *c=(char *)alloc_mem(pool,strlen(set_response));
-  strcpy(c,set_response);
-  push(conn->wc->w_queue,c);
+  int length=strlen(set_response);
+  char *c=(char *)alloc_mem(pool,length);
+  memcpy(c,set_response,length);
+  item_t *i=init_item();
+  i->data=c;
+  i->c_size=length;
+  push(conn->wc->w_queue,i);
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }
 
-static char* fill_get_response_header(char *key,int bytes){
+static item_t* fill_get_response_header(char *key,int bytes){
   char *s=(char *)alloc_mem(pool,20);
   sprintf(s,"%d",bytes);
   int first_length=strlen(first_get_response);
@@ -305,7 +314,7 @@ static char* fill_get_response_header(char *key,int bytes){
   int middle_length=strlen(middle);
   int s_length=strlen(s);
   int command_end_length=strlen(command_end);
-  int length=first_length+key_length+middle_length+s_length+command_end_length+1;
+  int length=first_length+key_length+middle_length+s_length+command_end_length;
   char *c=(char *)alloc_mem(pool,length);
   memset(c,0,length);
   int index=0;
@@ -319,13 +328,19 @@ static char* fill_get_response_header(char *key,int bytes){
   index+=s_length;
   memcpy(c+index,command_end,command_end_length);
   index+=command_end_length;
-  *(c+index)=special_end;
   free_mem(s);
-  return c;
+  item_t *i=init_item();
+  i->data=c;
+  i->c_size=length;
+  return i;
 }
 
-static char* fill_get_response_footer(){
-  char *c=(char *)alloc_mem(pool,strlen(data_end)+1);
-  strcpy(c,data_end);
-  return c;
+static item_t* fill_get_response_footer(){
+  int length=strlen(data_end);
+  char *c=(char *)alloc_mem(pool,length);
+  memcpy(c,data_end,length);
+  item_t *i=init_item();
+  i->data=c;
+  i->c_size=length;
+  return i;
 }

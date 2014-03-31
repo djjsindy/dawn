@@ -4,6 +4,7 @@
 #include "dy_char.h"
 #include "network.h"
 #include "queue.h"
+#include "item.h"
 #define READ_BUF_SIZE 1024*4
 #define WRITE_BUF_SIZE 1024*4
 //read status
@@ -12,6 +13,7 @@
 #define OK 2
 //write status
 #define ENOUGH 3
+#define CHAR_SIZE 16
 
 enum PARSE_STATUS{
   READ_COMMAND,
@@ -35,7 +37,7 @@ typedef struct read_context_s read_context_t;
 
 struct write_context_s{
   queue_t *w_queue;
-  char *w_data;
+  item_t *w_data;
   int w_index;
 };
 

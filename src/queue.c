@@ -6,54 +6,33 @@ extern mem_pool_t *pool;
 
 queue_t *init_queue(){
   queue_t *q=(queue_t *)alloc_mem(pool,sizeof(queue_t));
-  pthread_mutex_t mutex;
-  pthread_mutex_init(&mutex, NULL);
-  q->mutex=&mutex;
-  q->head=NULL;
-  q->tail=NULL;
+  pthread_mutex_init(&(q->mutex), NULL);
+  q->head=(list_head_t *)alloc_mem(pool,sizeof(list_head_t));
+  init_list(q->head);
   return q;
 }
 
-void detroy_queue(queue_t *t){
-}
-
 void push(queue_t *q,void *data){
-  pthread_mutex_lock(q->mutex);
+  pthread_mutex_lock(&(q->mutex));
   queue_item_t *item=(queue_item_t *)alloc_mem(pool,sizeof(queue_item_t));
   item->data=data;
-  if(q->tail==NULL&&q->head==NULL){
-    q->tail=item;
-    q->head=item;
-  }else if(q->tail==q->head){  
-    q->head->next=item;
-    q->tail=item;
-  }else{
-    queue_item_t *tail=q->tail;
-    tail->next=item;
-    q->tail=item;
-  }
-  pthread_mutex_unlock(q->mutex);
+  list_add_data(&(item->list),q->head,q->head->next);
+  pthread_mutex_unlock(&(q->mutex));
 }
 
 void* pop(queue_t *q){
-  pthread_mutex_lock(q->mutex);
-  if(q->head==NULL){
-    return 0;
-  }
-  void *data=q->head->data;
-  queue_item_t *t=q->head;
-  if(q->head==q->tail){
-    q->head=NULL;
-    q->tail=NULL;
-  }else{
-    q->head=q->head->next;
-  }
-  free_mem(t);
-  pthread_mutex_unlock(q->mutex);
+  void *data=NULL;
+  pthread_mutex_lock(&(q->mutex));
+  if(!list_is_empty(q->head)){
+    list_head_t *del=list_del_data(q->head->prev->prev,q->head);
+    queue_item_t *item=list_entry(del,queue_item_t,list);
+    data=item->data;
+    free_mem(item);  
+  }  
+  pthread_mutex_unlock(&(q->mutex));
   return data;
 }
 
 void destroy_queue(queue_t *q){
-  pthread_mutex_destroy(q->mutex);
   free_mem(q);
 }

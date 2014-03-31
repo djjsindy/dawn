@@ -8,6 +8,7 @@ item_t* init_item(){
   item_t *i=(item_t *)alloc_mem(pool,sizeof(item_t));
   i->end=0;
   i->size=0;
+  i->c_size=0;
   return i;
 }
 

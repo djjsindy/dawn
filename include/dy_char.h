@@ -1,5 +1,6 @@
 #ifndef CHAR_H
 #define CHAR_H
+#define CHAR_SIZE 16
 struct char_s{
   char *data;
   int size;
@@ -8,7 +9,7 @@ struct char_s{
 
 typedef struct char_s char_t;
 
-char_t *init_char(int size);
+char_t *init_char();
 
 void add_char(char_t *t,char c);
 
