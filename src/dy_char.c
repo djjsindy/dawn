@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include "memory.h"
 #include "dy_char.h"
+#include "my_log.h"
 
 extern mem_pool_t *pool;
 
@@ -14,13 +15,13 @@ static void expand_char(char_t *t);
 char_t *init_char(){
   char_t *t=(char_t *)alloc_mem(pool,sizeof(char_t));
   if(t==NULL){
-    printf("alloc char error\n");
-    exit(0);
+    my_log(ERROR,"alloc dynamic char struct failed\n");
+    return NULL;
   }
   t->data=(char *)alloc_mem(pool,CHAR_SIZE);
   if(t->data==NULL){
-    printf("alloc char data error\n");
-    exit(0);
+    my_log(ERROR,"alloc dynamic char data failed\n");
+    return NULL;
   }
   t->current=0;
   t->size=CHAR_SIZE;
@@ -45,6 +46,9 @@ void add_terminal(char_t *t){
 static void expand_char(char_t *t){
   int size=t->size;
   char *temp=(char *)alloc_mem(pool,size*2);
+  if(temp==NULL){
+    my_log(ERROR,"expand dynamic char failed\n");
+  }
   memcpy(temp,t->data,size);
   free_mem(t->data);
   t->data=temp;

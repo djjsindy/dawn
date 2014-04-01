@@ -8,11 +8,13 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <unistd.h>
+#include <setjmp.h>
 #include "thread.h"
 #include "memory.h"
 #include "hash.h"
+#include "my_log.h"
 #define SERVER_PORT 10000
-#define BACKLOG 50
+#define BACKmy_log 50
 static void start_listen();
 
 int server_sock_fd;
@@ -21,8 +23,15 @@ hash_t *hash;
 
 mem_pool_t *pool;
 
+jmp_buf exit_buf;
+
 int main (int argc, const char * argv[])
 {
+  int exit_code=0;
+  if((exit_code=setjmp(exit_buf))!=0){
+    exit(exit_code);
+  }
+  my_log_init();
   pool=init_mem_pool();
   hash=init_hash();
   start_workers();
@@ -46,16 +55,16 @@ static void start_listen(){
   bzero(&(server_addr.sin_zero),8);
   server_sock_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (server_sock_fd == -1) {
-    printf("socket error\n");
-    exit(0);
+    my_log(ERROR,"create server socket error\n");
+    longjmp(exit_buf,-1);
   }
   int bind_result = bind(server_sock_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
   if (bind_result == -1) {
-    perror("bind error\n");
-    exit(0);
+    my_log(ERROR,"bind port failed\n");
+    longjmp(exit_buf,-1);
   }
-  if (listen(server_sock_fd,BACKLOG) == -1) {
-    perror("listen error\n");
-    exit(0);
+  if (listen(server_sock_fd,BACKmy_log) == -1) {
+    my_log(ERROR,"socket listen failed\n");
+    longjmp(exit_buf,-1);
   }
 }

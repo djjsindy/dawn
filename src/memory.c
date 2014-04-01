@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <math.h>
+#include <setjmp.h>
 #include "memory.h"
+#include "my_log.h"
 static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *pool);
 
 static int bin_index(int size,int bin_size);
@@ -36,13 +38,26 @@ static void init_pool_list(list_head_t **base,int num);
 
 static void init_pthread_mutex(mem_pool_t *pool);
 
+extern jmp_buf exit_buf;
 
 mem_pool_t* init_mem_pool(){
   int num=DEFAULT_LEVEL+1;
   mem_pool_t* pool=(mem_pool_t *)malloc(sizeof(mem_pool_t));
-  pool->small_bin=(list_head_t **)malloc(sizeof(list_head_t *)*(num));
-  init_pool_list(pool->small_bin,num);
+
+  if(pool==NULL){
+    my_log(ERROR,"alloc mem pool error\n");
+    longjmp(exit_buf,-1);
+  }
+
+  pool->small_bin=(list_head_t **)malloc(sizeof(list_head_t *)*(num));  
   pool->big_bin=(list_head_t **)malloc(sizeof(list_head_t *)*(num));
+
+  if(pool->small_bin==NULL||pool->big_bin==NULL){
+    my_log(ERROR,"alloc mem pool bin error\n");
+    longjmp(exit_buf,-1);
+  }
+
+  init_pool_list(pool->small_bin,num);
   init_pool_list(pool->big_bin,num);
   init_list(&(pool->direct_head));
   init_pthread_mutex(pool);
@@ -59,6 +74,10 @@ static void init_pool_list(list_head_t **base,int num){
   int index=0;
   for(;index<num;){
     list_head_t *head=(list_head_t *)malloc(sizeof(list_head_t));
+    if(head==NULL){
+      my_log(ERROR,"alloc mem pool bin list_head_t error\n");
+      longjmp(exit_buf,-1);
+    }
     init_list(head);
     *(base+index)=head;
     index++;
@@ -132,11 +151,23 @@ static int decide_real_size(int size){
 static buddy_t* init_buddy(int size,mem_pool_t *pool){
 
   buddy_t *buddy=(buddy_t *)malloc(sizeof(buddy_t));
+
+  if(buddy==NULL){
+    my_log(ERROR,"alloc new buddy failed\n");
+    return NULL;
+  }
+
   int i=0;
   for(;i<sizeof(buddy->flags)/sizeof(int);i++){
     buddy->flags[i]=1;
   }
   void *mem=malloc(size);
+
+  if(mem==NULL){
+    my_log(ERROR,"alloc new buddy base failed\n");
+    return NULL;
+  }
+
   buddy->base=mem;
   buddy->size=size;
   buddy->max=size;
@@ -157,6 +188,7 @@ static void* get_buddy_mem(buddy_t *buddy,int level){
     }
     index++;
   }
+  assert(chunk!=NULL);
   chunk->buddy=buddy;
   chunk->is_direct=0;
   chunk->level=level;

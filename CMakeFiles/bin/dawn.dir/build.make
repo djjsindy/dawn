@@ -305,9 +305,32 @@ CMakeFiles/./bin/dawn.dir/src/memory.o.provides: CMakeFiles/./bin/dawn.dir/src/m
 
 CMakeFiles/./bin/dawn.dir/src/memory.o.provides.build: CMakeFiles/./bin/dawn.dir/src/memory.o
 
+CMakeFiles/./bin/dawn.dir/src/my_log.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/my_log.o: src/my_log.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_12)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/my_log.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/my_log.o   -c /Users/jianjundeng/dawn/src/my_log.c
+
+CMakeFiles/./bin/dawn.dir/src/my_log.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/my_log.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/my_log.c > CMakeFiles/./bin/dawn.dir/src/my_log.i
+
+CMakeFiles/./bin/dawn.dir/src/my_log.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/my_log.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/my_log.c -o CMakeFiles/./bin/dawn.dir/src/my_log.s
+
+CMakeFiles/./bin/dawn.dir/src/my_log.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/my_log.o.requires
+
+CMakeFiles/./bin/dawn.dir/src/my_log.o.provides: CMakeFiles/./bin/dawn.dir/src/my_log.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/my_log.o.provides
+
+CMakeFiles/./bin/dawn.dir/src/my_log.o.provides.build: CMakeFiles/./bin/dawn.dir/src/my_log.o
+
 CMakeFiles/./bin/dawn.dir/src/protocol.o: CMakeFiles/./bin/dawn.dir/flags.make
 CMakeFiles/./bin/dawn.dir/src/protocol.o: src/protocol.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_12)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_13)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/protocol.o"
 	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/protocol.o   -c /Users/jianjundeng/dawn/src/protocol.c
 
@@ -330,7 +353,7 @@ CMakeFiles/./bin/dawn.dir/src/protocol.o.provides.build: CMakeFiles/./bin/dawn.d
 
 CMakeFiles/./bin/dawn.dir/src/queue.o: CMakeFiles/./bin/dawn.dir/flags.make
 CMakeFiles/./bin/dawn.dir/src/queue.o: src/queue.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_13)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_14)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/queue.o"
 	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/queue.o   -c /Users/jianjundeng/dawn/src/queue.c
 
@@ -353,7 +376,7 @@ CMakeFiles/./bin/dawn.dir/src/queue.o.provides.build: CMakeFiles/./bin/dawn.dir/
 
 CMakeFiles/./bin/dawn.dir/src/thread.o: CMakeFiles/./bin/dawn.dir/flags.make
 CMakeFiles/./bin/dawn.dir/src/thread.o: src/thread.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_14)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_15)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/thread.o"
 	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/thread.o   -c /Users/jianjundeng/dawn/src/thread.c
 
@@ -387,6 +410,7 @@ _/bin/dawn_OBJECTS = \
 "CMakeFiles/./bin/dawn.dir/src/main.o" \
 "CMakeFiles/./bin/dawn.dir/src/malloc.o" \
 "CMakeFiles/./bin/dawn.dir/src/memory.o" \
+"CMakeFiles/./bin/dawn.dir/src/my_log.o" \
 "CMakeFiles/./bin/dawn.dir/src/protocol.o" \
 "CMakeFiles/./bin/dawn.dir/src/queue.o" \
 "CMakeFiles/./bin/dawn.dir/src/thread.o"
@@ -405,6 +429,7 @@ _/bin/dawn_EXTERNAL_OBJECTS =
 ./bin/dawn: CMakeFiles/./bin/dawn.dir/src/main.o
 ./bin/dawn: CMakeFiles/./bin/dawn.dir/src/malloc.o
 ./bin/dawn: CMakeFiles/./bin/dawn.dir/src/memory.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/my_log.o
 ./bin/dawn: CMakeFiles/./bin/dawn.dir/src/protocol.o
 ./bin/dawn: CMakeFiles/./bin/dawn.dir/src/queue.o
 ./bin/dawn: CMakeFiles/./bin/dawn.dir/src/thread.o
@@ -428,6 +453,7 @@ CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/list.o.require
 CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/main.o.requires
 CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/malloc.o.requires
 CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/memory.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/my_log.o.requires
 CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/protocol.o.requires
 CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/queue.o.requires
 CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/thread.o.requires

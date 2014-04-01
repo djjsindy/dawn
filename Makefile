@@ -280,6 +280,21 @@ src/memory.s:
 .PHONY : src/memory.s
 
 # target to build an object file
+src/my_log.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.o
+.PHONY : src/my_log.o
+
+# target to preprocess a source file
+src/my_log.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.i
+.PHONY : src/my_log.i
+
+# target to generate assembly for a file
+src/my_log.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.s
+.PHONY : src/my_log.s
+
+# target to build an object file
 src/protocol.o:
 	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/protocol.o
 .PHONY : src/protocol.o
@@ -366,6 +381,9 @@ help:
 	@echo "... src/memory.o"
 	@echo "... src/memory.i"
 	@echo "... src/memory.s"
+	@echo "... src/my_log.o"
+	@echo "... src/my_log.i"
+	@echo "... src/my_log.s"
 	@echo "... src/protocol.o"
 	@echo "... src/protocol.i"
 	@echo "... src/protocol.s"

@@ -4,6 +4,7 @@
 CMakeFiles/bin/dawn.dir/src/buffer.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/buffer.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/buffer.o: ./include/memory.h
+CMakeFiles/bin/dawn.dir/src/buffer.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/buffer.o: src/buffer.c
 
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/buffer.h
@@ -12,6 +13,7 @@ CMakeFiles/bin/dawn.dir/src/connection.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/memory.h
+CMakeFiles/bin/dawn.dir/src/connection.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/connection.o: ./include/queue.h
 CMakeFiles/bin/dawn.dir/src/connection.o: src/connection.c
@@ -26,6 +28,7 @@ CMakeFiles/bin/dawn.dir/src/fdop.o: src/fdop.c
 CMakeFiles/bin/dawn.dir/src/hash.o: ./include/hash.h
 CMakeFiles/bin/dawn.dir/src/hash.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/hash.o: ./include/memory.h
+CMakeFiles/bin/dawn.dir/src/hash.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/hash.o: src/hash.c
 
 CMakeFiles/bin/dawn.dir/src/item.o: ./include/item.h
@@ -53,6 +56,7 @@ CMakeFiles/bin/dawn.dir/src/main.o: ./include/hash.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/memory.h
+CMakeFiles/bin/dawn.dir/src/main.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/queue.h
 CMakeFiles/bin/dawn.dir/src/main.o: ./include/thread.h
@@ -63,7 +67,11 @@ CMakeFiles/bin/dawn.dir/src/malloc.o: src/malloc.c
 
 CMakeFiles/bin/dawn.dir/src/memory.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/memory.o: ./include/memory.h
+CMakeFiles/bin/dawn.dir/src/memory.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/memory.o: src/memory.c
+
+CMakeFiles/bin/dawn.dir/src/my_log.o: ./include/my_log.h
+CMakeFiles/bin/dawn.dir/src/my_log.o: src/my_log.c
 
 CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/protocol.o: ./include/connection.h

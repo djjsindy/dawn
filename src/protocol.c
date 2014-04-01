@@ -306,7 +306,7 @@ static void write_set_response(connection_t *conn){
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }
 
-static item_t* fill_get_response_header(char *key,int bytes){
+static item_t* fill_get_response_header(char *key ,int bytes){
   char *s=(char *)alloc_mem(pool,20);
   sprintf(s,"%d",bytes);
   int first_length=strlen(first_get_response);

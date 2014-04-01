@@ -4,12 +4,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <setjmp.h>
 #include "connection.h"
 #include "thread.h"
 #include "network.h"
 #include "buffer.h"
 #include "dy_char.h"
 #include "memory.h"
+#include "my_log.h"
 
 thread_t threads[WORKER_NUM];
 
@@ -22,6 +24,8 @@ static pthread_cond_t init_cond;
 static int init_count=0;
 
 extern mem_pool_t *pool;
+
+extern jmp_buf exit_buf;
 
 static void *worker_loop(void *arg);
 
@@ -79,20 +83,24 @@ static void *worker_loop(void *arg){
 }
 
 static void init_thread(thread_t *t){
-    t->pipe_channel=(pipe_channel_t*)alloc_mem(pool,sizeof(pipe_channel_t));
-    pipe_channel_t *p=t->pipe_channel;
-    t->queue=init_queue();
-    if(p==NULL){
-      printf("create pipe channel error\n");
-      exit(0);
-    }
-    int fd[2];
-    if(pipe(fd)<0){
-      printf("create pipe error\n");
-      exit(0);
-    }
-    p->masterfd=fd[1];
-    p->workerfd=fd[0];
+  t->pipe_channel=(pipe_channel_t*)alloc_mem(pool,sizeof(pipe_channel_t));
+  if(t->pipe_channel==NULL){
+    my_log(ERROR,"init thread pipe channel failed\n");
+    longjmp(exit_buf,-1);
+  }
+  pipe_channel_t *p=t->pipe_channel;
+  t->queue=init_queue();
+  if(p==NULL){
+    my_log(ERROR,"init queue failed\n");
+    longjmp(exit_buf,-1);
+  }
+  int fd[2];
+  if(pipe(fd)<0){
+    my_log(ERROR,"init queue pipe failed\n");
+    longjmp(exit_buf,-1);
+  }
+  p->masterfd=fd[1];
+  p->workerfd=fd[0];
 }
 
 int handle_write(connection_t *conn){

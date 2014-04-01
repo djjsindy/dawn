@@ -10,6 +10,7 @@ FILE(REMOVE_RECURSE
   "CMakeFiles/./bin/dawn.dir/src/main.o"
   "CMakeFiles/./bin/dawn.dir/src/malloc.o"
   "CMakeFiles/./bin/dawn.dir/src/memory.o"
+  "CMakeFiles/./bin/dawn.dir/src/my_log.o"
   "CMakeFiles/./bin/dawn.dir/src/protocol.o"
   "CMakeFiles/./bin/dawn.dir/src/queue.o"
   "CMakeFiles/./bin/dawn.dir/src/thread.o"

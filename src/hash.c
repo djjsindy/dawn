@@ -2,13 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <setjmp.h>
 #include "memory.h"
 #include "hash.h"
-#define INIT_SIZE 4
+#include "my_log.h"
 
 extern mem_pool_t *pool;
 
-static void expand_hash(hash_t* hash);
+extern jmp_buf exit_buf;
+
+static int expand_hash(hash_t* hash);
 
 static unsigned long cal_hash(char *k);
 
@@ -17,13 +20,13 @@ static void* none_lock_get(char *key,hash_t *hash);
 hash_t* init_hash(){
   hash_t *h=(hash_t*)alloc_mem(pool,sizeof(hash_t));
   if(h==NULL){
-    printf("alloc hash error\n");
-    exit(0);
+    my_log(ERROR,"alloc hash struct failed\n");
+    longjmp(exit_buf,-1);
   }
   h->elements=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*INIT_SIZE);
   if(h->elements==NULL){
-    printf("alloc hash elements error\n");
-    exit(0);
+    my_log(ERROR,"alloc hash elements failed\n");
+    longjmp(exit_buf,-1);
   }
   pthread_mutex_t mutex;
   pthread_mutex_init(&mutex, NULL);
@@ -33,21 +36,23 @@ hash_t* init_hash(){
   return h;
 }
 
-void put(char *k,void *data,hash_t *hash){
+int put(char *k,void *data,hash_t *hash){
   pthread_mutex_lock(hash->mutex);
   void *d=none_lock_get(k,hash);
   if(d!=NULL){
-    return;
+    return 0;
   }
   float factor=hash->num/hash->size;
-  if(factor>0.75f){
-    expand_hash(hash);
+  if(factor>HASH_FACTOR){
+    if(!expand_hash(hash)){
+      return 0;
+    }
   }
   int index=cal_hash(k)%hash->size;
   hash_element_t *nelement=(hash_element_t *)alloc_mem(pool,sizeof(hash_element_t));
   if(nelement==NULL){
-    printf("alloc new element error\n");
-    exit(0);
+    my_log(ERROR,"alloc hash element failed\n");
+    return 0;
   }
   nelement->key=k;
   nelement->data=data;
@@ -56,6 +61,7 @@ void put(char *k,void *data,hash_t *hash){
   nelement->next=next;
   hash->num+=1;
   pthread_mutex_unlock(hash->mutex);
+  return 1;
 }
 
 void* get(char* key,hash_t *hash){
@@ -108,8 +114,12 @@ void delete(char* key,hash_t *hash){
   pthread_mutex_unlock(hash->mutex);
 }
 
-static void expand_hash(hash_t *hash){
+static int expand_hash(hash_t *hash){
   hash_element_t **temp=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*(hash->size*2));
+  if(temp==NULL){
+    my_log(ERROR,"expand hash data failed\n");
+    return 0;
+  }
   int index=0;
   for(;index<hash->size;index++){
     hash_element_t *element=hash->elements[index];
@@ -123,6 +133,7 @@ static void expand_hash(hash_t *hash){
   free_mem(hash->elements);
   hash->elements=temp;
   hash->size*=2;
+  return 1;
 }
 
 static unsigned long cal_hash(char *key){

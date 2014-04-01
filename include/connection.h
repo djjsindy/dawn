@@ -13,7 +13,6 @@
 #define OK 2
 //write status
 #define ENOUGH 3
-#define CHAR_SIZE 16
 
 enum PARSE_STATUS{
   READ_COMMAND,

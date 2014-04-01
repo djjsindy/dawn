@@ -6,29 +6,3 @@
 
 #IncludeRegexTransform: 
 
-./include/list.h
-stdio.h
--
-stdlib.h
--
-
-./include/memory.h
-list.h
-./include/list.h
-pthread.h
--
-
-/Users/jianjundeng/dawn/src/memory.c
-stdio.h
--
-assert.h
--
-stdlib.h
--
-inttypes.h
--
-math.h
--
-memory.h
-/Users/jianjundeng/dawn/src/memory.h
-

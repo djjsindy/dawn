@@ -15,6 +15,7 @@ SET(CMAKE_DEPENDS_CHECK_C
   "/Users/jianjundeng/dawn/src/main.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/main.o"
   "/Users/jianjundeng/dawn/src/malloc.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/malloc.o"
   "/Users/jianjundeng/dawn/src/memory.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/memory.o"
+  "/Users/jianjundeng/dawn/src/my_log.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/my_log.o"
   "/Users/jianjundeng/dawn/src/protocol.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/protocol.o"
   "/Users/jianjundeng/dawn/src/queue.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/queue.o"
   "/Users/jianjundeng/dawn/src/thread.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/thread.o"

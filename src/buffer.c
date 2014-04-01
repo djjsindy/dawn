@@ -4,19 +4,20 @@
 #include "buffer.h"
 #include "memory.h"
 #include <pthread.h>
+#include "my_log.h"
 
 extern mem_pool_t *pool;
 
 buffer_t* alloc_buffer(int size){
   buffer_t *b=(buffer_t *)alloc_mem(pool,sizeof(buffer_t));
   if(b==NULL){
-    printf("alloc buffer error");
-    exit(1);
+    my_log(ERROR,"alloc buffer struct failed\n");
+    return NULL;
   }
   b->data=(char *)alloc_mem(pool,size);
   if(b->data==NULL){
-    printf("alloc buffer error");
-    exit(1);
+    my_log(ERROR,"alloc buffer data failed,alloc size:%d\n",size);
+    return NULL;
   }
   b->size=size;
   b->current=0;

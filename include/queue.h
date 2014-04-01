@@ -18,7 +18,7 @@ typedef struct queue_s queue_t;
 
 queue_t* init_queue();
 
-void push(queue_t *q,void *data);
+int push(queue_t *q,void *data);
 
 void* pop(queue_t *q);
 

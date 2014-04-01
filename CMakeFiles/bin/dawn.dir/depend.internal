@@ -5,6 +5,7 @@ CMakeFiles/bin/dawn.dir/src/buffer.o
  ./include/buffer.h
  ./include/list.h
  ./include/memory.h
+ ./include/my_log.h
  /Users/jianjundeng/dawn/src/buffer.c
 CMakeFiles/bin/dawn.dir/src/connection.o
  ./include/buffer.h
@@ -13,6 +14,7 @@ CMakeFiles/bin/dawn.dir/src/connection.o
  ./include/item.h
  ./include/list.h
  ./include/memory.h
+ ./include/my_log.h
  ./include/network.h
  ./include/queue.h
  /Users/jianjundeng/dawn/src/connection.c
@@ -27,6 +29,7 @@ CMakeFiles/bin/dawn.dir/src/hash.o
  ./include/hash.h
  ./include/list.h
  ./include/memory.h
+ ./include/my_log.h
  /Users/jianjundeng/dawn/src/hash.c
 CMakeFiles/bin/dawn.dir/src/item.o
  ./include/item.h
@@ -54,6 +57,7 @@ CMakeFiles/bin/dawn.dir/src/main.o
  ./include/item.h
  ./include/list.h
  ./include/memory.h
+ ./include/my_log.h
  ./include/network.h
  ./include/queue.h
  ./include/thread.h
@@ -64,7 +68,11 @@ CMakeFiles/bin/dawn.dir/src/malloc.o
 CMakeFiles/bin/dawn.dir/src/memory.o
  ./include/list.h
  ./include/memory.h
+ ./include/my_log.h
  /Users/jianjundeng/dawn/src/memory.c
+CMakeFiles/bin/dawn.dir/src/my_log.o
+ ./include/my_log.h
+ /Users/jianjundeng/dawn/src/my_log.c
 CMakeFiles/bin/dawn.dir/src/protocol.o
  ./include/buffer.h
  ./include/connection.h
