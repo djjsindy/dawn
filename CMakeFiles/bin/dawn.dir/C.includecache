@@ -22,6 +22,10 @@ item.h
 
 ./include/dy_char.h
 
+./include/hash.h
+pthread.h
+-
+
 ./include/item.h
 
 ./include/list.h
@@ -34,10 +38,6 @@ stdlib.h
 list.h
 ./include/list.h
 pthread.h
--
-
-./include/my_log.h
-stdarg.h
 -
 
 ./include/network.h
@@ -60,43 +60,27 @@ pthread.h
 list.h
 ./include/list.h
 
-./include/thread.h
+/Users/jianjundeng/dawn/src/protocol.c
+buffer.h
+/Users/jianjundeng/dawn/src/buffer.h
+dy_char.h
+/Users/jianjundeng/dawn/src/dy_char.h
+hash.h
+/Users/jianjundeng/dawn/src/hash.h
 queue.h
-./include/queue.h
-connection.h
-./include/connection.h
-network.h
-./include/network.h
-
-/Users/jianjundeng/dawn/src/select.c
+/Users/jianjundeng/dawn/src/queue.h
+item.h
+/Users/jianjundeng/dawn/src/item.h
 network.h
 /Users/jianjundeng/dawn/src/network.h
-thread.h
-/Users/jianjundeng/dawn/src/thread.h
-my_log.h
-/Users/jianjundeng/dawn/src/my_log.h
 memory.h
 /Users/jianjundeng/dawn/src/memory.h
-list.h
-/Users/jianjundeng/dawn/src/list.h
-stdio.h
--
-sys/select.h
--
-sys/types.h
--
-arpa/inet.h
--
-netinet/in.h
--
-sys/socket.h
--
-unistd.h
+connection.h
+/Users/jianjundeng/dawn/src/connection.h
+string.h
 -
 stdlib.h
 -
-string.h
--
-setjmp.h
+stdio.h
 -
 

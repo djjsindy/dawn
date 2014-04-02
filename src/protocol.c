@@ -131,14 +131,11 @@ static int process_get(connection_t *conn){
   }
   char *key=rc->key->data;
   queue_t *q=(queue_t *)get(key,hash);
-  if(q==NULL){
-    write_null(conn,key);
-  }else{
+  if(q!=NULL){
     int first=1;
     while(1){
       item_t *i=(item_t *)pop(q);
       if(i==NULL){
-        write_null(conn,key);
         break;
       }
       if(first){    
@@ -150,8 +147,8 @@ static int process_get(connection_t *conn){
         break;
       }
     }
-    push(conn->wc->w_queue,fill_get_response_footer());
   } 
+  push(conn->wc->w_queue,fill_get_response_footer());
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
   return OK;
 }

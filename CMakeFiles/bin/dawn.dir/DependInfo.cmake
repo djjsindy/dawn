@@ -25,7 +25,7 @@ SET(CMAKE_C_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 SET(CMAKE_TARGET_DEFINITIONS
-  "HAVE_SELECT"
+  "HAVE_EVENT"
   )
 
 # Targets to which this target links.
