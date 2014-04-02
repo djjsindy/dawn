@@ -13,8 +13,11 @@
 #include "memory.h"
 #include "hash.h"
 #include "my_log.h"
+#include "network.h"
+
 #define SERVER_PORT 10000
 #define BACKmy_log 50
+
 static void start_listen();
 
 int server_sock_fd;
@@ -24,6 +27,7 @@ hash_t *hash;
 mem_pool_t *pool;
 
 jmp_buf exit_buf;
+
 
 int main (int argc, const char * argv[])
 {
@@ -39,9 +43,9 @@ int main (int argc, const char * argv[])
   event_context_t ec;
   ec.listen_fd=server_sock_fd;
   event_operation.init_event(&ec);
-  event_operation.add_listen_event(&ec);
+  event_operation.register_event(server_sock_fd,READ,&ec,NULL);
   while (1) {
-    event_operation.process_listen_event(&ec);
+    event_operation.process_event(&ec);
   }
   return 0;
 }
@@ -68,3 +72,5 @@ static void start_listen(){
     longjmp(exit_buf,-1);
   }
 }
+
+

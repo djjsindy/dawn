@@ -52,387 +52,412 @@ include CMakeFiles/./bin/dawn.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/./bin/dawn.dir/flags.make
 
-CMakeFiles/./bin/dawn.dir/src/buffer.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/buffer.o: src/buffer.c
+CMakeFiles/./bin/dawn.dir/src/buffer.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/buffer.c.o: src/buffer.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/buffer.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/buffer.o   -c /Users/jianjundeng/dawn/src/buffer.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/buffer.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/buffer.c.o   -c /Users/jianjundeng/dawn/src/buffer.c
 
-CMakeFiles/./bin/dawn.dir/src/buffer.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/buffer.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/buffer.c > CMakeFiles/./bin/dawn.dir/src/buffer.i
+CMakeFiles/./bin/dawn.dir/src/buffer.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/buffer.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/buffer.c > CMakeFiles/./bin/dawn.dir/src/buffer.c.i
 
-CMakeFiles/./bin/dawn.dir/src/buffer.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/buffer.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/buffer.c -o CMakeFiles/./bin/dawn.dir/src/buffer.s
+CMakeFiles/./bin/dawn.dir/src/buffer.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/buffer.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/buffer.c -o CMakeFiles/./bin/dawn.dir/src/buffer.c.s
 
-CMakeFiles/./bin/dawn.dir/src/buffer.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/buffer.o.requires
+CMakeFiles/./bin/dawn.dir/src/buffer.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/buffer.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/buffer.o.provides: CMakeFiles/./bin/dawn.dir/src/buffer.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/buffer.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/buffer.o.provides
+CMakeFiles/./bin/dawn.dir/src/buffer.c.o.provides: CMakeFiles/./bin/dawn.dir/src/buffer.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/buffer.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/buffer.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/buffer.o.provides.build: CMakeFiles/./bin/dawn.dir/src/buffer.o
+CMakeFiles/./bin/dawn.dir/src/buffer.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/buffer.c.o
 
-CMakeFiles/./bin/dawn.dir/src/connection.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/connection.o: src/connection.c
+CMakeFiles/./bin/dawn.dir/src/connection.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/connection.c.o: src/connection.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_2)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/connection.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/connection.o   -c /Users/jianjundeng/dawn/src/connection.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/connection.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/connection.c.o   -c /Users/jianjundeng/dawn/src/connection.c
 
-CMakeFiles/./bin/dawn.dir/src/connection.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/connection.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/connection.c > CMakeFiles/./bin/dawn.dir/src/connection.i
+CMakeFiles/./bin/dawn.dir/src/connection.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/connection.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/connection.c > CMakeFiles/./bin/dawn.dir/src/connection.c.i
 
-CMakeFiles/./bin/dawn.dir/src/connection.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/connection.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/connection.c -o CMakeFiles/./bin/dawn.dir/src/connection.s
+CMakeFiles/./bin/dawn.dir/src/connection.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/connection.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/connection.c -o CMakeFiles/./bin/dawn.dir/src/connection.c.s
 
-CMakeFiles/./bin/dawn.dir/src/connection.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/connection.o.requires
+CMakeFiles/./bin/dawn.dir/src/connection.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/connection.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/connection.o.provides: CMakeFiles/./bin/dawn.dir/src/connection.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/connection.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/connection.o.provides
+CMakeFiles/./bin/dawn.dir/src/connection.c.o.provides: CMakeFiles/./bin/dawn.dir/src/connection.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/connection.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/connection.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/connection.o.provides.build: CMakeFiles/./bin/dawn.dir/src/connection.o
+CMakeFiles/./bin/dawn.dir/src/connection.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/connection.c.o
 
-CMakeFiles/./bin/dawn.dir/src/dy_char.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/dy_char.o: src/dy_char.c
+CMakeFiles/./bin/dawn.dir/src/dy_char.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/dy_char.c.o: src/dy_char.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_3)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/dy_char.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/dy_char.o   -c /Users/jianjundeng/dawn/src/dy_char.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/dy_char.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/dy_char.c.o   -c /Users/jianjundeng/dawn/src/dy_char.c
 
-CMakeFiles/./bin/dawn.dir/src/dy_char.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/dy_char.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/dy_char.c > CMakeFiles/./bin/dawn.dir/src/dy_char.i
+CMakeFiles/./bin/dawn.dir/src/dy_char.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/dy_char.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/dy_char.c > CMakeFiles/./bin/dawn.dir/src/dy_char.c.i
 
-CMakeFiles/./bin/dawn.dir/src/dy_char.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/dy_char.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/dy_char.c -o CMakeFiles/./bin/dawn.dir/src/dy_char.s
+CMakeFiles/./bin/dawn.dir/src/dy_char.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/dy_char.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/dy_char.c -o CMakeFiles/./bin/dawn.dir/src/dy_char.c.s
 
-CMakeFiles/./bin/dawn.dir/src/dy_char.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/dy_char.o.requires
+CMakeFiles/./bin/dawn.dir/src/dy_char.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/dy_char.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/dy_char.o.provides: CMakeFiles/./bin/dawn.dir/src/dy_char.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/dy_char.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/dy_char.o.provides
+CMakeFiles/./bin/dawn.dir/src/dy_char.c.o.provides: CMakeFiles/./bin/dawn.dir/src/dy_char.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/dy_char.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/dy_char.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/dy_char.o.provides.build: CMakeFiles/./bin/dawn.dir/src/dy_char.o
+CMakeFiles/./bin/dawn.dir/src/dy_char.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/dy_char.c.o
 
-CMakeFiles/./bin/dawn.dir/src/fdop.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/fdop.o: src/fdop.c
+CMakeFiles/./bin/dawn.dir/src/fdop.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/fdop.c.o: src/fdop.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_4)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/fdop.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/fdop.o   -c /Users/jianjundeng/dawn/src/fdop.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/fdop.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/fdop.c.o   -c /Users/jianjundeng/dawn/src/fdop.c
 
-CMakeFiles/./bin/dawn.dir/src/fdop.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/fdop.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/fdop.c > CMakeFiles/./bin/dawn.dir/src/fdop.i
+CMakeFiles/./bin/dawn.dir/src/fdop.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/fdop.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/fdop.c > CMakeFiles/./bin/dawn.dir/src/fdop.c.i
 
-CMakeFiles/./bin/dawn.dir/src/fdop.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/fdop.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/fdop.c -o CMakeFiles/./bin/dawn.dir/src/fdop.s
+CMakeFiles/./bin/dawn.dir/src/fdop.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/fdop.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/fdop.c -o CMakeFiles/./bin/dawn.dir/src/fdop.c.s
 
-CMakeFiles/./bin/dawn.dir/src/fdop.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/fdop.o.requires
+CMakeFiles/./bin/dawn.dir/src/fdop.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/fdop.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/fdop.o.provides: CMakeFiles/./bin/dawn.dir/src/fdop.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/fdop.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/fdop.o.provides
+CMakeFiles/./bin/dawn.dir/src/fdop.c.o.provides: CMakeFiles/./bin/dawn.dir/src/fdop.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/fdop.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/fdop.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/fdop.o.provides.build: CMakeFiles/./bin/dawn.dir/src/fdop.o
+CMakeFiles/./bin/dawn.dir/src/fdop.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/fdop.c.o
 
-CMakeFiles/./bin/dawn.dir/src/hash.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/hash.o: src/hash.c
+CMakeFiles/./bin/dawn.dir/src/hash.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/hash.c.o: src/hash.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_5)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/hash.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/hash.o   -c /Users/jianjundeng/dawn/src/hash.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/hash.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/hash.c.o   -c /Users/jianjundeng/dawn/src/hash.c
 
-CMakeFiles/./bin/dawn.dir/src/hash.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/hash.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/hash.c > CMakeFiles/./bin/dawn.dir/src/hash.i
+CMakeFiles/./bin/dawn.dir/src/hash.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/hash.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/hash.c > CMakeFiles/./bin/dawn.dir/src/hash.c.i
 
-CMakeFiles/./bin/dawn.dir/src/hash.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/hash.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/hash.c -o CMakeFiles/./bin/dawn.dir/src/hash.s
+CMakeFiles/./bin/dawn.dir/src/hash.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/hash.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/hash.c -o CMakeFiles/./bin/dawn.dir/src/hash.c.s
 
-CMakeFiles/./bin/dawn.dir/src/hash.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/hash.o.requires
+CMakeFiles/./bin/dawn.dir/src/hash.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/hash.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/hash.o.provides: CMakeFiles/./bin/dawn.dir/src/hash.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/hash.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/hash.o.provides
+CMakeFiles/./bin/dawn.dir/src/hash.c.o.provides: CMakeFiles/./bin/dawn.dir/src/hash.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/hash.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/hash.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/hash.o.provides.build: CMakeFiles/./bin/dawn.dir/src/hash.o
+CMakeFiles/./bin/dawn.dir/src/hash.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/hash.c.o
 
-CMakeFiles/./bin/dawn.dir/src/item.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/item.o: src/item.c
+CMakeFiles/./bin/dawn.dir/src/item.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/item.c.o: src/item.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_6)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/item.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/item.o   -c /Users/jianjundeng/dawn/src/item.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/item.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/item.c.o   -c /Users/jianjundeng/dawn/src/item.c
 
-CMakeFiles/./bin/dawn.dir/src/item.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/item.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/item.c > CMakeFiles/./bin/dawn.dir/src/item.i
+CMakeFiles/./bin/dawn.dir/src/item.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/item.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/item.c > CMakeFiles/./bin/dawn.dir/src/item.c.i
 
-CMakeFiles/./bin/dawn.dir/src/item.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/item.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/item.c -o CMakeFiles/./bin/dawn.dir/src/item.s
+CMakeFiles/./bin/dawn.dir/src/item.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/item.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/item.c -o CMakeFiles/./bin/dawn.dir/src/item.c.s
 
-CMakeFiles/./bin/dawn.dir/src/item.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/item.o.requires
+CMakeFiles/./bin/dawn.dir/src/item.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/item.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/item.o.provides: CMakeFiles/./bin/dawn.dir/src/item.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/item.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/item.o.provides
+CMakeFiles/./bin/dawn.dir/src/item.c.o.provides: CMakeFiles/./bin/dawn.dir/src/item.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/item.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/item.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/item.o.provides.build: CMakeFiles/./bin/dawn.dir/src/item.o
+CMakeFiles/./bin/dawn.dir/src/item.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/item.c.o
 
-CMakeFiles/./bin/dawn.dir/src/kqueue.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/kqueue.o: src/kqueue.c
+CMakeFiles/./bin/dawn.dir/src/kqueue.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/kqueue.c.o: src/kqueue.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_7)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/kqueue.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/kqueue.o   -c /Users/jianjundeng/dawn/src/kqueue.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/kqueue.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/kqueue.c.o   -c /Users/jianjundeng/dawn/src/kqueue.c
 
-CMakeFiles/./bin/dawn.dir/src/kqueue.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/kqueue.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/kqueue.c > CMakeFiles/./bin/dawn.dir/src/kqueue.i
+CMakeFiles/./bin/dawn.dir/src/kqueue.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/kqueue.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/kqueue.c > CMakeFiles/./bin/dawn.dir/src/kqueue.c.i
 
-CMakeFiles/./bin/dawn.dir/src/kqueue.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/kqueue.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/kqueue.c -o CMakeFiles/./bin/dawn.dir/src/kqueue.s
+CMakeFiles/./bin/dawn.dir/src/kqueue.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/kqueue.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/kqueue.c -o CMakeFiles/./bin/dawn.dir/src/kqueue.c.s
 
-CMakeFiles/./bin/dawn.dir/src/kqueue.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/kqueue.o.requires
+CMakeFiles/./bin/dawn.dir/src/kqueue.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/kqueue.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/kqueue.o.provides: CMakeFiles/./bin/dawn.dir/src/kqueue.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/kqueue.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/kqueue.o.provides
+CMakeFiles/./bin/dawn.dir/src/kqueue.c.o.provides: CMakeFiles/./bin/dawn.dir/src/kqueue.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/kqueue.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/kqueue.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/kqueue.o.provides.build: CMakeFiles/./bin/dawn.dir/src/kqueue.o
+CMakeFiles/./bin/dawn.dir/src/kqueue.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/kqueue.c.o
 
-CMakeFiles/./bin/dawn.dir/src/list.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/list.o: src/list.c
+CMakeFiles/./bin/dawn.dir/src/list.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/list.c.o: src/list.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_8)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/list.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/list.o   -c /Users/jianjundeng/dawn/src/list.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/list.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/list.c.o   -c /Users/jianjundeng/dawn/src/list.c
 
-CMakeFiles/./bin/dawn.dir/src/list.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/list.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/list.c > CMakeFiles/./bin/dawn.dir/src/list.i
+CMakeFiles/./bin/dawn.dir/src/list.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/list.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/list.c > CMakeFiles/./bin/dawn.dir/src/list.c.i
 
-CMakeFiles/./bin/dawn.dir/src/list.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/list.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/list.c -o CMakeFiles/./bin/dawn.dir/src/list.s
+CMakeFiles/./bin/dawn.dir/src/list.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/list.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/list.c -o CMakeFiles/./bin/dawn.dir/src/list.c.s
 
-CMakeFiles/./bin/dawn.dir/src/list.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/list.o.requires
+CMakeFiles/./bin/dawn.dir/src/list.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/list.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/list.o.provides: CMakeFiles/./bin/dawn.dir/src/list.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/list.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/list.o.provides
+CMakeFiles/./bin/dawn.dir/src/list.c.o.provides: CMakeFiles/./bin/dawn.dir/src/list.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/list.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/list.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/list.o.provides.build: CMakeFiles/./bin/dawn.dir/src/list.o
+CMakeFiles/./bin/dawn.dir/src/list.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/list.c.o
 
-CMakeFiles/./bin/dawn.dir/src/main.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/main.o: src/main.c
+CMakeFiles/./bin/dawn.dir/src/main.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/main.c.o: src/main.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_9)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/main.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/main.o   -c /Users/jianjundeng/dawn/src/main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/main.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/main.c.o   -c /Users/jianjundeng/dawn/src/main.c
 
-CMakeFiles/./bin/dawn.dir/src/main.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/main.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/main.c > CMakeFiles/./bin/dawn.dir/src/main.i
+CMakeFiles/./bin/dawn.dir/src/main.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/main.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/main.c > CMakeFiles/./bin/dawn.dir/src/main.c.i
 
-CMakeFiles/./bin/dawn.dir/src/main.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/main.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/main.c -o CMakeFiles/./bin/dawn.dir/src/main.s
+CMakeFiles/./bin/dawn.dir/src/main.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/main.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/main.c -o CMakeFiles/./bin/dawn.dir/src/main.c.s
 
-CMakeFiles/./bin/dawn.dir/src/main.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/main.o.requires
+CMakeFiles/./bin/dawn.dir/src/main.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/main.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/main.o.provides: CMakeFiles/./bin/dawn.dir/src/main.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/main.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/main.o.provides
+CMakeFiles/./bin/dawn.dir/src/main.c.o.provides: CMakeFiles/./bin/dawn.dir/src/main.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/main.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/main.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/main.o.provides.build: CMakeFiles/./bin/dawn.dir/src/main.o
+CMakeFiles/./bin/dawn.dir/src/main.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/main.c.o
 
-CMakeFiles/./bin/dawn.dir/src/malloc.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/malloc.o: src/malloc.c
+CMakeFiles/./bin/dawn.dir/src/malloc.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/malloc.c.o: src/malloc.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_10)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/malloc.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/malloc.o   -c /Users/jianjundeng/dawn/src/malloc.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/malloc.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/malloc.c.o   -c /Users/jianjundeng/dawn/src/malloc.c
 
-CMakeFiles/./bin/dawn.dir/src/malloc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/malloc.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/malloc.c > CMakeFiles/./bin/dawn.dir/src/malloc.i
+CMakeFiles/./bin/dawn.dir/src/malloc.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/malloc.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/malloc.c > CMakeFiles/./bin/dawn.dir/src/malloc.c.i
 
-CMakeFiles/./bin/dawn.dir/src/malloc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/malloc.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/malloc.c -o CMakeFiles/./bin/dawn.dir/src/malloc.s
+CMakeFiles/./bin/dawn.dir/src/malloc.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/malloc.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/malloc.c -o CMakeFiles/./bin/dawn.dir/src/malloc.c.s
 
-CMakeFiles/./bin/dawn.dir/src/malloc.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/malloc.o.requires
+CMakeFiles/./bin/dawn.dir/src/malloc.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/malloc.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/malloc.o.provides: CMakeFiles/./bin/dawn.dir/src/malloc.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/malloc.o.provides
+CMakeFiles/./bin/dawn.dir/src/malloc.c.o.provides: CMakeFiles/./bin/dawn.dir/src/malloc.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/malloc.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/malloc.o.provides.build: CMakeFiles/./bin/dawn.dir/src/malloc.o
+CMakeFiles/./bin/dawn.dir/src/malloc.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/malloc.c.o
 
-CMakeFiles/./bin/dawn.dir/src/memory.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/memory.o: src/memory.c
+CMakeFiles/./bin/dawn.dir/src/memory.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/memory.c.o: src/memory.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_11)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/memory.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/memory.o   -c /Users/jianjundeng/dawn/src/memory.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/memory.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/memory.c.o   -c /Users/jianjundeng/dawn/src/memory.c
 
-CMakeFiles/./bin/dawn.dir/src/memory.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/memory.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/memory.c > CMakeFiles/./bin/dawn.dir/src/memory.i
+CMakeFiles/./bin/dawn.dir/src/memory.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/memory.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/memory.c > CMakeFiles/./bin/dawn.dir/src/memory.c.i
 
-CMakeFiles/./bin/dawn.dir/src/memory.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/memory.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/memory.c -o CMakeFiles/./bin/dawn.dir/src/memory.s
+CMakeFiles/./bin/dawn.dir/src/memory.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/memory.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/memory.c -o CMakeFiles/./bin/dawn.dir/src/memory.c.s
 
-CMakeFiles/./bin/dawn.dir/src/memory.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/memory.o.requires
+CMakeFiles/./bin/dawn.dir/src/memory.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/memory.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/memory.o.provides: CMakeFiles/./bin/dawn.dir/src/memory.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/memory.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/memory.o.provides
+CMakeFiles/./bin/dawn.dir/src/memory.c.o.provides: CMakeFiles/./bin/dawn.dir/src/memory.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/memory.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/memory.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/memory.o.provides.build: CMakeFiles/./bin/dawn.dir/src/memory.o
+CMakeFiles/./bin/dawn.dir/src/memory.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/memory.c.o
 
-CMakeFiles/./bin/dawn.dir/src/my_log.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/my_log.o: src/my_log.c
+CMakeFiles/./bin/dawn.dir/src/my_log.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/my_log.c.o: src/my_log.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_12)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/my_log.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/my_log.o   -c /Users/jianjundeng/dawn/src/my_log.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/my_log.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/my_log.c.o   -c /Users/jianjundeng/dawn/src/my_log.c
 
-CMakeFiles/./bin/dawn.dir/src/my_log.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/my_log.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/my_log.c > CMakeFiles/./bin/dawn.dir/src/my_log.i
+CMakeFiles/./bin/dawn.dir/src/my_log.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/my_log.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/my_log.c > CMakeFiles/./bin/dawn.dir/src/my_log.c.i
 
-CMakeFiles/./bin/dawn.dir/src/my_log.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/my_log.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/my_log.c -o CMakeFiles/./bin/dawn.dir/src/my_log.s
+CMakeFiles/./bin/dawn.dir/src/my_log.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/my_log.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/my_log.c -o CMakeFiles/./bin/dawn.dir/src/my_log.c.s
 
-CMakeFiles/./bin/dawn.dir/src/my_log.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/my_log.o.requires
+CMakeFiles/./bin/dawn.dir/src/my_log.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/my_log.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/my_log.o.provides: CMakeFiles/./bin/dawn.dir/src/my_log.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/my_log.o.provides
+CMakeFiles/./bin/dawn.dir/src/my_log.c.o.provides: CMakeFiles/./bin/dawn.dir/src/my_log.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/my_log.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/my_log.o.provides.build: CMakeFiles/./bin/dawn.dir/src/my_log.o
+CMakeFiles/./bin/dawn.dir/src/my_log.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/my_log.c.o
 
-CMakeFiles/./bin/dawn.dir/src/protocol.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/protocol.o: src/protocol.c
+CMakeFiles/./bin/dawn.dir/src/protocol.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/protocol.c.o: src/protocol.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_13)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/protocol.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/protocol.o   -c /Users/jianjundeng/dawn/src/protocol.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/protocol.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/protocol.c.o   -c /Users/jianjundeng/dawn/src/protocol.c
 
-CMakeFiles/./bin/dawn.dir/src/protocol.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/protocol.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/protocol.c > CMakeFiles/./bin/dawn.dir/src/protocol.i
+CMakeFiles/./bin/dawn.dir/src/protocol.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/protocol.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/protocol.c > CMakeFiles/./bin/dawn.dir/src/protocol.c.i
 
-CMakeFiles/./bin/dawn.dir/src/protocol.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/protocol.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/protocol.c -o CMakeFiles/./bin/dawn.dir/src/protocol.s
+CMakeFiles/./bin/dawn.dir/src/protocol.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/protocol.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/protocol.c -o CMakeFiles/./bin/dawn.dir/src/protocol.c.s
 
-CMakeFiles/./bin/dawn.dir/src/protocol.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/protocol.o.requires
+CMakeFiles/./bin/dawn.dir/src/protocol.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/protocol.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/protocol.o.provides: CMakeFiles/./bin/dawn.dir/src/protocol.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/protocol.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/protocol.o.provides
+CMakeFiles/./bin/dawn.dir/src/protocol.c.o.provides: CMakeFiles/./bin/dawn.dir/src/protocol.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/protocol.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/protocol.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/protocol.o.provides.build: CMakeFiles/./bin/dawn.dir/src/protocol.o
+CMakeFiles/./bin/dawn.dir/src/protocol.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/protocol.c.o
 
-CMakeFiles/./bin/dawn.dir/src/queue.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/queue.o: src/queue.c
+CMakeFiles/./bin/dawn.dir/src/queue.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/queue.c.o: src/queue.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_14)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/queue.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/queue.o   -c /Users/jianjundeng/dawn/src/queue.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/queue.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/queue.c.o   -c /Users/jianjundeng/dawn/src/queue.c
 
-CMakeFiles/./bin/dawn.dir/src/queue.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/queue.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/queue.c > CMakeFiles/./bin/dawn.dir/src/queue.i
+CMakeFiles/./bin/dawn.dir/src/queue.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/queue.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/queue.c > CMakeFiles/./bin/dawn.dir/src/queue.c.i
 
-CMakeFiles/./bin/dawn.dir/src/queue.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/queue.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/queue.c -o CMakeFiles/./bin/dawn.dir/src/queue.s
+CMakeFiles/./bin/dawn.dir/src/queue.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/queue.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/queue.c -o CMakeFiles/./bin/dawn.dir/src/queue.c.s
 
-CMakeFiles/./bin/dawn.dir/src/queue.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/queue.o.requires
+CMakeFiles/./bin/dawn.dir/src/queue.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/queue.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/queue.o.provides: CMakeFiles/./bin/dawn.dir/src/queue.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/queue.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/queue.o.provides
+CMakeFiles/./bin/dawn.dir/src/queue.c.o.provides: CMakeFiles/./bin/dawn.dir/src/queue.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/queue.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/queue.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/queue.o.provides.build: CMakeFiles/./bin/dawn.dir/src/queue.o
+CMakeFiles/./bin/dawn.dir/src/queue.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/queue.c.o
 
-CMakeFiles/./bin/dawn.dir/src/thread.o: CMakeFiles/./bin/dawn.dir/flags.make
-CMakeFiles/./bin/dawn.dir/src/thread.o: src/thread.c
+CMakeFiles/./bin/dawn.dir/src/select.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/select.c.o: src/select.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_15)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/thread.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/thread.o   -c /Users/jianjundeng/dawn/src/thread.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/select.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/select.c.o   -c /Users/jianjundeng/dawn/src/select.c
 
-CMakeFiles/./bin/dawn.dir/src/thread.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/thread.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/thread.c > CMakeFiles/./bin/dawn.dir/src/thread.i
+CMakeFiles/./bin/dawn.dir/src/select.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/select.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/select.c > CMakeFiles/./bin/dawn.dir/src/select.c.i
 
-CMakeFiles/./bin/dawn.dir/src/thread.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/thread.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/thread.c -o CMakeFiles/./bin/dawn.dir/src/thread.s
+CMakeFiles/./bin/dawn.dir/src/select.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/select.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/select.c -o CMakeFiles/./bin/dawn.dir/src/select.c.s
 
-CMakeFiles/./bin/dawn.dir/src/thread.o.requires:
-.PHONY : CMakeFiles/./bin/dawn.dir/src/thread.o.requires
+CMakeFiles/./bin/dawn.dir/src/select.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/select.c.o.requires
 
-CMakeFiles/./bin/dawn.dir/src/thread.o.provides: CMakeFiles/./bin/dawn.dir/src/thread.o.requires
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/thread.o.provides.build
-.PHONY : CMakeFiles/./bin/dawn.dir/src/thread.o.provides
+CMakeFiles/./bin/dawn.dir/src/select.c.o.provides: CMakeFiles/./bin/dawn.dir/src/select.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/select.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/select.c.o.provides
 
-CMakeFiles/./bin/dawn.dir/src/thread.o.provides.build: CMakeFiles/./bin/dawn.dir/src/thread.o
+CMakeFiles/./bin/dawn.dir/src/select.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/select.c.o
+
+CMakeFiles/./bin/dawn.dir/src/thread.c.o: CMakeFiles/./bin/dawn.dir/flags.make
+CMakeFiles/./bin/dawn.dir/src/thread.c.o: src/thread.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles $(CMAKE_PROGRESS_16)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/./bin/dawn.dir/src/thread.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/./bin/dawn.dir/src/thread.c.o   -c /Users/jianjundeng/dawn/src/thread.c
+
+CMakeFiles/./bin/dawn.dir/src/thread.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/./bin/dawn.dir/src/thread.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /Users/jianjundeng/dawn/src/thread.c > CMakeFiles/./bin/dawn.dir/src/thread.c.i
+
+CMakeFiles/./bin/dawn.dir/src/thread.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/./bin/dawn.dir/src/thread.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /Users/jianjundeng/dawn/src/thread.c -o CMakeFiles/./bin/dawn.dir/src/thread.c.s
+
+CMakeFiles/./bin/dawn.dir/src/thread.c.o.requires:
+.PHONY : CMakeFiles/./bin/dawn.dir/src/thread.c.o.requires
+
+CMakeFiles/./bin/dawn.dir/src/thread.c.o.provides: CMakeFiles/./bin/dawn.dir/src/thread.c.o.requires
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/thread.c.o.provides.build
+.PHONY : CMakeFiles/./bin/dawn.dir/src/thread.c.o.provides
+
+CMakeFiles/./bin/dawn.dir/src/thread.c.o.provides.build: CMakeFiles/./bin/dawn.dir/src/thread.c.o
 
 # Object files for target ./bin/dawn
 _/bin/dawn_OBJECTS = \
-"CMakeFiles/./bin/dawn.dir/src/buffer.o" \
-"CMakeFiles/./bin/dawn.dir/src/connection.o" \
-"CMakeFiles/./bin/dawn.dir/src/dy_char.o" \
-"CMakeFiles/./bin/dawn.dir/src/fdop.o" \
-"CMakeFiles/./bin/dawn.dir/src/hash.o" \
-"CMakeFiles/./bin/dawn.dir/src/item.o" \
-"CMakeFiles/./bin/dawn.dir/src/kqueue.o" \
-"CMakeFiles/./bin/dawn.dir/src/list.o" \
-"CMakeFiles/./bin/dawn.dir/src/main.o" \
-"CMakeFiles/./bin/dawn.dir/src/malloc.o" \
-"CMakeFiles/./bin/dawn.dir/src/memory.o" \
-"CMakeFiles/./bin/dawn.dir/src/my_log.o" \
-"CMakeFiles/./bin/dawn.dir/src/protocol.o" \
-"CMakeFiles/./bin/dawn.dir/src/queue.o" \
-"CMakeFiles/./bin/dawn.dir/src/thread.o"
+"CMakeFiles/./bin/dawn.dir/src/buffer.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/connection.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/dy_char.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/fdop.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/hash.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/item.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/kqueue.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/list.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/main.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/malloc.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/memory.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/my_log.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/protocol.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/queue.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/select.c.o" \
+"CMakeFiles/./bin/dawn.dir/src/thread.c.o"
 
 # External object files for target ./bin/dawn
 _/bin/dawn_EXTERNAL_OBJECTS =
 
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/buffer.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/connection.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/dy_char.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/fdop.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/hash.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/item.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/kqueue.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/list.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/main.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/malloc.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/memory.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/my_log.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/protocol.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/queue.o
-./bin/dawn: CMakeFiles/./bin/dawn.dir/src/thread.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/buffer.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/connection.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/dy_char.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/fdop.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/hash.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/item.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/kqueue.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/list.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/main.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/malloc.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/memory.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/my_log.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/protocol.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/queue.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/select.c.o
+./bin/dawn: CMakeFiles/./bin/dawn.dir/src/thread.c.o
 ./bin/dawn: CMakeFiles/./bin/dawn.dir/build.make
 ./bin/dawn: CMakeFiles/./bin/dawn.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking C executable ./bin/dawn"
@@ -442,21 +467,22 @@ _/bin/dawn_EXTERNAL_OBJECTS =
 CMakeFiles/./bin/dawn.dir/build: ./bin/dawn
 .PHONY : CMakeFiles/./bin/dawn.dir/build
 
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/buffer.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/connection.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/dy_char.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/fdop.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/hash.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/item.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/kqueue.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/list.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/main.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/malloc.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/memory.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/my_log.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/protocol.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/queue.o.requires
-CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/thread.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/buffer.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/connection.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/dy_char.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/fdop.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/hash.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/item.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/kqueue.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/list.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/main.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/malloc.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/memory.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/my_log.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/protocol.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/queue.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/select.c.o.requires
+CMakeFiles/./bin/dawn.dir/requires: CMakeFiles/./bin/dawn.dir/src/thread.c.o.requires
 .PHONY : CMakeFiles/./bin/dawn.dir/requires
 
 CMakeFiles/./bin/dawn.dir/clean:

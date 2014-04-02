@@ -114,230 +114,389 @@ depend:
 	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/build
 .PHONY : ./bin/dawn/fast
 
-# target to build an object file
-src/buffer.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/buffer.o
+src/buffer.o: src/buffer.c.o
 .PHONY : src/buffer.o
 
-# target to preprocess a source file
-src/buffer.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/buffer.i
+# target to build an object file
+src/buffer.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/buffer.c.o
+.PHONY : src/buffer.c.o
+
+src/buffer.i: src/buffer.c.i
 .PHONY : src/buffer.i
 
-# target to generate assembly for a file
-src/buffer.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/buffer.s
+# target to preprocess a source file
+src/buffer.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/buffer.c.i
+.PHONY : src/buffer.c.i
+
+src/buffer.s: src/buffer.c.s
 .PHONY : src/buffer.s
 
-# target to build an object file
-src/connection.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/connection.o
+# target to generate assembly for a file
+src/buffer.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/buffer.c.s
+.PHONY : src/buffer.c.s
+
+src/connection.o: src/connection.c.o
 .PHONY : src/connection.o
 
-# target to preprocess a source file
-src/connection.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/connection.i
+# target to build an object file
+src/connection.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/connection.c.o
+.PHONY : src/connection.c.o
+
+src/connection.i: src/connection.c.i
 .PHONY : src/connection.i
 
-# target to generate assembly for a file
-src/connection.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/connection.s
+# target to preprocess a source file
+src/connection.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/connection.c.i
+.PHONY : src/connection.c.i
+
+src/connection.s: src/connection.c.s
 .PHONY : src/connection.s
 
-# target to build an object file
-src/dy_char.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/dy_char.o
+# target to generate assembly for a file
+src/connection.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/connection.c.s
+.PHONY : src/connection.c.s
+
+src/dy_char.o: src/dy_char.c.o
 .PHONY : src/dy_char.o
 
-# target to preprocess a source file
-src/dy_char.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/dy_char.i
+# target to build an object file
+src/dy_char.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/dy_char.c.o
+.PHONY : src/dy_char.c.o
+
+src/dy_char.i: src/dy_char.c.i
 .PHONY : src/dy_char.i
 
-# target to generate assembly for a file
-src/dy_char.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/dy_char.s
+# target to preprocess a source file
+src/dy_char.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/dy_char.c.i
+.PHONY : src/dy_char.c.i
+
+src/dy_char.s: src/dy_char.c.s
 .PHONY : src/dy_char.s
 
-# target to build an object file
-src/fdop.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/fdop.o
+# target to generate assembly for a file
+src/dy_char.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/dy_char.c.s
+.PHONY : src/dy_char.c.s
+
+src/fdop.o: src/fdop.c.o
 .PHONY : src/fdop.o
 
-# target to preprocess a source file
-src/fdop.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/fdop.i
+# target to build an object file
+src/fdop.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/fdop.c.o
+.PHONY : src/fdop.c.o
+
+src/fdop.i: src/fdop.c.i
 .PHONY : src/fdop.i
 
-# target to generate assembly for a file
-src/fdop.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/fdop.s
+# target to preprocess a source file
+src/fdop.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/fdop.c.i
+.PHONY : src/fdop.c.i
+
+src/fdop.s: src/fdop.c.s
 .PHONY : src/fdop.s
 
-# target to build an object file
-src/hash.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/hash.o
+# target to generate assembly for a file
+src/fdop.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/fdop.c.s
+.PHONY : src/fdop.c.s
+
+src/hash.o: src/hash.c.o
 .PHONY : src/hash.o
 
-# target to preprocess a source file
-src/hash.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/hash.i
+# target to build an object file
+src/hash.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/hash.c.o
+.PHONY : src/hash.c.o
+
+src/hash.i: src/hash.c.i
 .PHONY : src/hash.i
 
-# target to generate assembly for a file
-src/hash.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/hash.s
+# target to preprocess a source file
+src/hash.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/hash.c.i
+.PHONY : src/hash.c.i
+
+src/hash.s: src/hash.c.s
 .PHONY : src/hash.s
 
-# target to build an object file
-src/item.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/item.o
+# target to generate assembly for a file
+src/hash.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/hash.c.s
+.PHONY : src/hash.c.s
+
+src/item.o: src/item.c.o
 .PHONY : src/item.o
 
-# target to preprocess a source file
-src/item.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/item.i
+# target to build an object file
+src/item.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/item.c.o
+.PHONY : src/item.c.o
+
+src/item.i: src/item.c.i
 .PHONY : src/item.i
 
-# target to generate assembly for a file
-src/item.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/item.s
+# target to preprocess a source file
+src/item.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/item.c.i
+.PHONY : src/item.c.i
+
+src/item.s: src/item.c.s
 .PHONY : src/item.s
 
-# target to build an object file
-src/kqueue.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/kqueue.o
+# target to generate assembly for a file
+src/item.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/item.c.s
+.PHONY : src/item.c.s
+
+src/kqueue.o: src/kqueue.c.o
 .PHONY : src/kqueue.o
 
-# target to preprocess a source file
-src/kqueue.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/kqueue.i
+# target to build an object file
+src/kqueue.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/kqueue.c.o
+.PHONY : src/kqueue.c.o
+
+src/kqueue.i: src/kqueue.c.i
 .PHONY : src/kqueue.i
 
-# target to generate assembly for a file
-src/kqueue.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/kqueue.s
+# target to preprocess a source file
+src/kqueue.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/kqueue.c.i
+.PHONY : src/kqueue.c.i
+
+src/kqueue.s: src/kqueue.c.s
 .PHONY : src/kqueue.s
 
-# target to build an object file
-src/list.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/list.o
+# target to generate assembly for a file
+src/kqueue.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/kqueue.c.s
+.PHONY : src/kqueue.c.s
+
+src/list.o: src/list.c.o
 .PHONY : src/list.o
 
-# target to preprocess a source file
-src/list.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/list.i
+# target to build an object file
+src/list.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/list.c.o
+.PHONY : src/list.c.o
+
+src/list.i: src/list.c.i
 .PHONY : src/list.i
 
-# target to generate assembly for a file
-src/list.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/list.s
+# target to preprocess a source file
+src/list.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/list.c.i
+.PHONY : src/list.c.i
+
+src/list.s: src/list.c.s
 .PHONY : src/list.s
 
-# target to build an object file
-src/main.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/main.o
+# target to generate assembly for a file
+src/list.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/list.c.s
+.PHONY : src/list.c.s
+
+src/main.o: src/main.c.o
 .PHONY : src/main.o
 
-# target to preprocess a source file
-src/main.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/main.i
+# target to build an object file
+src/main.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/main.c.o
+.PHONY : src/main.c.o
+
+src/main.i: src/main.c.i
 .PHONY : src/main.i
 
-# target to generate assembly for a file
-src/main.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/main.s
+# target to preprocess a source file
+src/main.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/main.c.i
+.PHONY : src/main.c.i
+
+src/main.s: src/main.c.s
 .PHONY : src/main.s
 
-# target to build an object file
-src/malloc.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.o
+# target to generate assembly for a file
+src/main.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/main.c.s
+.PHONY : src/main.c.s
+
+src/malloc.o: src/malloc.c.o
 .PHONY : src/malloc.o
 
-# target to preprocess a source file
-src/malloc.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.i
+# target to build an object file
+src/malloc.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.c.o
+.PHONY : src/malloc.c.o
+
+src/malloc.i: src/malloc.c.i
 .PHONY : src/malloc.i
 
-# target to generate assembly for a file
-src/malloc.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.s
+# target to preprocess a source file
+src/malloc.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.c.i
+.PHONY : src/malloc.c.i
+
+src/malloc.s: src/malloc.c.s
 .PHONY : src/malloc.s
 
-# target to build an object file
-src/memory.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/memory.o
+# target to generate assembly for a file
+src/malloc.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.c.s
+.PHONY : src/malloc.c.s
+
+src/memory.o: src/memory.c.o
 .PHONY : src/memory.o
 
-# target to preprocess a source file
-src/memory.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/memory.i
+# target to build an object file
+src/memory.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/memory.c.o
+.PHONY : src/memory.c.o
+
+src/memory.i: src/memory.c.i
 .PHONY : src/memory.i
 
-# target to generate assembly for a file
-src/memory.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/memory.s
+# target to preprocess a source file
+src/memory.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/memory.c.i
+.PHONY : src/memory.c.i
+
+src/memory.s: src/memory.c.s
 .PHONY : src/memory.s
 
-# target to build an object file
-src/my_log.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.o
+# target to generate assembly for a file
+src/memory.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/memory.c.s
+.PHONY : src/memory.c.s
+
+src/my_log.o: src/my_log.c.o
 .PHONY : src/my_log.o
 
-# target to preprocess a source file
-src/my_log.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.i
+# target to build an object file
+src/my_log.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.c.o
+.PHONY : src/my_log.c.o
+
+src/my_log.i: src/my_log.c.i
 .PHONY : src/my_log.i
 
-# target to generate assembly for a file
-src/my_log.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.s
+# target to preprocess a source file
+src/my_log.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.c.i
+.PHONY : src/my_log.c.i
+
+src/my_log.s: src/my_log.c.s
 .PHONY : src/my_log.s
 
-# target to build an object file
-src/protocol.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/protocol.o
+# target to generate assembly for a file
+src/my_log.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.c.s
+.PHONY : src/my_log.c.s
+
+src/protocol.o: src/protocol.c.o
 .PHONY : src/protocol.o
 
-# target to preprocess a source file
-src/protocol.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/protocol.i
+# target to build an object file
+src/protocol.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/protocol.c.o
+.PHONY : src/protocol.c.o
+
+src/protocol.i: src/protocol.c.i
 .PHONY : src/protocol.i
 
-# target to generate assembly for a file
-src/protocol.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/protocol.s
+# target to preprocess a source file
+src/protocol.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/protocol.c.i
+.PHONY : src/protocol.c.i
+
+src/protocol.s: src/protocol.c.s
 .PHONY : src/protocol.s
 
-# target to build an object file
-src/queue.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/queue.o
+# target to generate assembly for a file
+src/protocol.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/protocol.c.s
+.PHONY : src/protocol.c.s
+
+src/queue.o: src/queue.c.o
 .PHONY : src/queue.o
 
-# target to preprocess a source file
-src/queue.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/queue.i
+# target to build an object file
+src/queue.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/queue.c.o
+.PHONY : src/queue.c.o
+
+src/queue.i: src/queue.c.i
 .PHONY : src/queue.i
 
-# target to generate assembly for a file
-src/queue.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/queue.s
+# target to preprocess a source file
+src/queue.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/queue.c.i
+.PHONY : src/queue.c.i
+
+src/queue.s: src/queue.c.s
 .PHONY : src/queue.s
 
+# target to generate assembly for a file
+src/queue.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/queue.c.s
+.PHONY : src/queue.c.s
+
+src/select.o: src/select.c.o
+.PHONY : src/select.o
+
 # target to build an object file
-src/thread.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/thread.o
-.PHONY : src/thread.o
+src/select.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/select.c.o
+.PHONY : src/select.c.o
+
+src/select.i: src/select.c.i
+.PHONY : src/select.i
 
 # target to preprocess a source file
-src/thread.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/thread.i
-.PHONY : src/thread.i
+src/select.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/select.c.i
+.PHONY : src/select.c.i
+
+src/select.s: src/select.c.s
+.PHONY : src/select.s
 
 # target to generate assembly for a file
-src/thread.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/thread.s
+src/select.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/select.c.s
+.PHONY : src/select.c.s
+
+src/thread.o: src/thread.c.o
+.PHONY : src/thread.o
+
+# target to build an object file
+src/thread.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/thread.c.o
+.PHONY : src/thread.c.o
+
+src/thread.i: src/thread.c.i
+.PHONY : src/thread.i
+
+# target to preprocess a source file
+src/thread.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/thread.c.i
+.PHONY : src/thread.c.i
+
+src/thread.s: src/thread.c.s
 .PHONY : src/thread.s
+
+# target to generate assembly for a file
+src/thread.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/thread.c.s
+.PHONY : src/thread.c.s
 
 # Help Target
 help:
@@ -390,6 +549,9 @@ help:
 	@echo "... src/queue.o"
 	@echo "... src/queue.i"
 	@echo "... src/queue.s"
+	@echo "... src/select.o"
+	@echo "... src/select.i"
+	@echo "... src/select.s"
 	@echo "... src/thread.o"
 	@echo "... src/thread.i"
 	@echo "... src/thread.s"

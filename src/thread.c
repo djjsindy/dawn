@@ -5,6 +5,12 @@
 #include <string.h>
 #include <errno.h>
 #include <setjmp.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/event.h>
+#include <sys/types.h>
+#include <sys/time.h>
+#include <arpa/inet.h>
 #include "connection.h"
 #include "thread.h"
 #include "network.h"
@@ -13,9 +19,9 @@
 #include "memory.h"
 #include "my_log.h"
 
-thread_t threads[WORKER_NUM];
+static thread_t threads[WORKER_NUM];
 
-int worker_index=0;
+static int worker_index=0;
 
 static pthread_mutex_t init_lock;
 
@@ -26,6 +32,8 @@ static int init_count=0;
 extern mem_pool_t *pool;
 
 extern jmp_buf exit_buf;
+
+extern int server_sock_fd;
 
 static void *worker_loop(void *arg);
 
@@ -40,6 +48,8 @@ static void register_thread_init();
 extern int parse_command(connection_t *conn);
 
 extern int process_command(connection_t *conn);
+
+extern int set_noblocking(int fd);
 
 void start_workers(){
   pthread_mutex_init(&init_lock, NULL);
@@ -70,15 +80,15 @@ static void register_thread_init(){
 static void *worker_loop(void *arg){
   thread_t* t=(thread_t *)arg;
   init_thread(t);
-  event_context_t ec;
+  event_context_t *ec=(event_context_t *)alloc_mem(pool,sizeof(event_context_t));
   int notify_fd=t->pipe_channel->workerfd;
-  event_operation.init_event(&ec);
-  ec.worker_fd=notify_fd;
-  ec.queue=t->queue;
-  event_operation.register_event(notify_fd,READ,&ec,t);
+  event_operation.init_event(ec);
+  ec->worker_fd=notify_fd;
+  ec->queue=t->queue;
+  event_operation.register_event(notify_fd,READ,ec,t);
   register_thread_init();
   while(1){
-    event_operation.process_event(&ec);    
+    event_operation.process_event(ec);    
   }
 }
 
@@ -219,5 +229,23 @@ void handle_notify(int fd,event_context_t *ec){
         event_operation.register_event(co->fd,READ,ec,co);
         break;
       }
+  }
+}
+
+void accept_connection(){
+  struct sockaddr_in client_address;
+  socklen_t address_len;
+  int client_socket_fd = accept(server_sock_fd, (struct sockaddr *)&client_address, &address_len);
+  if(set_noblocking(client_socket_fd)<0){
+    my_log(ERROR,"set none block mode failed\n");
+  }
+  char notify_buf='c';
+  thread_t *t=&threads[worker_index];
+  push(t->queue,&client_socket_fd);
+  int fd=t->pipe_channel->masterfd;
+  write(fd,&notify_buf,1);
+  worker_index++;
+  if(worker_index==WORKER_NUM){
+    worker_index=0;
   }
 }

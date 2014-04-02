@@ -190,3 +190,42 @@ Parsed CXX implicit link information from above output:
   implicit fwks: [/Library/Frameworks;/System/Library/Frameworks]
 
 
+Determining if the include file sys/event.h exists passed with the following output:
+Change Dir: /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3886766867/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec3886766867.dir/build.make CMakeFiles/cmTryCompileExec3886766867.dir/build
+/opt/local/bin/cmake -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3886766867.dir/CheckIncludeFile.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec3886766867.dir/CheckIncludeFile.c.o   -c /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec3886766867
+/opt/local/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3886766867.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTryCompileExec3886766867.dir/CheckIncludeFile.c.o  -o cmTryCompileExec3886766867  
+
+
+Determining if the include file sys/select.h exists passed with the following output:
+Change Dir: /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec978523710/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec978523710.dir/build.make CMakeFiles/cmTryCompileExec978523710.dir/build
+/opt/local/bin/cmake -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec978523710.dir/CheckIncludeFile.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec978523710.dir/CheckIncludeFile.c.o   -c /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec978523710
+/opt/local/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec978523710.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTryCompileExec978523710.dir/CheckIncludeFile.c.o  -o cmTryCompileExec978523710  
+
+
+Determining if the include file sys/poll.h exists passed with the following output:
+Change Dir: /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3839728948/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec3839728948.dir/build.make CMakeFiles/cmTryCompileExec3839728948.dir/build
+/opt/local/bin/cmake -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3839728948.dir/CheckIncludeFile.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec3839728948.dir/CheckIncludeFile.c.o   -c /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec3839728948
+/opt/local/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3839728948.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTryCompileExec3839728948.dir/CheckIncludeFile.c.o  -o cmTryCompileExec3839728948  
+
+

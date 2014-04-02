@@ -16,6 +16,8 @@ SET(CMAKE_MAKEFILE_DEPENDS
   "/opt/local/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake"
   "/opt/local/share/cmake-2.8/Modules/CMakeGenericSystem.cmake"
   "/opt/local/share/cmake-2.8/Modules/CMakeSystemSpecificInformation.cmake"
+  "/opt/local/share/cmake-2.8/Modules/CheckIncludeFile.cmake"
+  "/opt/local/share/cmake-2.8/Modules/CheckIncludeFiles.cmake"
   "/opt/local/share/cmake-2.8/Modules/Compiler/Clang-C.cmake"
   "/opt/local/share/cmake-2.8/Modules/Compiler/Clang-CXX.cmake"
   "/opt/local/share/cmake-2.8/Modules/Compiler/Clang.cmake"

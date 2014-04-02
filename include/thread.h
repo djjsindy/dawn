@@ -25,4 +25,7 @@ void handle_notify(int fd,event_context_t *ec);
 void handle_read(connection_t *conn);
 
 int handle_write(connection_t *conn);
+
+void accept_connection();
+
 #endif
