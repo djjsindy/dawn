@@ -76,6 +76,8 @@ CMakeFiles/bin/dawn.dir/src/memory.c.o: src/memory.c
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: src/my_log.c
 
+CMakeFiles/bin/dawn.dir/src/poll.c.o: src/poll.c
+
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/dy_char.h

@@ -11,6 +11,7 @@ FILE(REMOVE_RECURSE
   "CMakeFiles/./bin/dawn.dir/src/malloc.c.o"
   "CMakeFiles/./bin/dawn.dir/src/memory.c.o"
   "CMakeFiles/./bin/dawn.dir/src/my_log.c.o"
+  "CMakeFiles/./bin/dawn.dir/src/poll.c.o"
   "CMakeFiles/./bin/dawn.dir/src/protocol.c.o"
   "CMakeFiles/./bin/dawn.dir/src/queue.c.o"
   "CMakeFiles/./bin/dawn.dir/src/select.c.o"

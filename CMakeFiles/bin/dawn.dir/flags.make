@@ -4,5 +4,5 @@
 # compile C with /usr/bin/cc
 C_FLAGS = -g -I/Users/jianjundeng/dawn/./include   
 
-C_DEFINES = -DHAVE_EVENT
+C_DEFINES = -DHAVE_SELECT
 

@@ -173,48 +173,40 @@ static int no_block_write(int fd,buffer_t *wbuf){
   return OK;
 }
 
+//这里read 不能while true 的read，因为当buffer缓冲区一直有数据（command 太多），导致了没有机会write，必须等到read全部完成后，才能write，这里只read一次。一边read一边write
 void handle_read(connection_t *conn){
   buffer_t *rbuf=conn->rbuf;
-  while(1){
-    int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
-    if(count<0){
-      return;
-    }else if(count==0){
-      printf("read count 0\n");
-      cancel_connection(conn);
-      return;
-    }
-    int read_all=rbuf->size-rbuf->limit;
-    rbuf->limit=rbuf->current+count;
-    int result;
-    //表示还有数据需要处理
-    while(has_remaining(rbuf)){
-      //command还未接收处理完
-      if(conn->rc->read_process==READ_COMMAND){
-        //接收处理command
-        result=parse_command(conn);
-        //表示command行没有接收全部，read没有read完全
-        if(result==AGAIN){
-          reset(rbuf);
-          break;
-        }
-      }
-      //处理command操作
-      result=process_command(conn);
-      //不管什么结果都收紧buf，去掉已经处理完成的数据，重置指针
-      if(result==AGAIN){
-        reset(rbuf);
-        break;
-      }else{
-        reset_read_context(conn->rc);
-      }   
-    }
-    reset(rbuf);
-    //如果本次read接收的数据小于预期，那么说明不用再次read了，os缓冲已经没有数据了，否则需要再次read，继续取数据
-    if(count<read_all){
-      return ;
-    }
+  int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
+  if(count<0){
+    return;
+  }else if(count==0){
+    event_operation.close_event(conn->fd,conn->ec);
+    cancel_connection(conn);
+    return;
   }
+  rbuf->limit=rbuf->current+count;
+  int result;
+        //表示还有数据需要处理
+  while(has_remaining(rbuf)){
+          //command还未接收处理完
+    if(conn->rc->read_process==READ_COMMAND){
+            //接收处理command
+      result=parse_command(conn);
+            //表示command行没有接收全部，read没有read完全
+      if(result==AGAIN){
+        break;
+      }
+    }
+          //处理command操作
+    result=process_command(conn);
+          //不管什么结果都收紧buf，去掉已经处理完成的数据，重置指针
+    if(result==AGAIN){
+      break;
+    }else{
+      reset_read_context(conn->rc);
+    }   
+  }
+  reset(rbuf);
 }
 
 void handle_notify(int fd,event_context_t *ec){
@@ -225,8 +217,11 @@ void handle_notify(int fd,event_context_t *ec){
       {
         connection_t *co=init_connection();
         co->ec=ec;
-        co->fd=*(int *)pop(ec->queue);
+        int *i=(int *)pop(ec->queue);
+        printf("fd %d\n",*i);
+        co->fd=*i;
         event_operation.register_event(co->fd,READ,ec,co);
+        free_mem(i);
         break;
       }
   }
@@ -241,7 +236,9 @@ void accept_connection(){
   }
   char notify_buf='c';
   thread_t *t=&threads[worker_index];
-  push(t->queue,&client_socket_fd);
+  int *i=(int *)alloc_mem(pool,sizeof(int));
+  *i=client_socket_fd;
+  push(t->queue,i);
   int fd=t->pipe_channel->masterfd;
   write(fd,&notify_buf,1);
   worker_index++;

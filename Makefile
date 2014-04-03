@@ -402,6 +402,30 @@ src/my_log.c.s:
 	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.c.s
 .PHONY : src/my_log.c.s
 
+src/poll.o: src/poll.c.o
+.PHONY : src/poll.o
+
+# target to build an object file
+src/poll.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/poll.c.o
+.PHONY : src/poll.c.o
+
+src/poll.i: src/poll.c.i
+.PHONY : src/poll.i
+
+# target to preprocess a source file
+src/poll.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/poll.c.i
+.PHONY : src/poll.c.i
+
+src/poll.s: src/poll.c.s
+.PHONY : src/poll.s
+
+# target to generate assembly for a file
+src/poll.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/poll.c.s
+.PHONY : src/poll.c.s
+
 src/protocol.o: src/protocol.c.o
 .PHONY : src/protocol.o
 
@@ -543,6 +567,9 @@ help:
 	@echo "... src/my_log.o"
 	@echo "... src/my_log.i"
 	@echo "... src/my_log.s"
+	@echo "... src/poll.o"
+	@echo "... src/poll.i"
+	@echo "... src/poll.s"
 	@echo "... src/protocol.o"
 	@echo "... src/protocol.i"
 	@echo "... src/protocol.s"

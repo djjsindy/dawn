@@ -14,16 +14,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <setjmp.h>
-
-int max_fd;
+#include <errno.h> 
 
 struct event_s{
   void *data;
   int fd;
-  int event_type;
+  enum EVENT event;
 };
 
-struct timeval tv={1,0};
+struct timeval tv={5,0};
 
 typedef struct event_s event_t;
 
@@ -35,9 +34,13 @@ static void select_del_event(int fd,enum EVENT event,event_context_t *ec);
 
 static void select_process_event(event_context_t *ec);
 
+static void select_close_event(int fd,event_context_t *ec);
+
 static int insert_event(int fd,int index,event_t *events);
 
-static int find_event(int fd,int start,int end,event_t *events);
+static int find_empty_slot(event_t *events);
+
+static int prepare_fd_set(event_context_t *ec,fd_set *read_set,fd_set *write_set);
 
 extern int worker_index;
 
@@ -55,81 +58,56 @@ event_operation_t event_operation={
   select_init_event,
   select_register_event,
   select_del_event,
-  select_process_event
+  select_process_event,
+  select_close_event
 };
 
 static void select_init_event(event_context_t *ec){ 
-  event_t events[MAX_EVENT_COUNT];
+  event_t *events=alloc_mem(pool,sizeof(event_t)*MAX_EVENT_COUNT);
+  int index=0;
+  while(index<MAX_EVENT_COUNT){
+    events[index].fd=0;
+    index++;
+  }
   ec->events=events;
-  ec->fd_num=0;
 }
 
 static void select_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+  int index=find_empty_slot(ec->events);
   event_t *events=ec->events;
-  int index=find_event(fd,0,ec->fd_num,events);
-  if(index==-1){
-    index=insert_event(fd,ec->fd_num,events);
+  if(index!=-1){
+    events[index].data=data;
+    events[index].fd=fd;
+    events[index].event=event;
   }
-  events[index].data=data;
-  events[index].event_type=events[index].event_type|event;
-  events[index].fd=fd;
-  ec->fd_num+=1;
 }
 
-static int insert_event(int fd,int index,event_t *events){
-  while(index>0){
-    if(events[index-1].fd>fd){
-      event_t t=events[index];
-      events[index]=events[index-1];
-      events[index-1]=t;
-      index--;
-    }else{
-      break;
+static int find_empty_slot(event_t *events){
+  int index=0;
+  while(index<MAX_EVENT_COUNT){
+    if(events[index].fd==0){
+      return index;
     }
+    index++;
   }
-  return index;
-}
-
-static int find_event(int fd,int start,int end,event_t *events){
-  if(start>end){
-    return -1;
-  }
-  int mid=start+(end-start)/2;
-  if(fd==events[mid].fd){
-    return mid;
-  }else if(events[mid].fd>fd){
-    return find_event(fd,mid+1,end,events);
-  }else 
-    return find_event(fd,start,mid-1,events);
+  return -1;
 }
 
 static void select_del_event(int fd,enum EVENT event,event_context_t *ec){
+  int index=0;
   event_t *events=ec->events;
-  int index=find_event(fd,0,ec->fd_num,events);
-  if(index!=-1){
-    events[index].event_type&=~event;
+  while(index<MAX_EVENT_COUNT){
+    if(events[index].fd==fd&&events[index].event==event){
+      events[index].fd=0;
+    }
+    index++;
   }
 }
 
 static void select_process_event(event_context_t *ec){
-  int max=0;
   fd_set read_set;
   fd_set write_set;
-  FD_ZERO(&read_set);
-  FD_ZERO(&write_set);
-  int index=0;
-  for(;index<ec->fd_num;index++){
-    event_t *event=((event_t *)ec->events)+index;
-    if((event->event_type&READ)!=0){
-      FD_SET(event->fd,&read_set);
-    } 
-    if((event->event_type&WRITE)!=0){
-      FD_SET(event->fd,&write_set);
-    }
-    if(event->fd>max){
-      max=event->fd;
-    }
-  }
+  int max=prepare_fd_set(ec,&read_set,&write_set);
   int ret = select(max+1, &read_set, &write_set, NULL, &tv);
   if(ret==-1){
     my_log(ERROR,"kqueue event error\n");
@@ -137,24 +115,62 @@ static void select_process_event(event_context_t *ec){
   }else if(ret==0){
     return;
   }
-  int i=0;
-  for(;i<ec->fd_num;i++){
-    event_t *events=(event_t *)ec->events;
+  event_t *events=(event_t *)ec->events;
+  int i=0;  
+  for(;i<MAX_EVENT_COUNT;i++){
     int fd=events[i].fd;
+    if(fd==0){
+      continue;
+    }
     if(FD_ISSET(fd,&read_set)){
-      if(fd==ec->worker_fd){
-        handle_notify(fd,ec);
-      }else if(fd==ec->listen_fd){
+      if(fd==ec->listen_fd){
         accept_connection();
+      }else if(fd==ec->worker_fd){
+        handle_notify(fd,ec);
       }else{
         handle_read(events[i].data);
       }
-    }else if(FD_ISSET(fd,&write_set)){
+    }
+    if(FD_ISSET(fd,&write_set)){
       int result=handle_write(events[i].data);
       if(result==OK){
         event_operation.del_event(fd,WRITE,ec);
       }
     }
+  }
+}
+
+static int prepare_fd_set(event_context_t *ec,fd_set *read_set,fd_set *write_set){
+  int max=0;
+  FD_ZERO(read_set);
+  FD_ZERO(write_set);
+  int index=0;
+  event_t *events=(event_t *)ec->events;
+  for(;index<MAX_EVENT_COUNT;index++){    
+    if(events[index].fd==0){
+      continue;
+    }
+    if(events[index].event==READ){
+      FD_SET(events[index].fd,read_set);
+    }
+    if(events[index].event==WRITE){
+      FD_SET(events[index].fd,write_set);
+    }
+    if(events[index].fd>max){
+      max=events[index].fd;
+    }
+  }
+  return max;
+}
+
+static void select_close_event(int fd,event_context_t *ec){
+  event_t *events=ec->events;
+  int index=0;
+  while(index<MAX_EVENT_COUNT){
+    if(events[index].fd==fd){
+      events[index].fd=0;
+    }
+    index++;
   }
 }
 #endif

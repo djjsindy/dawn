@@ -21,6 +21,8 @@ static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec);
 
 static void kqueue_process_event(event_context_t *ec);
 
+static void kqueue_close_event(int fd,event_context_t *ec);
+
 extern int server_sock_fd;
 
 extern jmp_buf exit_buf;
@@ -31,7 +33,8 @@ event_operation_t event_operation={
   kqueue_init_event,
   kqueue_register_event,
   kqueue_del_event,
-  kqueue_process_event
+  kqueue_process_event,
+  kqueue_close_event
 };
 
 static void kqueue_init_event(event_context_t *ec){ 
@@ -42,7 +45,7 @@ static void kqueue_init_event(event_context_t *ec){
   }
   ec->fd=kq;
   struct kevent events[MAX_EVENT_COUNT];
-  ec->events=&events;
+  ec->events=events;
 }
 
 static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
@@ -100,6 +103,11 @@ static void kqueue_process_event(event_context_t *ec){
       }
     }
   }
+}
+
+static void kqueue_close_event(int fd,event_context_t *ec){
+  //nothing to do ,because kqueue will delete event,when fd is close
+
 }
 
 #endif
