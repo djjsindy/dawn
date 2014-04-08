@@ -1,5 +1,4 @@
 #include <stdarg.h>
-#define LOG_FILE "../log/dawn.log"
 #define LOG_LEVEL INFO
 
 enum log_level{

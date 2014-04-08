@@ -20,6 +20,8 @@
 
 static void start_listen();
 
+extern int daemonize();
+
 int server_sock_fd;
 
 hash_t *hash;
@@ -31,6 +33,7 @@ jmp_buf exit_buf;
 
 int main (int argc, const char * argv[])
 {
+  daemonize();
   int exit_code=0;
   if((exit_code=setjmp(exit_buf))!=0){
     exit(exit_code);

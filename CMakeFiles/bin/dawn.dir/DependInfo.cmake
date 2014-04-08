@@ -6,6 +6,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
 SET(CMAKE_DEPENDS_CHECK_C
   "/Users/jianjundeng/dawn/src/buffer.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/buffer.c.o"
   "/Users/jianjundeng/dawn/src/connection.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/connection.c.o"
+  "/Users/jianjundeng/dawn/src/daemon.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/daemon.c.o"
   "/Users/jianjundeng/dawn/src/dy_char.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/dy_char.c.o"
   "/Users/jianjundeng/dawn/src/fdop.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/fdop.c.o"
   "/Users/jianjundeng/dawn/src/hash.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/hash.c.o"
@@ -26,7 +27,8 @@ SET(CMAKE_C_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 SET(CMAKE_TARGET_DEFINITIONS
-  "HAVE_SELECT"
+  "HAVE_EVENT"
+  "PREFIX=\"/Users/jianjundeng/dawn\""
   )
 
 # Targets to which this target links.

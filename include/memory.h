@@ -110,6 +110,11 @@ struct mem_buddy_chunk_s{
    mem_pool_t *pool;
 
    /**
+    * 该chunk分配的内存的大小，包括当前struct的空间，记录这个字段主要是为了realloc的时候，侦测当前level下，chunk还有多少可以分配的内存
+    */
+   int size;
+
+   /**
    * 标志这段空间是否是malloc直接分配，如果是，释放的时候直接调用free函数
    */
    int is_direct;
@@ -131,7 +136,6 @@ struct mem_direct_chunk_s{
    */
   mem_pool_t *pool;
 
-
   /**
    * 标志这段空间是否是malloc直接分配，如果是，释放的时候直接调用free函数
    */ 
@@ -144,6 +148,8 @@ typedef struct mem_direct_chunk_s mem_direct_chunk_t;
 mem_pool_t* init_mem_pool();
 
 void* alloc_mem(mem_pool_t *pool,int size);
+
+void* realloc_mem(void *origin,int new_size);
 
 void free_mem(void *mem);
 

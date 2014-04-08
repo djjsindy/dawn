@@ -36,8 +36,6 @@ static void select_process_event(event_context_t *ec);
 
 static void select_close_event(int fd,event_context_t *ec);
 
-static int insert_event(int fd,int index,event_t *events);
-
 static int find_empty_slot(event_t *events);
 
 static int prepare_fd_set(event_context_t *ec,fd_set *read_set,fd_set *write_set);
@@ -110,7 +108,7 @@ static void select_process_event(event_context_t *ec){
   int max=prepare_fd_set(ec,&read_set,&write_set);
   int ret = select(max+1, &read_set, &write_set, NULL, &tv);
   if(ret==-1){
-    my_log(ERROR,"kqueue event error\n");
+    my_log(ERROR,"select event error\n");
     return;
   }else if(ret==0){
     return;

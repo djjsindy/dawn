@@ -1,0 +1,16 @@
+Determining if the include file sys/epoll.h exists failed with the following output:
+Change Dir: /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3854962130/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec3854962130.dir/build.make CMakeFiles/cmTryCompileExec3854962130.dir/build
+/opt/local/bin/cmake -E cmake_progress_report /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3854962130.dir/CheckIncludeFile.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec3854962130.dir/CheckIncludeFile.c.o   -c /Users/jianjundeng/dawn/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jianjundeng/dawn/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'sys/epoll.h' file not found
+#include <sys/epoll.h>
+         ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTryCompileExec3854962130.dir/CheckIncludeFile.c.o] Error 1
+make: *** [cmTryCompileExec3854962130/fast] Error 2
+
+

@@ -218,7 +218,6 @@ void handle_notify(int fd,event_context_t *ec){
         connection_t *co=init_connection();
         co->ec=ec;
         int *i=(int *)pop(ec->queue);
-        printf("fd %d\n",*i);
         co->fd=*i;
         event_operation.register_event(co->fd,READ,ec,co);
         free_mem(i);

@@ -6,21 +6,26 @@
 #include <setjmp.h>
 #include "memory.h"
 #include "my_log.h"
+
+
+
 static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *pool);
 
 static int bin_index(int size,int bin_size);
 
 static buddy_t* init_buddy(int size,mem_pool_t *pool);
 
-static void* get_buddy_mem(buddy_t *buddy,int level);
+static mem_buddy_chunk_t* get_buddy_mem(buddy_t *buddy,int level);
 
 static void update_buddy_max(buddy_t *buddy);
 
-static void adjust_bin(buddy_t *buddy,int origin_index);
+static void adjust_bin(buddy_t *buddy);
 
 static void* direct_alloc(list_head_t *head,int size,mem_pool_t *pool);
 
 static void free_buddy_chunk(mem_buddy_chunk_t *chunk);
+
+static void free_direct_chunk(mem_direct_chunk_t *chunk);
 
 static void update_child_flag(buddy_t *buddy,int index,int flag);
 
@@ -32,11 +37,13 @@ static void free_buddy_bin(list_head_t **bin);
 
 static void free_direct_list(list_head_t *head);
 
-static int decide_real_size(int size);
+static int head_size();
 
 static void init_pool_list(list_head_t **base,int num);
 
 static void init_pthread_mutex(mem_pool_t *pool);
+
+static void * realloc_direct_chunk(mem_direct_chunk_t *old_chunk,int new_size);
 
 extern jmp_buf exit_buf;
 
@@ -124,7 +131,7 @@ static void free_buddy_bin(list_head_t **bin){
 }
 
 void* alloc_mem(mem_pool_t *pool,int size){
-  int real_size=decide_real_size(size);
+  int real_size=size+head_size();
   void *p;
   if(real_size<=SMALL_THRESHOLD){
     pthread_mutex_lock(&(pool->small_mutex));
@@ -142,10 +149,10 @@ void* alloc_mem(mem_pool_t *pool,int size){
   return p;
 }
 
-static int decide_real_size(int size){
+static int head_size(){
   int buddy_s_size=sizeof(mem_buddy_chunk_t);
   int direct_s_size=sizeof(mem_direct_chunk_t);
-  return size+(buddy_s_size>direct_s_size?buddy_s_size:direct_s_size);
+  return buddy_s_size>direct_s_size?buddy_s_size:direct_s_size;
 }
 
 static buddy_t* init_buddy(int size,mem_pool_t *pool){
@@ -162,7 +169,6 @@ static buddy_t* init_buddy(int size,mem_pool_t *pool){
     buddy->flags[i]=1;
   }
   void *mem=malloc(size);
-
   if(mem==NULL){
     my_log(ERROR,"alloc new buddy base failed\n");
     return NULL;
@@ -175,7 +181,7 @@ static buddy_t* init_buddy(int size,mem_pool_t *pool){
   return buddy;
 }
 
-static void* get_buddy_mem(buddy_t *buddy,int level){
+static mem_buddy_chunk_t* get_buddy_mem(buddy_t *buddy,int level){
   int size=buddy->size;
   int start=LEVEL_START(level);
   int end=LEVEL_END(level);
@@ -188,14 +194,13 @@ static void* get_buddy_mem(buddy_t *buddy,int level){
     }
     index++;
   }
-  assert(chunk!=NULL);
   chunk->buddy=buddy;
   chunk->is_direct=0;
   chunk->level=level;
   chunk->pool=buddy->pool;
   update_buddy_flag_inuse(buddy,index);
   update_buddy_max(buddy);
-  return USER_BUDDY_MEM(chunk);
+  return chunk;
 }
 
 
@@ -301,14 +306,15 @@ static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *p
     list_add_data(&buddy->list,head,head->next);
   }
   int max=buddy->max;
-  void* result=get_buddy_mem(buddy,DEFAULT_LEVEL-level);
+  mem_buddy_chunk_t *chunk=get_buddy_mem(buddy,DEFAULT_LEVEL-level);
+  chunk->size=size;
   if(max!=buddy->max){
-    adjust_bin(buddy,level);
+    adjust_bin(buddy);
   }
-  return result;
+  return USER_BUDDY_MEM(chunk);
 }
 
-static void adjust_bin(buddy_t *buddy,int index){
+static void adjust_bin(buddy_t *buddy){
   //delete from origin buddy list
   list_del_data(buddy->list.prev,buddy->list.next);
   //add buddy to new list
@@ -329,15 +335,19 @@ void free_mem(void *mem){
   int flag=*(FLAG_MEM(mem));
   if(flag==1){
     mem_direct_chunk_t *chunk=CHUNK_DIRECT_MEM(mem);
-    pthread_mutex_lock(&(chunk->pool->direct_mutex));
-    list_del_data(chunk->list.prev,chunk->list.next); 
-    free(&(chunk->list));
-    free(chunk);
-    pthread_mutex_unlock(&(chunk->pool->direct_mutex));
+    free_direct_chunk(chunk);
   }else{
     mem_buddy_chunk_t *chunk=CHUNK_BUDDY_MEM(mem);
     free_buddy_chunk(chunk);
   }
+}
+
+static void free_direct_chunk(mem_direct_chunk_t *chunk){
+  pthread_mutex_lock(&(chunk->pool->direct_mutex));
+  list_del_data(chunk->list.prev,chunk->list.next); 
+  free(&(chunk->list));
+  free(chunk);
+  pthread_mutex_unlock(&(chunk->pool->direct_mutex));
 }
 
 static void free_buddy_chunk(mem_buddy_chunk_t *chunk){
@@ -350,13 +360,97 @@ static void free_buddy_chunk(mem_buddy_chunk_t *chunk){
     mutex=&(chunk->pool->big_mutex);
   }
   pthread_mutex_lock(mutex);
-  int origin_index=bin_index(max,buddy->size);
   int diff=((void*)chunk - buddy->base)/(buddy->size>>chunk->level);
   int index=LEVEL_START(chunk->level)+diff;
   update_buddy_flag_unuse(buddy,index);  
   update_buddy_max(buddy);
   if(max!=buddy->max){
-    adjust_bin(buddy,origin_index);
+    adjust_bin(buddy);
   }
   pthread_mutex_unlock(mutex);
 }
+
+// void* realloc_mem(void *origin,int new_size){
+//   int flag=*(FLAG_MEM(origin));
+//   if(flag){
+//     mem_direct_chunk_t *chunk=CHUNK_DIRECT_MEM(origin);
+//     return realloc_direct_chunk(chunk,new_size);
+//   }else{
+//     mem_buddy_chunk_t *chunk=CHUNK_BUDDY_MEM(origin);
+//     return realloc_buddy_chunk(chunk,new_size);
+//   }
+// }
+
+// static void * realloc_direct_chunk(mem_direct_chunk_t *old_chunk,int new_size){
+//   pthread_mutex_lock(&(old_chunk->pool->direct_mutex));
+//   int real_size=new_size+head_size();
+//   mem_direct_chunk_t *chunk=(mem_direct_chunk_t *)realloc(old_chunk,real_size);
+//   pthread_mutex_unlock(&(chunk->pool->direct_mutex));
+//   return USER_DIRECT_MEM(chunk);
+// }
+
+// static void * realloc_buddy_chunk(mem_direct_chunk_t *old_chunk,int new_size){
+//   pthread_mutex_t *mutex;
+//   if(max==SMALL_THRESHOLD){
+//     mutex=&(old_chunk->pool->small_mutex);
+//   }else{
+//     mutex=&(old_chunk->pool->big_mutex);
+//   }
+//   pthread_mutex_lock(mutex);
+//   void *p;
+//   buddy_t *buddy=old_chunk->buddy;
+//   int size=old_chunk->size;
+//   int real_size=new_size+head_size();
+//   if(real_size<=size){
+//     p=CHUNK_BUDDY_MEM(old_chunk);
+//     goto END;
+//   }
+//   int max=old_chunk->max;
+//   int level=old_chunk->level;
+//   int level_size=max>>level;
+//   int diff=((void*)old_chunk - buddy->base)/(old_chunk->size>>old_chunk->level);
+//   //在需要几个level_size
+//   int need=((real_size-size)/level_size);
+//   if(need==0){
+//     p=CHUNK_BUDDY_MEM(old_chunk);
+//     goto END;
+//   }
+//   int index=LEVEL_START(level)+diff;
+//   index++;
+//   while(index<=LEVEL_END(level)){
+//     if(buddy->flags[index]==0){
+//       break;
+//     }
+//     need--;
+//     index++;
+//     if(need==0){
+//       break;
+//     }
+//   }
+  
+//   //表示可以根据当前的level，expand 当前chunk到new_size
+//   if(need==0){
+//     int i=LEVEL_START(level)+diff;
+//     while(i<index){
+//       buddy->flags[i]=0;
+//       update_buddy_flag_inuse(buddy,i);
+//     }
+//     update_buddy_max(buddy);
+//     old_chunk->size=real_size;
+//     if(max!=buddy->max){
+//       adjust_bin(buddy);
+//     }
+//     p=CHUNK_BUDDY_MEM(old_chunk);
+//   }else{
+//     p=alloc_mem(old_chunk->pool,new_size);
+//     memcpy(p,USER_BUDDY_MEM(old_chunk),size);
+//     update_buddy_flag_unuse(buddy,index);  
+//     update_buddy_max(buddy);
+//     if(max!=buddy->max){
+//       adjust_bin(buddy);
+//     }
+//   }
+// END:
+//   pthread_mutex_unlock(mutex);
+//   return p;
+// }

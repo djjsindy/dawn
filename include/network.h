@@ -27,6 +27,9 @@ struct event_context_s{
   int worker_fd;
   queue_t *queue;
   void *events;
+  #ifdef HAVE_POLL
+    void *data;
+  #endif
 };
 
 typedef struct event_context_s event_context_t;
