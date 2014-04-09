@@ -14,6 +14,8 @@ static int process_set(connection_t *conn);
 
 static int process_get(connection_t *conn);
 
+static int process_delete(connection_t *conn);
+
 static void process_client_error(connection_t *conn,const char *message);
 
 static void process_version(connection_t *conn);
@@ -22,6 +24,8 @@ static int parse_set_header(connection_t *conn);
 
 static int parse_get_header(connection_t *conn);
 
+static int parse_delete_header(connection_t *conn);
+
 static int process_set_body(connection_t *conn);
 
 static void write_set_response(connection_t *conn);
@@ -29,6 +33,8 @@ static void write_set_response(connection_t *conn);
 static item_t* fill_get_response_header(char *c,int bytes);
 
 static item_t* fill_get_response_footer();
+
+static void write_delete_response(connection_t *conn);
 
 static void write_null(connection_t *conn,char *key);
 
@@ -63,6 +69,8 @@ static const char *unsupport_command="unsupport_command";
 static const char *version="VERSION 1.0\r\n";
 
 static const char *empty="";
+
+static const char *deleted="DELETED\r\n";
 
 int parse_command(connection_t *conn){
   int result=AGAIN;
@@ -99,6 +107,8 @@ int process_command(connection_t *conn){
     result=process_set(conn);
   }else if(strcmp(data,"version")==0){
     process_version(conn);
+  }else if(strcmp(data,"delete")==0){
+    result=process_delete(conn);
   }else{
    process_client_error(conn,unsupport_command);
  }
@@ -340,4 +350,74 @@ static item_t* fill_get_response_footer(){
   i->data=c;
   i->c_size=length;
   return i;
+}
+
+static int process_delete(connection_t *conn){
+  read_context_t *rc=conn->rc;
+  if(rc->read_process!=READ_COMMAND_END){
+    int result=parse_delete_header(conn);
+    if(result==AGAIN){
+      return AGAIN;
+    }
+  }
+  char *key=rc->key->data;
+  queue_t *q=(queue_t *)get(key,hash);
+  if(q!=NULL){
+    while(1){
+      item_t *i=(item_t *)pop(q);
+      if(i==NULL){
+        break;
+      }
+      destroy_item(i);    
+    }
+  } 
+  write_delete_response(conn);
+  event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
+  return OK;
+}
+
+static void write_delete_response(connection_t *conn){
+  item_t *i=init_item();
+  int length=strlen(deleted);
+  char *del=(char *)alloc_mem(pool,length);
+  memcpy(del,deleted,length);
+  i->data=del;
+  i->c_size=length;
+  push(conn->wc->w_queue,i);
+}
+
+static int parse_delete_header(connection_t *conn){
+  read_context_t *rc=conn->rc;
+  buffer_t *buf=conn->rbuf;
+  while(buf->current<buf->limit){
+    char c=*(buf->data+buf->current);
+    buf->current+=1;
+    switch(rc->read_process){
+      case READ_KEY:
+        if(c==special_r){
+          add_terminal(rc->key);
+          rc->read_process=READ_COMMAND_LAST;
+        }else if(c==space){
+          add_terminal(rc->key);
+          rc->read_process=READ_EXPIRE_TIME;
+        }else{
+          add_char(rc->key,c);
+        }
+        break;
+      case READ_EXPIRE_TIME:
+        if(c==special_r){
+          rc->read_process=READ_COMMAND_LAST;
+        }
+        break;
+      case READ_COMMAND_LAST:
+        if(c==special_n){
+          rc->read_process=READ_COMMAND_END;
+          return COMMAND_OK;
+        }
+        break;
+      default:
+        break;   
+    }
+  }
+  return AGAIN;
 }

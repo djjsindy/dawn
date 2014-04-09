@@ -18,6 +18,7 @@
 #include "dy_char.h"
 #include "memory.h"
 #include "my_log.h"
+#include "item.h"
 
 static thread_t threads[WORKER_NUM];
 
@@ -142,9 +143,8 @@ int handle_write(connection_t *conn){
     //更新指针
     wc->w_index+=copy;
     wbuf->limit+=copy;
-    if(copy==wc->w_data->c_size){     
-      free_mem(wc->w_data->data);
-      free_mem(wc->w_data);
+    if(copy==wc->w_data->c_size){
+      destroy_item(wc->w_data);     
       wc->w_data=NULL;
       wc->w_index=0;
     }

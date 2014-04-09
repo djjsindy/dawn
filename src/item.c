@@ -18,6 +18,6 @@ item_t* init_item(){
 }
 
 void destroy_item(item_t *i){
-  free_mem(i->data);
+  free_mem((void *)i->data);
   free_mem(i);
 }
