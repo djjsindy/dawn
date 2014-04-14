@@ -28,4 +28,6 @@ int handle_write(connection_t *conn);
 
 void accept_connection();
 
+void close_connection(connection_t *conn);
+
 #endif

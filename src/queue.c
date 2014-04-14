@@ -17,6 +17,7 @@ queue_t *init_queue(){
     my_log(ERROR,"alloc queue list head failed\n");
     return NULL;
   }
+  q->size=0;
   init_list(q->head);
   return q;
 }
@@ -30,6 +31,7 @@ int push(queue_t *q,void *data){
   }
   item->data=data;
   list_add_data(&(item->list),q->head,q->head->next);
+  q->size+=1;
   pthread_mutex_unlock(&(q->mutex));
   return 1;
 }
@@ -42,9 +44,18 @@ void* pop(queue_t *q){
     queue_item_t *item=list_entry(del,queue_item_t,list);
     data=item->data;
     free_mem(item);  
+    q->size-=1;
   }  
   pthread_mutex_unlock(&(q->mutex));
   return data;
+}
+
+int queue_size(queue_t *q){
+  int size=0;
+  pthread_mutex_lock(&(q->mutex));
+  size=q->size;
+  pthread_mutex_unlock(&(q->mutex));
+  return size;
 }
 
 void destroy_queue(queue_t *q){
@@ -56,6 +67,7 @@ void destroy_queue(queue_t *q){
     free_mem(i->data);
     free_mem(i);
   }
+  pthread_mutex_destroy(&q->mutex);
   free_mem(q->head);
   free_mem(q);
 }

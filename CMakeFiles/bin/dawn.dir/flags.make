@@ -4,5 +4,5 @@
 # compile C with /usr/bin/cc
 C_FLAGS = -g -I/Users/jianjundeng/dawn/./include   
 
-C_DEFINES = -DHAVE_EVENT -DPREFIX=\"/Users/jianjundeng/dawn\"
+C_DEFINES = -DDAWN_HOME=\"/Users/jianjundeng/dawn\" -DHAVE_EVENT
 

@@ -5,6 +5,8 @@
 #include "my_log.h"
 #include "memory.h"
 
+#define LOG_DIR "/log/dawn.log"
+
 static FILE *out;
 
 extern jmp_buf exit_buf;
@@ -12,11 +14,11 @@ extern jmp_buf exit_buf;
 extern mem_pool_t *pool;
 
 void my_log_init(){
- char dir[200];
- int length=strlen(PREFIX);
- memcpy(dir,PREFIX,length);
- char *log_dir="/log/dawn.log";
+ char *log_dir=LOG_DIR;
+ int length=strlen(DAWN_HOME);
  int log_length=strlen(log_dir);
+ char dir[length+log_length+1];
+ memcpy(dir,DAWN_HOME,length);
  memcpy(dir+length,log_dir,log_length);
  dir[length+log_length]='\0';
  if ((out = fopen(dir, "a+"))== NULL) { 

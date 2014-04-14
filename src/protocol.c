@@ -6,6 +6,7 @@
   #include "network.h"
   #include "memory.h"
   #include "connection.h"
+  #include "thread.h"
   #include <string.h>
   #include <stdlib.h>
   #include <stdio.h>
@@ -43,6 +44,10 @@ extern hash_t *hash;
 extern event_operation_t event_operation;
 
 extern mem_pool_t *pool;
+
+extern void add_set_sync_data(char *key,item_t *i);
+
+extern void add_get_sync_data(char *key,int size);
 
 static const char space=' ';
 
@@ -109,9 +114,11 @@ int process_command(connection_t *conn){
     process_version(conn);
   }else if(strcmp(data,"delete")==0){
     result=process_delete(conn);
+  }else if(strcmp(data,"quit")==0){
+    close_connection(conn);
   }else{
    process_client_error(conn,unsupport_command);
- }
+  }
  return result;
 }
 
@@ -151,6 +158,7 @@ static int process_get(connection_t *conn){
       if(first){    
         push(conn->wc->w_queue,fill_get_response_header(key,i->size));
         first=0;
+        add_get_sync_data(key,i->size);
       }
       push(conn->wc->w_queue,i);
       if(i->end==1){
@@ -181,21 +189,21 @@ static int parse_get_header(connection_t *conn){
     buf->current+=1;
     switch(rc->read_process){
       case READ_KEY:
-        if(c==special_r){
-          add_terminal(rc->key);
-          rc->read_process=READ_COMMAND_LAST;
-        }else{
-          add_char(rc->key,c);
-        }
-        break;
+      if(c==special_r){
+        add_terminal(rc->key);
+        rc->read_process=READ_COMMAND_LAST;
+      }else{
+        add_char(rc->key,c);
+      }
+      break;
       case READ_COMMAND_LAST:
-        if(c==special_n){
-          rc->read_process=READ_COMMAND_END;
-          return COMMAND_OK;
-        }
-        break;
+      if(c==special_n){
+        rc->read_process=READ_COMMAND_END;
+        return COMMAND_OK;
+      }
+      break;
       default:
-        break;   
+      break;   
     }
   }
   return AGAIN;
@@ -251,6 +259,7 @@ static int process_set_body(connection_t *conn){
   i->data=c;
   i->c_size=fill;
   push(q,i);
+  add_set_sync_data(key,i);
   b->current+=fill;
   return result;
 }
@@ -394,29 +403,29 @@ static int parse_delete_header(connection_t *conn){
     buf->current+=1;
     switch(rc->read_process){
       case READ_KEY:
-        if(c==special_r){
-          add_terminal(rc->key);
-          rc->read_process=READ_COMMAND_LAST;
-        }else if(c==space){
-          add_terminal(rc->key);
-          rc->read_process=READ_EXPIRE_TIME;
-        }else{
-          add_char(rc->key,c);
-        }
-        break;
+      if(c==special_r){
+        add_terminal(rc->key);
+        rc->read_process=READ_COMMAND_LAST;
+      }else if(c==space){
+        add_terminal(rc->key);
+        rc->read_process=READ_EXPIRE_TIME;
+      }else{
+        add_char(rc->key,c);
+      }
+      break;
       case READ_EXPIRE_TIME:
-        if(c==special_r){
-          rc->read_process=READ_COMMAND_LAST;
-        }
-        break;
+      if(c==special_r){
+        rc->read_process=READ_COMMAND_LAST;
+      }
+      break;
       case READ_COMMAND_LAST:
-        if(c==special_n){
-          rc->read_process=READ_COMMAND_END;
-          return COMMAND_OK;
-        }
-        break;
+      if(c==special_n){
+        rc->read_process=READ_COMMAND_END;
+        return COMMAND_OK;
+      }
+      break;
       default:
-        break;   
+      break;   
     }
   }
   return AGAIN;

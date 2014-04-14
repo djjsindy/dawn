@@ -81,6 +81,14 @@ CMakeFiles/bin/dawn.dir/src/my_log.c.o
  ./include/memory.h
  ./include/my_log.h
  /Users/jianjundeng/dawn/src/my_log.c
+CMakeFiles/bin/dawn.dir/src/persistence.c.o
+ ./include/hash.h
+ ./include/item.h
+ ./include/list.h
+ ./include/memory.h
+ ./include/my_log.h
+ ./include/queue.h
+ /Users/jianjundeng/dawn/src/persistence.c
 CMakeFiles/bin/dawn.dir/src/poll.c.o
  ./include/buffer.h
  ./include/connection.h
@@ -103,6 +111,7 @@ CMakeFiles/bin/dawn.dir/src/protocol.c.o
  ./include/memory.h
  ./include/network.h
  ./include/queue.h
+ ./include/thread.h
  /Users/jianjundeng/dawn/src/protocol.c
 CMakeFiles/bin/dawn.dir/src/queue.c.o
  ./include/list.h

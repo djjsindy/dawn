@@ -22,6 +22,8 @@ static void start_listen();
 
 extern int daemonize();
 
+extern void init_sync();
+
 int server_sock_fd;
 
 hash_t *hash;
@@ -33,7 +35,7 @@ jmp_buf exit_buf;
 
 int main (int argc, const char * argv[])
 {
-  daemonize();
+  // daemonize();
   int exit_code=0;
   if((exit_code=setjmp(exit_buf))!=0){
     exit(exit_code);
@@ -41,6 +43,7 @@ int main (int argc, const char * argv[])
   my_log_init();
   pool=init_mem_pool();
   hash=init_hash();
+  init_sync();
   start_workers();
   start_listen();
   event_context_t ec;

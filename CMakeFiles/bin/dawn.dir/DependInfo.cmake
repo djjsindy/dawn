@@ -17,6 +17,7 @@ SET(CMAKE_DEPENDS_CHECK_C
   "/Users/jianjundeng/dawn/src/malloc.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/malloc.c.o"
   "/Users/jianjundeng/dawn/src/memory.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/memory.c.o"
   "/Users/jianjundeng/dawn/src/my_log.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/my_log.c.o"
+  "/Users/jianjundeng/dawn/src/persistence.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/persistence.c.o"
   "/Users/jianjundeng/dawn/src/poll.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/poll.c.o"
   "/Users/jianjundeng/dawn/src/protocol.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/protocol.c.o"
   "/Users/jianjundeng/dawn/src/queue.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/queue.c.o"
@@ -27,8 +28,8 @@ SET(CMAKE_C_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 SET(CMAKE_TARGET_DEFINITIONS
+  "DAWN_HOME=\"/Users/jianjundeng/dawn\""
   "HAVE_EVENT"
-  "PREFIX=\"/Users/jianjundeng/dawn\""
   )
 
 # Targets to which this target links.

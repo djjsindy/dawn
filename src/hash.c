@@ -147,3 +147,22 @@ static unsigned long cal_hash(char *key){
   return hash;
 }
 
+list_head_t* visit_hash(hash_t *hash){
+  pthread_mutex_lock(hash->mutex);
+  list_head_t* head=(list_head_t *)alloc_mem(pool,sizeof(list_head_t));
+  init_list(head);
+  int index=0;
+  for(;index<hash->size;index++){
+    hash_element_t *element=hash->elements[index];
+    while(element!=NULL){
+      hash_entry_t *entry=(hash_entry_t *)alloc_mem(pool,sizeof(hash_entry_t));
+      entry->data=element->data;
+      entry->key=element->key;
+      list_add_data(&(entry->list),head,head->next);
+      element=element->next;
+    }
+  }
+  pthread_mutex_unlock(hash->mutex);
+  return head;
+}
+

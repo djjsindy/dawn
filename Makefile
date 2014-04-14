@@ -426,6 +426,30 @@ src/my_log.c.s:
 	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/my_log.c.s
 .PHONY : src/my_log.c.s
 
+src/persistence.o: src/persistence.c.o
+.PHONY : src/persistence.o
+
+# target to build an object file
+src/persistence.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/persistence.c.o
+.PHONY : src/persistence.c.o
+
+src/persistence.i: src/persistence.c.i
+.PHONY : src/persistence.i
+
+# target to preprocess a source file
+src/persistence.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/persistence.c.i
+.PHONY : src/persistence.c.i
+
+src/persistence.s: src/persistence.c.s
+.PHONY : src/persistence.s
+
+# target to generate assembly for a file
+src/persistence.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/persistence.c.s
+.PHONY : src/persistence.c.s
+
 src/poll.o: src/poll.c.o
 .PHONY : src/poll.o
 
@@ -594,6 +618,9 @@ help:
 	@echo "... src/my_log.o"
 	@echo "... src/my_log.i"
 	@echo "... src/my_log.s"
+	@echo "... src/persistence.o"
+	@echo "... src/persistence.i"
+	@echo "... src/persistence.s"
 	@echo "... src/poll.o"
 	@echo "... src/poll.i"
 	@echo "... src/poll.s"

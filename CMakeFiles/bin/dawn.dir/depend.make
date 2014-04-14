@@ -81,6 +81,14 @@ CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: src/my_log.c
 
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/hash.h
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/item.h
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/memory.h
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/my_log.h
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/queue.h
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: src/persistence.c
+
 CMakeFiles/bin/dawn.dir/src/poll.c.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/poll.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/poll.c.o: ./include/dy_char.h
@@ -102,6 +110,7 @@ CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/queue.h
+CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/thread.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: src/protocol.c
 
 CMakeFiles/bin/dawn.dir/src/queue.c.o: ./include/list.h

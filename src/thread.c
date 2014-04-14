@@ -245,3 +245,9 @@ void accept_connection(){
     worker_index=0;
   }
 }
+
+void close_connection(connection_t *conn){
+  event_operation.close_event(conn->fd,conn->ec);
+  close(conn->fd);
+  cancel_connection(conn);
+}
