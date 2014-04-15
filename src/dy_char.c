@@ -55,19 +55,8 @@ static void expand_char(char_t *t){
 }
 
 void reset_char(char_t *t){
-  memset(t->data,0,strlen(t->data));
-  t->size=CHAR_SIZE;
+  memset(t->data,0,t->current);
   t->current=0;
-}
-
-
-void add_chars(char_t *t,char *cs){
-  int size=sizeof(cs);
-  int index=0;
-  while(index<size){
-    add_char(t,*(cs+index));
-    index++;
-  }
 }
 
 void destroy_char(char_t *t){

@@ -81,7 +81,7 @@ int parse_command(connection_t *conn){
   int result=AGAIN;
   read_context_t *rc=conn->rc;
   buffer_t *buf=conn->rbuf;
-  while(buf->current<buf->limit){
+  while(has_remaining(buf)){
     char c=*(buf->data+buf->current);
     buf->current+=1;
     if(c==space){
@@ -267,7 +267,7 @@ static int process_set_body(connection_t *conn){
 static int parse_set_header(connection_t *conn){
   read_context_t *rc=conn->rc;
   buffer_t *buf=conn->rbuf;
-  while(buf->current<buf->limit){
+  while(has_remaining(buf)){
     char c=*(buf->data+buf->current);
     buf->current+=1;
     switch(rc->read_process){
@@ -398,7 +398,7 @@ static void write_delete_response(connection_t *conn){
 static int parse_delete_header(connection_t *conn){
   read_context_t *rc=conn->rc;
   buffer_t *buf=conn->rbuf;
-  while(buf->current<buf->limit){
+  while(has_remaining(buf)){
     char c=*(buf->data+buf->current);
     buf->current+=1;
     switch(rc->read_process){
