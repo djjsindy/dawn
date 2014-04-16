@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+./include/buffer.h
+
+./include/dy_char.h
+
 ./include/hash.h
 pthread.h
 -
@@ -47,6 +51,12 @@ fcntl.h
 -
 string.h
 -
+dirent.h
+-
+sys/types.h
+-
+sys/stat.h
+-
 queue.h
 /Users/jianjundeng/dawn/src/queue.h
 list.h
@@ -59,4 +69,8 @@ item.h
 /Users/jianjundeng/dawn/src/item.h
 memory.h
 /Users/jianjundeng/dawn/src/memory.h
+buffer.h
+/Users/jianjundeng/dawn/src/buffer.h
+dy_char.h
+/Users/jianjundeng/dawn/src/dy_char.h
 

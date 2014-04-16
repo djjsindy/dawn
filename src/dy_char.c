@@ -52,6 +52,7 @@ static void expand_char(char_t *t){
   memcpy(temp,t->data,size);
   free_mem(t->data);
   t->data=temp;
+  t->size*=2;
 }
 
 void reset_char(char_t *t){

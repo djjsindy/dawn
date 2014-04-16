@@ -34,7 +34,7 @@ jmp_buf exit_buf;
 
 
 int main (int argc, const char * argv[])
-{
+{ //todo
   // daemonize();
   int exit_code=0;
   if((exit_code=setjmp(exit_buf))!=0){

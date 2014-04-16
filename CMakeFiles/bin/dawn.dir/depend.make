@@ -81,6 +81,8 @@ CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: src/my_log.c
 
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/hash.h
 CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/list.h

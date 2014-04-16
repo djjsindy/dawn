@@ -82,6 +82,8 @@ CMakeFiles/bin/dawn.dir/src/my_log.c.o
  ./include/my_log.h
  /Users/jianjundeng/dawn/src/my_log.c
 CMakeFiles/bin/dawn.dir/src/persistence.c.o
+ ./include/buffer.h
+ ./include/dy_char.h
  ./include/hash.h
  ./include/item.h
  ./include/list.h
