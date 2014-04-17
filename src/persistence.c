@@ -393,8 +393,7 @@ static void* recovery_process(void *arg){
 		}
 		compact(rbuf);
 	}
-	//todo 方便测试
-	//remove_queue_file(key);
+	remove_queue_file(key);
 	close(fd);
 	register_recovery_finish();
 	reset(rbuf);
@@ -439,4 +438,5 @@ static void trancate_queue_file(char *key){
 	if(rename(queue_temp_file_url(key),queue_file_url(key))<0){
 		my_log(ERROR,"truncate queue file error\n");
 	}
+	reset(rbuf);
 }

@@ -8,17 +8,20 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <unistd.h>
-#include <setjmp.h>
 #include "thread.h"
 #include "memory.h"
 #include "hash.h"
 #include "my_log.h"
 #include "network.h"
+#include "connection.h"
 
 #define SERVER_PORT 10000
-#define BACKmy_log 50
+
+#define BACK_LOG 50
 
 static void start_listen();
+
+static void wait_connection();
 
 extern int daemonize();
 
@@ -30,30 +33,29 @@ hash_t *hash;
 
 mem_pool_t *pool;
 
-jmp_buf exit_buf;
-
-
 int main (int argc, const char * argv[])
-{ //todo
+{ 
+  //todo
   // daemonize();
-  int exit_code=0;
-  if((exit_code=setjmp(exit_buf))!=0){
-    exit(exit_code);
-  }
   my_log_init();
   pool=init_mem_pool();
   hash=init_hash();
   init_sync();
   start_workers();
   start_listen();
+  wait_connection();
+  return 0;
+}
+
+static void wait_connection(){
   event_context_t ec;
   ec.listen_fd=server_sock_fd;
+  connection_t *conn=init_connection();
   event_operation.init_event(&ec);
-  event_operation.register_event(server_sock_fd,READ,&ec,NULL);
+  event_operation.register_event(server_sock_fd,READ,&ec,conn);
   while (1) {
     event_operation.process_event(&ec);
   }
-  return 0;
 }
 
 static void start_listen(){  
@@ -66,16 +68,13 @@ static void start_listen(){
   server_sock_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (server_sock_fd == -1) {
     my_log(ERROR,"create server socket error\n");
-    longjmp(exit_buf,-1);
   }
   int bind_result = bind(server_sock_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
   if (bind_result == -1) {
     my_log(ERROR,"bind port failed\n");
-    longjmp(exit_buf,-1);
   }
-  if (listen(server_sock_fd,BACKmy_log) == -1) {
+  if (listen(server_sock_fd,BACK_LOG) == -1) {
     my_log(ERROR,"socket listen failed\n");
-    longjmp(exit_buf,-1);
   }
 }
 

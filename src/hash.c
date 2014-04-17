@@ -2,31 +2,27 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
-#include <setjmp.h>
 #include "memory.h"
 #include "hash.h"
 #include "my_log.h"
 
 extern mem_pool_t *pool;
 
-extern jmp_buf exit_buf;
-
 static int expand_hash(hash_t* hash);
 
 static unsigned long cal_hash(char *k);
 
-static void* none_lock_get(char *key,hash_t *hash);
-
+/**
+ * 初始化hash结构，包括锁，初始化elements空间
+ */
 hash_t* init_hash(){
   hash_t *h=(hash_t*)alloc_mem(pool,sizeof(hash_t));
   if(h==NULL){
     my_log(ERROR,"alloc hash struct failed\n");
-    longjmp(exit_buf,-1);
   }
   h->elements=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*INIT_SIZE);
   if(h->elements==NULL){
     my_log(ERROR,"alloc hash elements failed\n");
-    longjmp(exit_buf,-1);
   }
   pthread_mutex_t mutex;
   pthread_mutex_init(&mutex, NULL);
@@ -36,13 +32,21 @@ hash_t* init_hash(){
   return h;
 }
 
+/**
+ * 向hash结构中put数据
+ */
 int put(char *k,void *data,hash_t *hash){
   pthread_mutex_lock(hash->mutex);
-  void *d=none_lock_get(k,hash);
+  void *d=get(k,hash);
   if(d!=NULL){
     return 0;
   }
   float factor=hash->num/hash->size;
+
+  /**
+   * 如果当前hash中元素的数量和hash array的空间之比大于factor，那么对hash进行扩容
+   */
+
   if(factor>HASH_FACTOR){
     if(!expand_hash(hash)){
       return 0;
@@ -64,6 +68,9 @@ int put(char *k,void *data,hash_t *hash){
   return 1;
 }
 
+/**
+ * 从hash结构中，获取key所对应的value的值
+ */
 void* get(char* key,hash_t *hash){
   pthread_mutex_lock(hash->mutex);
   int index=cal_hash(key)%hash->size;
@@ -80,20 +87,9 @@ void* get(char* key,hash_t *hash){
   return result;
 }
 
-static void* none_lock_get(char *key,hash_t *hash){
-  int index=cal_hash(key)%hash->size;
-  hash_element_t *e=hash->elements[index];
-  void *result=NULL;
-  while(e!=NULL){
-    if(strcmp(e->key,key)==0){
-      result=e->data;
-      break;
-    }
-    e=e->next;
-  }
-  return result;
-}
-
+/**
+ *  从hash表中删除key的数据
+ */
 void delete(char* key,hash_t *hash){ 
   pthread_mutex_lock(hash->mutex);
   int index=cal_hash(key)%hash->size;
@@ -114,6 +110,9 @@ void delete(char* key,hash_t *hash){
   pthread_mutex_unlock(hash->mutex);
 }
 
+/**
+ *  扩容hash结构，当存储元素的个数大于size*factor的时候需要expand，避免退化链表结构，每次扩容2倍的size
+ */
 static int expand_hash(hash_t *hash){
   hash_element_t **temp=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*(hash->size*2));
   if(temp==NULL){
@@ -136,6 +135,10 @@ static int expand_hash(hash_t *hash){
   return 1;
 }
 
+
+/**
+ *  hash函数，计算key值的hash，现在的做法是把每个char叠加在一起，后面需要改善
+ */
 static unsigned long cal_hash(char *key){
   int index=0;
   int length=(int)strlen(key);
@@ -147,6 +150,9 @@ static unsigned long cal_hash(char *key){
   return hash;
 }
 
+/**
+ * 遍历整个hash结构，返回list，针对每个元素，使用完成后，必须free_mem
+ */
 list_head_t* visit_hash(hash_t *hash){
   pthread_mutex_lock(hash->mutex);
   list_head_t* head=(list_head_t *)alloc_mem(pool,sizeof(list_head_t));

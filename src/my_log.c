@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <setjmp.h>
 #include <time.h>
 #include <string.h>
 #include "my_log.h"
@@ -8,8 +7,6 @@
 #define LOG_DIR "/log/dawn.log"
 
 static FILE *out;
-
-extern jmp_buf exit_buf;
 
 extern mem_pool_t *pool;
 
@@ -23,7 +20,6 @@ void my_log_init(){
  dir[length+log_length]='\0';
  if ((out = fopen(dir, "a+"))== NULL) { 
   fprintf(stderr,"%s\n","log file not found");
-  longjmp(exit_buf,-1);
  }
 }
 

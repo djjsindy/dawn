@@ -32,8 +32,6 @@ static int init_count=0;
 
 extern mem_pool_t *pool;
 
-extern jmp_buf exit_buf;
-
 extern int server_sock_fd;
 
 static void *worker_loop(void *arg);
@@ -97,18 +95,15 @@ static void init_thread(thread_t *t){
   t->pipe_channel=(pipe_channel_t*)alloc_mem(pool,sizeof(pipe_channel_t));
   if(t->pipe_channel==NULL){
     my_log(ERROR,"init thread pipe channel failed\n");
-    longjmp(exit_buf,-1);
   }
   pipe_channel_t *p=t->pipe_channel;
   t->queue=init_queue();
   if(p==NULL){
     my_log(ERROR,"init queue failed\n");
-    longjmp(exit_buf,-1);
   }
   int fd[2];
   if(pipe(fd)<0){
     my_log(ERROR,"init queue pipe failed\n");
-    longjmp(exit_buf,-1);
   }
   p->masterfd=fd[1];
   p->workerfd=fd[0];
@@ -219,7 +214,9 @@ void handle_notify(int fd,event_context_t *ec){
         co->ec=ec;
         int *i=(int *)pop(ec->queue);
         co->fd=*i;
+        co->events=0;
         event_operation.register_event(co->fd,READ,ec,co);
+        co->events|=READ;
         free_mem(i);
         break;
       }

@@ -27,6 +27,17 @@ CMakeFiles/bin/dawn.dir/src/dy_char.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/dy_char.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/dy_char.c.o: src/dy_char.c
 
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/connection.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/dy_char.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/item.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/my_log.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/network.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/queue.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/thread.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: src/epoll.c
+
 CMakeFiles/bin/dawn.dir/src/fdop.c.o: src/fdop.c
 
 CMakeFiles/bin/dawn.dir/src/hash.c.o: ./include/hash.h
@@ -46,6 +57,7 @@ CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/queue.h
@@ -67,9 +79,6 @@ CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/queue.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/thread.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: src/main.c
-
-CMakeFiles/bin/dawn.dir/src/malloc.c.o: ./include/malloc.h
-CMakeFiles/bin/dawn.dir/src/malloc.c.o: src/malloc.c
 
 CMakeFiles/bin/dawn.dir/src/memory.c.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/memory.c.o: ./include/memory.h

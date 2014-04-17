@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <setjmp.h>
 
 int timeout=1;
 
@@ -21,13 +20,13 @@ static void poll_init_event(event_context_t *ec);
 
 static void poll_register_event(int fd,enum EVENT event,event_context_t *ec,void *data);
 
-static void poll_del_event(int fd,enum EVENT event,event_context_t *ec);
+static void poll_del_event(int fd,enum EVENT event,event_context_t *ec,void *data);
 
 static void poll_process_event(event_context_t *ec);
 
 static void poll_close_event(int fd,event_context_t *ec);
 
-static int find_empty_slot(event_t *events);
+static int find_fd_slot(event_t *events,int fd);
 
 extern int worker_index;
 
@@ -36,8 +35,6 @@ extern int server_sock_fd;
 extern thread_t threads[WORKER_NUM];
 
 extern int set_noblocking(int fd);
-
-extern jmp_buf exit_buf;
 
 extern mem_pool_t *pool;
 
@@ -61,39 +58,52 @@ static void poll_init_event(event_context_t *ec){
 }
 
 static void poll_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
-  int index=find_empty_slot(ec->events);
+  connection_t *conn=(connection_t *)data;
+  int index=find_fd_slot(ec->events,fd);
   event_t *events=ec->events;
   if(index!=-1){
     events[index].fd=fd;
     switch(event){
     	case READ:
-    		events[index].events=POLLIN;
+    		events[index].events|=POLLIN;
     		break;
     	case WRITE:
-    		events[index].events=POLLOUT;
+    		events[index].events|=POLLOUT;
     }
   	*(ec->data+index)=data;
   }
+  conn->events|=event;
 }
 
-static void poll_del_event(int fd,enum EVENT event,event_context_t *ec){
+static int find_fd_slot(event_t *events,int fd){
   int index=0;
-  event_t *events=ec->events;
-  int ev;
-  switch(event){
-  	case READ:
-  		ev=POLLIN;
-  		break;
-  	case WRITE:
-  		ev=POLLOUT;
-  		break;
-  }
+  int empty_index=-1;
   while(index<MAX_EVENT_COUNT){
-    if(events[index].fd==fd&&events[index].events==ev){
-      events[index].fd=0;
+    if(events[index].fd==fd){
+      return index;
+    }else if(events[index].fd==0&&empty_index==-1){
+      empty_index=index;
     }
     index++;
   }
+  return empty_index;
+}
+
+static void poll_del_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+  connection_t *conn=(connection_t *)data;
+  int index=find_fd_slot(ec->events,fd);
+  event_t *events=ec->events;
+  if(index!=-1){
+    switch(event){
+      case READ:
+        events[index].events&=~POLLIN;
+        break;
+      case WRITE:
+        events[index].events&=~POLLOUT;
+    }
+    *(ec->data+index)=data;
+  }
+  conn->events&=~event;
 }
 
 static void poll_process_event(event_context_t *ec){
@@ -123,7 +133,7 @@ static void poll_process_event(event_context_t *ec){
     if(fd==0){
       continue;
     }
-    if(events[i].revents & POLLIN){
+    if(events[i].revents & POLLIN>0){
       if(fd==ec->listen_fd){
         accept_connection();
       }else if(fd==ec->worker_fd){
@@ -132,7 +142,7 @@ static void poll_process_event(event_context_t *ec){
         handle_read((connection_t *)*(ec->data+i));
       }
     }
-    if(events[i].revents & POLLOUT){
+    if(events[i].revents & POLLOUT>0){
       int result=handle_write((connection_t *)*(ec->data+i));
       if(result==OK){
         event_operation.del_event(fd,WRITE,ec);

@@ -15,6 +15,13 @@ extern mem_pool_t *pool;
 
 static void destroy_connection(connection_t *conn);
 
+static void init_read_context(connection_t *conn);
+
+static void init_write_context(connection_t *conn);
+
+/**
+ *  当处理完一个command，那么需要清空read context中得数据，以便处理后面得command
+ */
 void reset_read_context(read_context_t *rc){
   reset_char(rc->key);
   reset_char(rc->command);
@@ -23,53 +30,54 @@ void reset_read_context(read_context_t *rc){
   rc->read_process=READ_COMMAND;
 }
 
+/**
+ *  初始化connection，包括读buf，写buf，读写context
+ */
 connection_t* init_connection(){
   connection_t *co=(connection_t *)alloc_mem(pool,sizeof(connection_t));
-  if(co==NULL){
-     my_log(ERROR,"alloc connection memory failed\n");
-     longjmp(exit_buf,-1);
-  }
   co->rbuf=alloc_buffer(READ_BUF_SIZE);
   co->wbuf=alloc_buffer(WRITE_BUF_SIZE);
-  if(co->rbuf==NULL||co->wbuf==NULL){
-     my_log(ERROR,"alloc connection buf failed\n");
-     longjmp(exit_buf,-1);
-  }
+  init_read_context(co);
+  init_write_context(co);
+  return co;
+}
+
+/**
+ *  初始化read context，包括状态机初始状态，command，key，value 的长度
+ */
+static void init_read_context(connection_t *conn){
   read_context_t *rc=(read_context_t *)alloc_mem(pool,sizeof(read_context_t));
-  if(rc==NULL){
-     my_log(ERROR,"alloc connection read context failed\n");
-     longjmp(exit_buf,-1);
-  }
-  co->rc=rc;
+  conn->rc=rc;
   rc->read_process=READ_COMMAND;
   rc->command=init_char();
   rc->key=init_char();
   rc->num=init_char();
-  if(rc->command==NULL||rc->key==NULL||rc->num==NULL){
-     my_log(ERROR,"alloc connection dynamic char failed\n");
-     longjmp(exit_buf,-1);
-  }
   rc->last_bytes=0;
-  write_context_t *wc=(write_context_t *)alloc_mem(pool,sizeof(write_context_t));
-  if(wc==NULL){
-     my_log(ERROR,"alloc connection write context failed\n");
-     longjmp(exit_buf,-1);
-  }
-  co->wc=wc;
-  wc->w_queue=init_queue();
-  if(wc->w_queue==NULL){
-     my_log(ERROR,"alloc connection write queue failed\n");
-     longjmp(exit_buf,-1);
-  }
-  wc->w_index=0;
-  return co;
 }
+
+/**
+ *  初始化write context，主要是写队列
+ */
+static void init_write_context(connection_t *conn){
+  write_context_t *wc=(write_context_t *)alloc_mem(pool,sizeof(write_context_t));
+  conn->wc=wc;
+  wc->w_data=NULL;
+  wc->w_index=0;
+  wc->w_queue=init_queue();
+}
+
+/**
+ *  关闭connection之前，需要释放一些关于connection中得数据结构，先取消网络事件
+ */
 void cancel_connection(connection_t *conn){
-  event_operation.del_event(conn->fd,READ,conn->ec);
-  event_operation.del_event(conn->fd,WRITE,conn->ec);
+  event_operation.del_event(conn->fd,READ,conn->ec,conn);
+  event_operation.del_event(conn->fd,WRITE,conn->ec,conn);
   destroy_connection(conn);
 }
 
+/**
+ *  释放connection得数据结构内存空间。
+ */
 static void destroy_connection(connection_t *conn){
   destroy_char(conn->rc->command);
   destroy_char(conn->rc->key);

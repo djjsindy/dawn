@@ -2,6 +2,7 @@
 #include "network.h"
 #include "thread.h"
 #include "my_log.h"
+#include "memory.h"
 #include <stdio.h>
 #include <sys/event.h>
 #include <sys/types.h>
@@ -11,13 +12,12 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <setjmp.h>
 
 static void kqueue_init_event(event_context_t *ec);
 
 static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,void *data);
 
-static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec);
+static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec,void *data);
 
 static void kqueue_process_event(event_context_t *ec);
 
@@ -25,7 +25,7 @@ static void kqueue_close_event(int fd,event_context_t *ec);
 
 extern int server_sock_fd;
 
-extern jmp_buf exit_buf;
+extern mem_pool_t *pool;
 
 const struct timespec ts={1,0};
 
@@ -41,14 +41,13 @@ static void kqueue_init_event(event_context_t *ec){
   int kq = kqueue();
   if (kq == -1) {
     my_log(ERROR,"create kqueue error\n");
-    longjmp(exit_buf,-1);
   }
   ec->fd=kq;
-  struct kevent events[MAX_EVENT_COUNT];
-  ec->events=events;
+  ec->events=alloc_mem(pool,sizeof(struct kevent)*MAX_EVENT_COUNT);
 }
 
 static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+  connection_t *conn=(connection_t *)data;
   struct kevent kev;
   switch(event){
     case READ:
@@ -59,9 +58,11 @@ static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,vo
       break;
   }
   kevent(ec->fd,&kev,1,NULL,0,NULL);
+  conn->events|=event;
 }
 
-static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec){
+static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+  connection_t *conn=(connection_t *)data;
   struct kevent kev;
   switch(event){
     case READ:
@@ -72,6 +73,7 @@ static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec){
       break;
   }
   kevent(ec->fd,&kev,1,NULL,0,NULL);
+  conn->events&=~event;
 }
 
 
@@ -98,7 +100,7 @@ static void kqueue_process_event(event_context_t *ec){
       }else if(events[i].filter==EVFILT_WRITE){
         int result=handle_write(conn);
         if(result==OK){
-          event_operation.del_event(sockfd,WRITE,ec);
+          event_operation.del_event(sockfd,WRITE,ec,conn);
         }
       }
     }

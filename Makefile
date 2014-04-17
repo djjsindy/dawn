@@ -210,6 +210,30 @@ src/dy_char.c.s:
 	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/dy_char.c.s
 .PHONY : src/dy_char.c.s
 
+src/epoll.o: src/epoll.c.o
+.PHONY : src/epoll.o
+
+# target to build an object file
+src/epoll.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/epoll.c.o
+.PHONY : src/epoll.c.o
+
+src/epoll.i: src/epoll.c.i
+.PHONY : src/epoll.i
+
+# target to preprocess a source file
+src/epoll.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/epoll.c.i
+.PHONY : src/epoll.c.i
+
+src/epoll.s: src/epoll.c.s
+.PHONY : src/epoll.s
+
+# target to generate assembly for a file
+src/epoll.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/epoll.c.s
+.PHONY : src/epoll.c.s
+
 src/fdop.o: src/fdop.c.o
 .PHONY : src/fdop.o
 
@@ -353,30 +377,6 @@ src/main.s: src/main.c.s
 src/main.c.s:
 	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/main.c.s
 .PHONY : src/main.c.s
-
-src/malloc.o: src/malloc.c.o
-.PHONY : src/malloc.o
-
-# target to build an object file
-src/malloc.c.o:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.c.o
-.PHONY : src/malloc.c.o
-
-src/malloc.i: src/malloc.c.i
-.PHONY : src/malloc.i
-
-# target to preprocess a source file
-src/malloc.c.i:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.c.i
-.PHONY : src/malloc.c.i
-
-src/malloc.s: src/malloc.c.s
-.PHONY : src/malloc.s
-
-# target to generate assembly for a file
-src/malloc.c.s:
-	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/malloc.c.s
-.PHONY : src/malloc.c.s
 
 src/memory.o: src/memory.c.o
 .PHONY : src/memory.o
@@ -591,6 +591,9 @@ help:
 	@echo "... src/dy_char.o"
 	@echo "... src/dy_char.i"
 	@echo "... src/dy_char.s"
+	@echo "... src/epoll.o"
+	@echo "... src/epoll.i"
+	@echo "... src/epoll.s"
 	@echo "... src/fdop.o"
 	@echo "... src/fdop.i"
 	@echo "... src/fdop.s"
@@ -609,9 +612,6 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/malloc.o"
-	@echo "... src/malloc.i"
-	@echo "... src/malloc.s"
 	@echo "... src/memory.o"
 	@echo "... src/memory.i"
 	@echo "... src/memory.s"

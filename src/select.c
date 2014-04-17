@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <setjmp.h>
 #include <errno.h> 
 
 struct event_s{
@@ -30,13 +29,13 @@ static void select_init_event(event_context_t *ec);
 
 static void select_register_event(int fd,enum EVENT event,event_context_t *ec,void *data);
 
-static void select_del_event(int fd,enum EVENT event,event_context_t *ec);
+static void select_del_event(int fd,enum EVENT event,event_context_t *ec,void *data);
 
 static void select_process_event(event_context_t *ec);
 
 static void select_close_event(int fd,event_context_t *ec);
 
-static int find_empty_slot(event_t *events);
+static int find_fd_slot(event_t *events,int fd);
 
 static int prepare_fd_set(event_context_t *ec,fd_set *read_set,fd_set *write_set);
 
@@ -71,35 +70,43 @@ static void select_init_event(event_context_t *ec){
 }
 
 static void select_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
-  int index=find_empty_slot(ec->events);
+  connection_t *conn=(connection_t *)data;
+  int index=find_fd_slot(ec->events,fd);
   event_t *events=ec->events;
   if(index!=-1){
     events[index].data=data;
     events[index].fd=fd;
-    events[index].event=event;
+    events[index].event|=event;
   }
+  conn->events|=event;
 }
 
-static int find_empty_slot(event_t *events){
+static int find_fd_slot(event_t *events,int fd){
   int index=0;
+  int empty_index=-1;
   while(index<MAX_EVENT_COUNT){
-    if(events[index].fd==0){
+    if(events[index].fd==fd){
       return index;
+    }else if(events[index].fd==0&&empty_index==-1){
+      empty_index=index;
     }
     index++;
   }
-  return -1;
+  return empty_index;
 }
 
-static void select_del_event(int fd,enum EVENT event,event_context_t *ec){
+static void select_del_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+  connection_t *conn=(connection_t *)data;
   int index=0;
   event_t *events=ec->events;
   while(index<MAX_EVENT_COUNT){
-    if(events[index].fd==fd&&events[index].event==event){
-      events[index].fd=0;
+    if(events[index].fd==fd){
+      events[index].event&=~event;
+      break;
     }
     index++;
   }
+  conn->events&=~event;
 }
 
 static void select_process_event(event_context_t *ec){
@@ -148,10 +155,10 @@ static int prepare_fd_set(event_context_t *ec,fd_set *read_set,fd_set *write_set
     if(events[index].fd==0){
       continue;
     }
-    if(events[index].event==READ){
+    if(events[index].event&READ!=0){
       FD_SET(events[index].fd,read_set);
     }
-    if(events[index].event==WRITE){
+    if(events[index].event&WRITE!=0){
       FD_SET(events[index].fd,write_set);
     }
     if(events[index].fd>max){

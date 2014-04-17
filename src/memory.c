@@ -6,8 +6,37 @@
 #include <setjmp.h>
 #include "memory.h"
 #include "my_log.h"
-
-
+/**                  max(b)  0  16  32  64 128 256 512  1024
+ *  mem_pool---- small_bin---0---1---2---3---4---5---6---7
+ *           |                        |               |
+ *           |                    list_head_t     list_head_t
+ *           |                        | 
+ *           |                    list_head_t
+ *           |
+ *           |   
+ *           |      max(kb) 0   16  32  64 128 256 512  1024
+ *           |----big_bin---0---1---2---3---4---5---6---7
+ *           |              |               |           |
+ *           |          list_head_t   list_head_t   list_head_t
+ *           |                              |           
+ *           |                        list_head_t
+ *           |
+ *           |
+ *           |
+ *           |>1Mb
+ *           |---list_head_t->list_head_t->list_head_t->list_head_t
+ *  
+ *
+ * mem_pool由small_bin,big_bin和direct list组成，small_bin接收1-1kb的请求，big_bin
+ * 接收1kb－1Mb的请求，其他大于1Mb的请求，直接调用malloc，每个bin是一个list_head_t的数组，
+ * 默认8个位置，每个list_head_t代表一个buddy，每个位置是一个buddy的双链表，每次分配根据请
+ * 求确定了bin和位置，如果当前index没有buddy，继续看下一个位置，如果都失败了，分配新的buddy，
+ * 从buddy中请求完空间后，更新buddy的max，如果max有变化，就调整buddy的index，在index之间
+ * 根据max调整位置,位置为0的index，记录的是buddy没有空间分配的链表，记录这个链表是为了在释
+ * 放空间后，再次调整buddy的位置。
+ *F
+ *
+ */
 
 static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *pool);
 
@@ -45,25 +74,18 @@ static void init_pthread_mutex(mem_pool_t *pool);
 
 static void * realloc_direct_chunk(mem_direct_chunk_t *old_chunk,int new_size);
 
-extern jmp_buf exit_buf;
 
+/**
+ *  初始化内存池内存结构，初始化small bin，big bin，和direct队列,初始化每个bin中的第一个元素（list_head_t）,初始化每个bin的锁
+ */
 mem_pool_t* init_mem_pool(){
   int num=DEFAULT_LEVEL+1;
   mem_pool_t* pool=(mem_pool_t *)malloc(sizeof(mem_pool_t));
-
-  if(pool==NULL){
-    my_log(ERROR,"alloc mem pool error\n");
-    longjmp(exit_buf,-1);
-  }
-
+  assert(pool!=NULL);
   pool->small_bin=(list_head_t **)malloc(sizeof(list_head_t *)*(num));  
   pool->big_bin=(list_head_t **)malloc(sizeof(list_head_t *)*(num));
-
-  if(pool->small_bin==NULL||pool->big_bin==NULL){
-    my_log(ERROR,"alloc mem pool bin error\n");
-    longjmp(exit_buf,-1);
-  }
-
+  assert(pool->small_bin);
+  assert(pool->big_bin);
   init_pool_list(pool->small_bin,num);
   init_pool_list(pool->big_bin,num);
   init_list(&(pool->direct_head));
@@ -71,6 +93,10 @@ mem_pool_t* init_mem_pool(){
   return pool;
 }
 
+
+/**
+ *  初始化内存池的锁
+ */
 static void init_pthread_mutex(mem_pool_t *pool){
   pthread_mutex_init(&(pool->small_mutex), NULL);
   pthread_mutex_init(&(pool->big_mutex), NULL);
@@ -83,7 +109,7 @@ static void init_pool_list(list_head_t **base,int num){
     list_head_t *head=(list_head_t *)malloc(sizeof(list_head_t));
     if(head==NULL){
       my_log(ERROR,"alloc mem pool bin list_head_t error\n");
-      longjmp(exit_buf,-1);
+      return;
     }
     init_list(head);
     *(base+index)=head;
@@ -369,6 +395,9 @@ static void free_buddy_chunk(mem_buddy_chunk_t *chunk){
   }
   pthread_mutex_unlock(mutex);
 }
+
+//todo realloc implements 
+
 
 // void* realloc_mem(void *origin,int new_size){
 //   int flag=*(FLAG_MEM(origin));

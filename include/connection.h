@@ -48,7 +48,8 @@ struct connection_s{
   buffer_t *wbuf;
   event_context_t *ec;
   write_context_t *wc;
-  read_context_t *rc;  
+  read_context_t *rc; 
+  int events; 
 };
 
 typedef struct connection_s connection_t;

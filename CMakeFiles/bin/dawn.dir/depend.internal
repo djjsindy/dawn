@@ -27,6 +27,17 @@ CMakeFiles/bin/dawn.dir/src/dy_char.c.o
  ./include/memory.h
  ./include/my_log.h
  /Users/jianjundeng/dawn/src/dy_char.c
+CMakeFiles/bin/dawn.dir/src/epoll.c.o
+ ./include/buffer.h
+ ./include/connection.h
+ ./include/dy_char.h
+ ./include/item.h
+ ./include/list.h
+ ./include/my_log.h
+ ./include/network.h
+ ./include/queue.h
+ ./include/thread.h
+ /Users/jianjundeng/dawn/src/epoll.c
 CMakeFiles/bin/dawn.dir/src/fdop.c.o
  /Users/jianjundeng/dawn/src/fdop.c
 CMakeFiles/bin/dawn.dir/src/hash.c.o
@@ -47,6 +58,7 @@ CMakeFiles/bin/dawn.dir/src/kqueue.c.o
  ./include/dy_char.h
  ./include/item.h
  ./include/list.h
+ ./include/memory.h
  ./include/my_log.h
  ./include/network.h
  ./include/queue.h
@@ -68,9 +80,6 @@ CMakeFiles/bin/dawn.dir/src/main.c.o
  ./include/queue.h
  ./include/thread.h
  /Users/jianjundeng/dawn/src/main.c
-CMakeFiles/bin/dawn.dir/src/malloc.c.o
- ./include/malloc.h
- /Users/jianjundeng/dawn/src/malloc.c
 CMakeFiles/bin/dawn.dir/src/memory.c.o
  ./include/list.h
  ./include/memory.h

@@ -11,7 +11,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <setjmp.h>
 
 #define MAX_FD_COUNT 1024
 
@@ -26,8 +25,6 @@ static void epoll_process_event(event_context_t *ec);
 static void epoll_close_event(int fd,event_context_t *ec);
 
 extern int server_sock_fd;
-
-extern jmp_buf exit_buf;
 
 extern mem_pool_t *pool;
 
@@ -45,7 +42,6 @@ static void epoll_init_event(event_context_t *ec){
 	int fd = epoll_create(MAX_FD_COUNT);
 	if (fd == -1) {
 		my_log(ERROR,"create epoll fd\n");
-		longjmp(exit_buf,-1);
 	}
 	ec->fd=fd;
 	ec->events=alloc_mem(pool,sizeof(struct epoll_event)*MAX_EVENT_COUNT);
