@@ -1,23 +1,35 @@
 #include "connection.h"
+#include <pthread.h>
+#include <stdlib.h>
+#include <setjmp.h>
 #include "network.h"
 #include "dy_char.h"
 #include "buffer.h"
 #include "queue.h"
 #include "memory.h"
 #include "my_log.h"
-#include <pthread.h>
-#include <stdlib.h>
-#include <setjmp.h>
+#include "config.h"
 
-extern jmp_buf exit_buf;
+#define READ_BUF_SIZE 1024*4
+#define WRITE_BUF_SIZE 1024*4
 
-extern mem_pool_t *pool;
+static int read_buf_size=READ_BUF_SIZE;
+
+static int write_buf_size=WRITE_BUF_SIZE;
 
 static void destroy_connection(connection_t *conn);
 
 static void init_read_context(connection_t *conn);
 
 static void init_write_context(connection_t *conn);
+
+static void set_read_buf_size_value(char_t *value);
+
+static void set_write_buf_size_value(char_t *value);
+
+extern jmp_buf exit_buf;
+
+extern mem_pool_t *pool;
 
 /**
  *  当处理完一个command，那么需要清空read context中得数据，以便处理后面得command
@@ -88,4 +100,23 @@ static void destroy_connection(connection_t *conn){
   destroy_buffer(conn->rbuf);
   destroy_buffer(conn->wbuf);
   free_mem(conn);
+}
+
+static command_t connection_command[]={
+  {"read_buf_size",set_read_buf_size_value},
+  {"write_buf_size",set_write_buf_size_value},
+  NULL
+};
+
+config_module_t connection_conf_module={
+  "connection",
+  connection_command
+};
+
+static void set_read_buf_size_value(char_t *value){
+  // port=atoi(value->data);
+}
+
+static void set_write_buf_size_value(char_t *value){
+  // back_log=atoi(value->data);
 }

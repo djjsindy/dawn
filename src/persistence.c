@@ -53,9 +53,9 @@ static void *recovery_process(void *arg);
 
 static long queue_file_size(char *key);
 
-static char* queue_file_url(char *key);
+static char_t* queue_file_url(char *key);
 
-static char* queue_temp_file_url(char *key);
+static char_t* queue_temp_file_url(char *key);
 
 static void trancate_queue_file(char *key);
 
@@ -203,12 +203,12 @@ static void sync_get(){
 void add_set_sync_data(char *key,item_t *i){
 	queue_t *q=get(key,sync_set_hash);
 	if(q==NULL){
-		int k_length=strlen(key);
-		char *k=(char *)alloc_mem(pool,k_length+1);
-		memcpy(k,key,k_length);
-		*(k+k_length)='\0';
+		char_t *s=init_char();
+		add_chars(s,key);
+		add_terminal(s);
 		q=init_queue();
-		put(k,q,sync_set_hash);
+		q=init_queue();
+		put(s->data,q,sync_set_hash);
 	}
 	push(q,i);
 }
@@ -216,12 +216,11 @@ void add_set_sync_data(char *key,item_t *i){
 void add_get_sync_data(char *key,int size){
 	queue_t *q=get(key,sync_get_hash);
 	if(q==NULL){
-		int k_length=strlen(key);
-		char *k=(char *)alloc_mem(pool,k_length+1);
-		memcpy(k,key,k_length);
-		*(k+k_length)='\0';
+		char_t *s=init_char();
+		add_chars(s,key);
+		add_terminal(s);
 		q=init_queue();
-		put(k,q,sync_get_hash);
+		put(s->data,q,sync_get_hash);
 	}
 	int *i=(int *)alloc_mem(pool,sizeof(int));
 	*i=size;
@@ -229,101 +228,76 @@ void add_get_sync_data(char *key,int size){
 }
 
 static int open_queue_file(char *key){
-	char *dir=queue_file_url(key);
-	int fd=open(dir,O_RDWR|O_CREAT);
+	char_t *dir=queue_file_url(key);
+	int fd=open(dir->data,O_RDWR|O_CREAT);
 	if(fd==-1){
 		my_log(ERROR,"open queue file error\n");
 	}
-	free_mem(dir);
+	destroy_char(dir);
 	return fd;
 }
 
 static int open_queue_temp_file(char *key){
-	char *dir=queue_temp_file_url(key);
-	int fd=open(dir,O_RDWR|O_CREAT);
+	char_t *dir=queue_temp_file_url(key);
+	int fd=open(dir->data,O_RDWR|O_CREAT);
 	if(fd==-1){
 		my_log(ERROR,"open queue file error\n");
 	}
-	free_mem(dir);
+	destroy_char(dir);
 	return fd;
 }
 
-static char* queue_file_url(char *key){
-	char *log_dir=QUEUE_DATA_DIR;
-	int length=strlen(DAWN_HOME);
-	int log_length=strlen(log_dir);
-	int name_length=strlen(key);
-	int suffix_length=strlen(FILE_SUFFIX);
-	char *dir=(char *)alloc_mem(pool,length+log_length+name_length+suffix_length+1);
-	int index=0;
-	memcpy(dir,DAWN_HOME,length);
-	index+=length;
-	memcpy(dir+index,log_dir,log_length);
-	index+=log_length;
-	memcpy(dir+index,key,name_length);
-	index+=name_length;
-	memcpy(dir+index,FILE_SUFFIX,suffix_length);
-	index+=suffix_length;
-	dir[index]='\0';
-	return dir;
+static char_t* queue_file_url(char *key){
+	char_t *s=init_char();
+	add_chars(s,DAWN_HOME);
+	add_chars(s,QUEUE_DATA_DIR);
+	add_chars(s,key);
+	add_chars(s,FILE_SUFFIX);
+	add_terminal(s);
+	return s;
 }
 
-static char* queue_temp_file_url(char *key){
-	char *log_dir=QUEUE_DATA_DIR;
-	int length=strlen(DAWN_HOME);
-	int log_length=strlen(log_dir);
-	int name_length=strlen(key);
-	int suffix_length=strlen(TEMP_FILE_SUFFIX);
-	char *dir=(char *)alloc_mem(pool,length+log_length+name_length+suffix_length+1);
-	int index=0;
-	memcpy(dir,DAWN_HOME,length);
-	index+=length;
-	memcpy(dir+index,log_dir,log_length);
-	index+=log_length;
-	memcpy(dir+index,key,name_length);
-	index+=name_length;
-	memcpy(dir+index,TEMP_FILE_SUFFIX,suffix_length);
-	index+=suffix_length;
-	dir[index]='\0';
-	return dir;
+static char_t* queue_temp_file_url(char *key){
+	char_t *s=init_char();
+	add_chars(s,DAWN_HOME);
+	add_chars(s,QUEUE_DATA_DIR);
+	add_chars(s,key);
+	add_chars(s,TEMP_FILE_SUFFIX);
+	add_terminal(s);
+	return s;
 }
 
 static long queue_file_size(char *key){
-	char *dir=queue_file_url(key);
+	char_t *dir=queue_file_url(key);
 	unsigned long filesize = -1;      
     struct stat statbuff;  
-    if(stat(dir, &statbuff) < 0){  
-        
+    if(stat(dir->data, &statbuff) < 0){  
+        my_log(ERROR,"open dir failed\n");
     }else{  
         filesize = statbuff.st_size;  
     }
-    free_mem(dir);  
+    destroy_char(dir);  
     return filesize;
 }
 
 static DIR* open_queue_dir(){
-	int index=0;
-	char *log_dir=QUEUE_DATA_DIR;
-	int length=strlen(DAWN_HOME);
-	int log_length=strlen(log_dir);
-	char dir[length+log_length+1];
-	memcpy(dir,DAWN_HOME,length);
-	index+=length;
-	memcpy(dir+index,log_dir,log_length);
-	index+=log_length;
-	dir[index]='\0';
+	char_t *s=init_char();
+	add_chars(s,DAWN_HOME);
+	add_chars(s,QUEUE_DATA_DIR);
+	add_terminal(s);
 	DIR *p_dir;
-	if((p_dir=opendir(dir))==NULL){
+	if((p_dir=opendir(s->data))==NULL){
 		my_log(ERROR,"open dir error\n");
 		return NULL;
 	}
+	destroy_char(s);
 	return p_dir;
 }
 
 static void remove_queue_file(char *key){
-	char *dir=queue_file_url(key);
-	remove(dir);
-	free_mem(dir);
+	char_t *dir=queue_file_url(key);
+	remove(dir->data);
+	destroy_char(dir);
 }
 
 static void start_recovery(){
@@ -435,8 +409,12 @@ static void trancate_queue_file(char *key){
 	}
 	close(fd);
 	close(tmp_fd);
-	if(rename(queue_temp_file_url(key),queue_file_url(key))<0){
+	char_t *origin_file=queue_file_url(key);
+	char_t *temp_file=queue_temp_file_url(key);
+	if(rename(temp_file->data,origin_file->data)<0){
 		my_log(ERROR,"truncate queue file error\n");
 	}
+	destroy_char(origin_file);
+	destroy_char(temp_file);
 	reset(rbuf);
 }

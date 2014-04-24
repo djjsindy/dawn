@@ -7,8 +7,15 @@ CMakeFiles/bin/dawn.dir/src/buffer.c.o
  ./include/memory.h
  ./include/my_log.h
  /Users/jianjundeng/dawn/src/buffer.c
+CMakeFiles/bin/dawn.dir/src/config.c.o
+ ./include/buffer.h
+ ./include/config.h
+ ./include/dy_char.h
+ ./include/my_log.h
+ /Users/jianjundeng/dawn/src/config.c
 CMakeFiles/bin/dawn.dir/src/connection.c.o
  ./include/buffer.h
+ ./include/config.h
  ./include/connection.h
  ./include/dy_char.h
  ./include/item.h
@@ -69,6 +76,7 @@ CMakeFiles/bin/dawn.dir/src/list.c.o
  /Users/jianjundeng/dawn/src/list.c
 CMakeFiles/bin/dawn.dir/src/main.c.o
  ./include/buffer.h
+ ./include/config.h
  ./include/connection.h
  ./include/dy_char.h
  ./include/hash.h
@@ -86,8 +94,7 @@ CMakeFiles/bin/dawn.dir/src/memory.c.o
  ./include/my_log.h
  /Users/jianjundeng/dawn/src/memory.c
 CMakeFiles/bin/dawn.dir/src/my_log.c.o
- ./include/list.h
- ./include/memory.h
+ ./include/dy_char.h
  ./include/my_log.h
  /Users/jianjundeng/dawn/src/my_log.c
 CMakeFiles/bin/dawn.dir/src/persistence.c.o
@@ -144,6 +151,7 @@ CMakeFiles/bin/dawn.dir/src/select.c.o
  /Users/jianjundeng/dawn/src/select.c
 CMakeFiles/bin/dawn.dir/src/thread.c.o
  ./include/buffer.h
+ ./include/config.h
  ./include/connection.h
  ./include/dy_char.h
  ./include/item.h

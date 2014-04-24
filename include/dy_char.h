@@ -13,7 +13,7 @@ char_t *init_char();
 
 void add_char(char_t *t,char c);
 
-void add_chars(char_t *t,char *cs);
+void add_chars(char_t *t,char *s);
 
 void add_terminal(char_t *t);
 

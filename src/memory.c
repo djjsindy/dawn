@@ -34,7 +34,7 @@
  * 从buddy中请求完空间后，更新buddy的max，如果max有变化，就调整buddy的index，在index之间
  * 根据max调整位置,位置为0的index，记录的是buddy没有空间分配的链表，记录这个链表是为了在释
  * 放空间后，再次调整buddy的位置。
- *F
+ * 
  *
  */
 

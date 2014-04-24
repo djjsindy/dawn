@@ -5,8 +5,6 @@
 #include "network.h"
 #include "queue.h"
 #include "item.h"
-#define READ_BUF_SIZE 1024*4
-#define WRITE_BUF_SIZE 1024*4
 //read status
 #define AGAIN 0
 #define COMMAND_OK 1

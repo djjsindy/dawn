@@ -36,6 +36,14 @@ void add_char(char_t *t,char c){
   t->current+=1;
 }
 
+void add_chars(char_t *t,char *s){
+  int index=0;
+  int sum=strlen(s);
+  for(;index<sum;index++){
+    add_char(t,*(s+index));
+  }
+}
+
 void add_terminal(char_t *t){
   if(t->current==t->size){
     expand_char(t);

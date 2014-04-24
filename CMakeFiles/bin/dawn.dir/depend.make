@@ -7,7 +7,14 @@ CMakeFiles/bin/dawn.dir/src/buffer.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/buffer.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/buffer.c.o: src/buffer.c
 
+CMakeFiles/bin/dawn.dir/src/config.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/config.c.o: ./include/config.h
+CMakeFiles/bin/dawn.dir/src/config.c.o: ./include/dy_char.h
+CMakeFiles/bin/dawn.dir/src/config.c.o: ./include/my_log.h
+CMakeFiles/bin/dawn.dir/src/config.c.o: src/config.c
+
 CMakeFiles/bin/dawn.dir/src/connection.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/connection.c.o: ./include/config.h
 CMakeFiles/bin/dawn.dir/src/connection.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/connection.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/connection.c.o: ./include/item.h
@@ -68,6 +75,7 @@ CMakeFiles/bin/dawn.dir/src/list.c.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/list.c.o: src/list.c
 
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/config.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/hash.h
@@ -85,8 +93,7 @@ CMakeFiles/bin/dawn.dir/src/memory.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/memory.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/memory.c.o: src/memory.c
 
-CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/list.h
-CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/memory.h
+CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: src/my_log.c
 
@@ -143,6 +150,7 @@ CMakeFiles/bin/dawn.dir/src/select.c.o: ./include/thread.h
 CMakeFiles/bin/dawn.dir/src/select.c.o: src/select.c
 
 CMakeFiles/bin/dawn.dir/src/thread.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/thread.c.o: ./include/config.h
 CMakeFiles/bin/dawn.dir/src/thread.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/thread.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/thread.c.o: ./include/item.h

@@ -3,7 +3,6 @@
 #include "queue.h"
 #include "connection.h"
 #include "network.h"
-#define WORKER_NUM 8
 
 struct pipe_channel_s{
     int masterfd;

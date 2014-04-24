@@ -2,13 +2,11 @@
 #include <time.h>
 #include <string.h>
 #include "my_log.h"
-#include "memory.h"
+#include "dy_char.h"
 
 #define LOG_DIR "/log/dawn.log"
 
 static FILE *out;
-
-extern mem_pool_t *pool;
 
 void my_log_init(){
  char *log_dir=LOG_DIR;

@@ -5,6 +5,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_C
   "/Users/jianjundeng/dawn/src/buffer.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/buffer.c.o"
+  "/Users/jianjundeng/dawn/src/config.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/config.c.o"
   "/Users/jianjundeng/dawn/src/connection.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/connection.c.o"
   "/Users/jianjundeng/dawn/src/daemon.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/daemon.c.o"
   "/Users/jianjundeng/dawn/src/dy_char.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/dy_char.c.o"

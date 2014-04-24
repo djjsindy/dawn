@@ -1,5 +1,6 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/./bin/dawn.dir/src/buffer.c.o"
+  "CMakeFiles/./bin/dawn.dir/src/config.c.o"
   "CMakeFiles/./bin/dawn.dir/src/connection.c.o"
   "CMakeFiles/./bin/dawn.dir/src/daemon.c.o"
   "CMakeFiles/./bin/dawn.dir/src/dy_char.c.o"

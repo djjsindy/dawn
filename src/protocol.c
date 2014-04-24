@@ -118,7 +118,7 @@ int process_command(connection_t *conn){
     close_connection(conn);
   }else{
    process_client_error(conn,unsupport_command);
-  }
+ }
  return result;
 }
 
@@ -344,6 +344,7 @@ static item_t* fill_get_response_header(char *key ,int bytes){
   index+=s_length;
   memcpy(c+index,command_end,command_end_length);
   index+=command_end_length;
+  
   free_mem(s);
   item_t *i=init_item();
   i->data=c;

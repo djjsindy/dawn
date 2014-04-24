@@ -19,8 +19,13 @@
 #include "memory.h"
 #include "my_log.h"
 #include "item.h"
+#include "config.h"
 
-static thread_t threads[WORKER_NUM];
+#define WORKER_NUM 8
+
+static int worker_num=WORKER_NUM;
+
+static thread_t **threads;
 
 static int worker_index=0;
 
@@ -40,9 +45,7 @@ static int no_block_write(int fd,buffer_t *wbuf);
 
 static void init_thread(thread_t *t);
 
-static void wait_thread_init();
-
-static void register_thread_init();
+static void set_worker_num_value(char_t *value);
 
 extern int parse_command(connection_t *conn);
 
@@ -51,41 +54,27 @@ extern int process_command(connection_t *conn);
 extern int set_noblocking(int fd);
 
 void start_workers(){
-  pthread_mutex_init(&init_lock, NULL);
-  pthread_cond_init(&init_cond, NULL);
   int i=0;
-  for(;i<WORKER_NUM;i++){
+  threads=(thread_t **)alloc_mem(pool,sizeof(thread_t *)*worker_num);
+  for(;i<worker_num;i++){
     pthread_t tid=0;
     pthread_create(&tid,NULL,worker_loop,threads+i);
   }
-  pthread_mutex_lock(&init_lock);
-  wait_thread_init();
-  pthread_mutex_unlock(&init_lock);
 }
 
-static void wait_thread_init(){
-  while (init_count < WORKER_NUM) {
-    pthread_cond_wait(&init_cond, &init_lock);
-  }
-}
-
-static void register_thread_init(){
-  pthread_mutex_lock(&init_lock);
-  init_count++;
-  pthread_cond_signal(&init_cond);
-  pthread_mutex_unlock(&init_lock);
-}
 
 static void *worker_loop(void *arg){
-  thread_t* t=(thread_t *)arg;
-  init_thread(t);
+  thread_t **t=(thread_t **)arg;
+  *t=(thread_t *)alloc_mem(pool,sizeof(thread_t));
+  init_thread(*t);
+  thread_t *thread=*t;
   event_context_t *ec=(event_context_t *)alloc_mem(pool,sizeof(event_context_t));
-  int notify_fd=t->pipe_channel->workerfd;
+  int notify_fd=thread->pipe_channel->workerfd;
   event_operation.init_event(ec);
   ec->worker_fd=notify_fd;
-  ec->queue=t->queue;
-  event_operation.register_event(notify_fd,READ,ec,t);
-  register_thread_init();
+  ec->queue=thread->queue;
+  connection_t *conn=init_connection();
+  event_operation.register_event(notify_fd,READ,ec,conn);
   while(1){
     event_operation.process_event(ec);    
   }
@@ -179,7 +168,7 @@ void handle_read(connection_t *conn){
     cancel_connection(conn);
     return;
   }
-  rbuf->limit=rbuf->current+count;
+  rbuf->limit+=count;
   int result;
         //表示还有数据需要处理
   while(has_remaining(rbuf)){
@@ -231,7 +220,7 @@ void accept_connection(){
     my_log(ERROR,"set none block mode failed\n");
   }
   char notify_buf='c';
-  thread_t *t=&threads[worker_index];
+  thread_t *t=*(threads+worker_index);
   int *i=(int *)alloc_mem(pool,sizeof(int));
   *i=client_socket_fd;
   push(t->queue,i);
@@ -248,3 +237,18 @@ void close_connection(connection_t *conn){
   close(conn->fd);
   cancel_connection(conn);
 }
+
+static command_t thread_command[]={
+  {"worker_num",set_worker_num_value},
+  NULL
+};
+
+config_module_t thread_conf_module={
+  "thread",
+  thread_command
+};
+
+static void set_worker_num_value(char_t *value){
+  worker_num=atoi(value->data);
+}
+
