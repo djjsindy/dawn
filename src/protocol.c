@@ -12,6 +12,8 @@
 #include "thread.h"
 #include "statistics.h"
 
+#define STAT_LINE_BUFFER_SIZE 100
+
 static int process_set(connection_t *conn);
 
 static int process_get(connection_t *conn);
@@ -42,6 +44,12 @@ static void write_delete_response(connection_t *conn);
 
 static void write_null(connection_t *conn,char *key);
 
+static item_t *get_buddy_stat(unsigned long *data,const char *type);
+
+static item_t *get_direct_stat();
+
+static void get_queue_stat(connection_t *conn);
+
 static const char space=' ';
 
 static const char special_r='\r';
@@ -69,6 +77,10 @@ static const char *version="VERSION 1.0\r\n";
 static const char *empty="";
 
 static const char *deleted="DELETED\r\n";
+
+static const char *small_buddy="small bin";
+
+static const char *big_buddy="big bin";
 
 extern hash_t *hash;
 
@@ -173,10 +185,13 @@ static int process_get(connection_t *conn){
       }
       push(conn->wc->w_queue,i);
       if(i->end==1){
+          //加入统计
+        decrease_queue_stat(key,i->size);
         break;
       }
     }
-  } 
+  }
+
   push(conn->wc->w_queue,fill_get_response_footer());
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
   return OK;
@@ -244,10 +259,15 @@ static int process_set_body(connection_t *conn){
   char *key=rc->key->data;
   queue_t *q=(queue_t *)get(key,hash);
   if(q==NULL){
+
+    //初始化队列，加入hash中
     q=init_queue();
     char *q_name=(char *)alloc_mem(pool,strlen(key));
     strcpy(q_name,key);
     put(q_name,q,hash);
+
+    //开始统计这个队列
+    start_queue_stat(q_name);
   }  
   int fill=0;
   int result=AGAIN;
@@ -259,6 +279,9 @@ static int process_set_body(connection_t *conn){
     i->end=1;
     result=OK;
     write_set_response(conn);
+
+    //加入队列数据统计
+    increase_queue_stat(key,i->size);
   }else{
       //如果buffer不够了那么先把这部分数据copy出来，放入一个item中
     fill=count;
@@ -445,18 +468,52 @@ static int parse_delete_header(connection_t *conn){
 }
 
 static void process_stats(connection_t *conn){
-  item_t *small_item=init_item();
-  small_item->data=alloc_mem(pool,100);
-  sprintf(small_item->data,"buddy_mem small bin:0:%lu 1:%lu 2:%lu 3:%lu 4:%lu 5:%lu 6:%lu 7:%lu\n",stat->small_buddy_stats[0],
-    stat->small_buddy_stats[1],
-    stat->small_buddy_stats[2],
-    stat->small_buddy_stats[3],
-    stat->small_buddy_stats[4],
-    stat->small_buddy_stats[5],
-    stat->small_buddy_stats[6],
-    stat->small_buddy_stats[7]);
-  small_item->end=1;
-  small_item->c_size=strlen(small_item->data);
-  push(conn->wc->w_queue,small_item);
+  push(conn->wc->w_queue,get_buddy_stat(stat->small_buddy_stats,small_buddy));
+  push(conn->wc->w_queue,get_buddy_stat(stat->big_buddy_stats,big_buddy));
+  push(conn->wc->w_queue,get_direct_stat());
+  get_queue_stat(conn);
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
+}
+
+static item_t *get_buddy_stat(unsigned long *data,const char *type){
+  item_t *i=init_item();
+  i->data=alloc_mem(pool,STAT_LINE_BUFFER_SIZE);
+  snprintf(i->data,STAT_LINE_BUFFER_SIZE,"buddy_mem-%s 0:%lu 1:%lu 2:%lu 3:%lu 4:%lu 5:%lu 6:%lu 7:%lu\n",type,*data,
+    *(data+1),
+    *(data+2),
+    *(data+3),
+    *(data+4),
+    *(data+5),
+    *(data+6),
+    *(data+7)
+    );
+  i->end=1;
+  i->c_size=strlen(i->data);
+  return i;
+}
+
+static item_t *get_direct_stat(){
+  item_t *i=init_item();
+  i->data=alloc_mem(pool,STAT_LINE_BUFFER_SIZE);
+  snprintf(i->data,STAT_LINE_BUFFER_SIZE,"buddy_mem-direct_size:%ld\n",stat->direct_size);
+  i->end=1;
+  i->c_size=strlen(i->data);
+  return i;
+}
+
+static void get_queue_stat(connection_t *conn){
+  list_head_t *head=visit_hash(stat->queue_data_hash);
+  while(!list_is_empty(head)){
+    hash_entry_t *entry=(hash_entry_t *)list_entry(head->next,hash_entry_t,list);
+    queue_stat_t *qs=(queue_stat_t *)entry->data;
+    item_t *i=init_item();
+    i->data=alloc_mem(pool,STAT_LINE_BUFFER_SIZE);
+    i->end=1;
+    snprintf(i->data,STAT_LINE_BUFFER_SIZE,"queue_name:%s,size:%ld,bytes:%ld\n",qs->name,qs->size,qs->bytes);
+    i->c_size=strlen(i->data);
+    push(conn->wc->w_queue,i);
+    free_mem(entry);
+    list_del_data(head,head->next->next); 
+  }
+  free_mem(head);
 }

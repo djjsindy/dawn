@@ -47,16 +47,37 @@ static int back_log=DEFAULT_BACKLOG;
 
 int main (int argc, const char * argv[])
 { 
-  //todo
+  //后台进程
   // daemonize();
+
+  //初始化log系统
   my_log_init();
+
+  //初始化统计
   init_stat();
+
+  //初始全局内存池
   pool=init_mem_pool();
+
+  //初始化队列统计hash
+  init_queue_stat();
+
+  //从配置文件中按照module加载配置
   init_conf();
+
+  //初始化存储队列的hash结构
   hash=init_hash();
+
+  //根据持久化文件，初始化数据，开启同步数据线程
   init_sync();
+
+  //启动worker线程
   start_workers();
+
+  //建立端口连接
   start_listen();
+
+  //主线程监听端口，等待连接
   wait_connection();
   return 0;
 }

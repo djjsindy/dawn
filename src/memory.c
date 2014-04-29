@@ -400,7 +400,7 @@ static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *p
   }
 
   int create=0;
-  //如果没有找到，就创建一个
+  //如果没有找到，就创建一个，暂时不入双链表
   if(buddy==NULL){  
     buddy=init_buddy(bin_size,pool);
     buddy->bin=bin;
@@ -414,11 +414,14 @@ static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *p
 
   //如果max有变化，更新buddy的位置，更新统计
   if(max!=buddy->max){
+
+    //如果不是新创建的，那么就调整buddy的位置
     if(!create){
       int new_level=adjust_bin(buddy);
       *(buddy_stat+level)-=1;
       *(buddy_stat+new_level)+=1;
     }else{
+      //插入双链表
       int level=bin_index(buddy->max,buddy->size);
       list_head_t *head=*(bin+level);
       list_add_data(&buddy->list,head,head->next);
