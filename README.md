@@ -7,3 +7,5 @@ features:
    
    async persistence queue data
    
+   config module
+   
