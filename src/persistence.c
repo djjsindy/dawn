@@ -14,6 +14,7 @@
 #include "memory.h"
 #include "buffer.h"
 #include "dy_char.h"
+#include "config.h"
 
 #define QUEUE_DATA_DIR "/queue/"
 
@@ -59,6 +60,18 @@ static char_t* queue_temp_file_url(char *key);
 
 static void trancate_queue_file(char *key);
 
+static void set_queue_directory_value(char_t *value);
+
+static void set_file_suffix_value(char_t *value);
+
+static void set_sync_interval_value(char_t *value);
+
+static void set_trancate_file_threshold_value(char_t *value);
+
+static void set_trancate_radio_value(char_t *value);
+
+static void set_file_buf_value(char_t *value);
+
 static hash_t *sync_set_hash;
 
 static hash_t *sync_get_hash;
@@ -77,6 +90,20 @@ static const char special_r='\r';
 
 static const char special_n='\n';
 
+static char *queue_dir=QUEUE_DATA_DIR;
+
+static char *file_suffix=FILE_SUFFIX;
+
+static char *temp_file_suffix=TEMP_FILE_SUFFIX;
+
+static int sync_interval=SYNC_INTERVAL;
+
+static int trancate_file_threshold=TRANCATE_FILE_THRESHOLD;
+
+static int trancate_radio=TRANCATE_RADIO;
+
+static int file_size=BUFFER_SIZE;
+
 static buffer_t *rbuf;
 
 static buffer_t *wbuf;
@@ -88,6 +115,8 @@ static pthread_cond_t recovery_cond;
 static int recovery_count=0;
 
 static int recovery_sum=0;
+
+extern int parse_int(char_t *s);
 
 enum RECOVERY_STATUS{
 	START,
@@ -105,7 +134,7 @@ void init_sync(){
 	sync_set_hash=init_hash();
 	sync_get_hash=init_hash();
 	sync_get_offset_hash=init_hash();
-	rbuf=alloc_buffer(BUFFER_SIZE);
+	rbuf=alloc_buffer(file_size);
 	start_recovery();
 	pthread_t tid=0;
 	pthread_create(&tid,NULL,data_sync_loop,NULL);
@@ -128,7 +157,7 @@ static void *data_sync_loop(void *arg){
 	while(1){
 		sync_set();
 		sync_get();
-		sleep(SYNC_INTERVAL);
+		sleep(sync_interval);
 	}
 }
 
@@ -190,7 +219,7 @@ static void sync_get(){
 			}
 			close(fd);
 			int size=queue_file_size(entry->key);
-			if(size>=TRANCATE_FILE_THRESHOLD&&(*o)*TRANCATE_RADIO>TRANCATE_FILE_THRESHOLD){
+			if(size>=trancate_file_threshold&&(*o)*trancate_radio>trancate_file_threshold){
 				trancate_queue_file(entry->key);
 			}
 		}
@@ -250,9 +279,9 @@ static int open_queue_temp_file(char *key){
 static char_t* queue_file_url(char *key){
 	char_t *s=init_char();
 	add_chars(s,DAWN_HOME);
-	add_chars(s,QUEUE_DATA_DIR);
+	add_chars(s,queue_dir);
 	add_chars(s,key);
-	add_chars(s,FILE_SUFFIX);
+	add_chars(s,file_suffix);
 	add_terminal(s);
 	return s;
 }
@@ -260,9 +289,9 @@ static char_t* queue_file_url(char *key){
 static char_t* queue_temp_file_url(char *key){
 	char_t *s=init_char();
 	add_chars(s,DAWN_HOME);
-	add_chars(s,QUEUE_DATA_DIR);
+	add_chars(s,queue_dir);
 	add_chars(s,key);
-	add_chars(s,TEMP_FILE_SUFFIX);
+	add_chars(s,temp_file_suffix);
 	add_terminal(s);
 	return s;
 }
@@ -283,7 +312,7 @@ static long queue_file_size(char *key){
 static DIR* open_queue_dir(){
 	char_t *s=init_char();
 	add_chars(s,DAWN_HOME);
-	add_chars(s,QUEUE_DATA_DIR);
+	add_chars(s,queue_dir);
 	add_terminal(s);
 	DIR *p_dir;
 	if((p_dir=opendir(s->data))==NULL){
@@ -418,3 +447,43 @@ static void trancate_queue_file(char *key){
 	destroy_char(temp_file);
 	reset(rbuf);
 }
+
+static command_t persistence_command[]={
+  {"queue_directory",set_queue_directory_value},
+  {"file_suffix",set_file_suffix_value},
+  {"sync_interval",set_sync_interval_value},
+  {"trancate_file_threshold",set_trancate_file_threshold_value},
+  {"trancate_radio",set_trancate_radio_value},
+  {"file_buf",set_file_buf_value},
+  NULL
+};
+
+config_module_t pesistence_conf_module={
+  "persistence",
+  persistence_command
+};
+
+static void set_queue_directory_value(char_t *value){
+  queue_dir=value->data;
+}
+
+static void set_file_suffix_value(char_t *value){
+  file_suffix=value->data;
+}
+
+static void set_sync_interval_value(char_t *value){
+  sync_interval=atoi(value->data);
+}
+
+static void set_trancate_file_threshold_value(char_t *value){
+  trancate_file_threshold=atoi(value->data);
+}
+
+static void set_trancate_radio_value(char_t *value){
+  trancate_radio=atof(value->data);
+}
+
+static void set_file_buf_value(char_t *value){
+  file_size=parse_int(value);
+}
+

@@ -1,3 +1,6 @@
+#ifndef MEMORY_H
+#define MEMORY_H
+
 #include "list.h"
 #include <pthread.h>
 #define DEFAULT_LEVEL 7
@@ -154,3 +157,5 @@ void* realloc_mem(void *origin,int new_size);
 void free_mem(void *mem);
 
 void destroy_mem_pool(mem_pool_t *pool);
+
+#endif

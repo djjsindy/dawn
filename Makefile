@@ -138,6 +138,30 @@ src/buffer.c.s:
 	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/buffer.c.s
 .PHONY : src/buffer.c.s
 
+src/common.o: src/common.c.o
+.PHONY : src/common.o
+
+# target to build an object file
+src/common.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/common.c.o
+.PHONY : src/common.c.o
+
+src/common.i: src/common.c.i
+.PHONY : src/common.i
+
+# target to preprocess a source file
+src/common.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/common.c.i
+.PHONY : src/common.c.i
+
+src/common.s: src/common.c.s
+.PHONY : src/common.s
+
+# target to generate assembly for a file
+src/common.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/common.c.s
+.PHONY : src/common.c.s
+
 src/config.o: src/config.c.o
 .PHONY : src/config.o
 
@@ -570,6 +594,30 @@ src/select.c.s:
 	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/select.c.s
 .PHONY : src/select.c.s
 
+src/statistics.o: src/statistics.c.o
+.PHONY : src/statistics.o
+
+# target to build an object file
+src/statistics.c.o:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/statistics.c.o
+.PHONY : src/statistics.c.o
+
+src/statistics.i: src/statistics.c.i
+.PHONY : src/statistics.i
+
+# target to preprocess a source file
+src/statistics.c.i:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/statistics.c.i
+.PHONY : src/statistics.c.i
+
+src/statistics.s: src/statistics.c.s
+.PHONY : src/statistics.s
+
+# target to generate assembly for a file
+src/statistics.c.s:
+	$(MAKE) -f CMakeFiles/./bin/dawn.dir/build.make CMakeFiles/./bin/dawn.dir/src/statistics.c.s
+.PHONY : src/statistics.c.s
+
 src/thread.o: src/thread.c.o
 .PHONY : src/thread.o
 
@@ -606,6 +654,9 @@ help:
 	@echo "... src/buffer.o"
 	@echo "... src/buffer.i"
 	@echo "... src/buffer.s"
+	@echo "... src/common.o"
+	@echo "... src/common.i"
+	@echo "... src/common.s"
 	@echo "... src/config.o"
 	@echo "... src/config.i"
 	@echo "... src/config.s"
@@ -660,6 +711,9 @@ help:
 	@echo "... src/select.o"
 	@echo "... src/select.i"
 	@echo "... src/select.s"
+	@echo "... src/statistics.o"
+	@echo "... src/statistics.i"
+	@echo "... src/statistics.s"
 	@echo "... src/thread.o"
 	@echo "... src/thread.i"
 	@echo "... src/thread.s"

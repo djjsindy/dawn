@@ -2,7 +2,7 @@
 #define ITEM_H
 
 struct item_s{
-  const char *data;
+  char *data;
   int end;
   int size;
   int c_size;

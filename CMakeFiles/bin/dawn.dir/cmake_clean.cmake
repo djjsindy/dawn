@@ -1,5 +1,6 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/./bin/dawn.dir/src/buffer.c.o"
+  "CMakeFiles/./bin/dawn.dir/src/common.c.o"
   "CMakeFiles/./bin/dawn.dir/src/config.c.o"
   "CMakeFiles/./bin/dawn.dir/src/connection.c.o"
   "CMakeFiles/./bin/dawn.dir/src/daemon.c.o"
@@ -18,6 +19,7 @@ FILE(REMOVE_RECURSE
   "CMakeFiles/./bin/dawn.dir/src/protocol.c.o"
   "CMakeFiles/./bin/dawn.dir/src/queue.c.o"
   "CMakeFiles/./bin/dawn.dir/src/select.c.o"
+  "CMakeFiles/./bin/dawn.dir/src/statistics.c.o"
   "CMakeFiles/./bin/dawn.dir/src/thread.c.o"
   "./bin/dawn.pdb"
   "./bin/dawn"

@@ -25,10 +25,19 @@ extern config_module_t thread_conf_module;
 
 extern config_module_t connection_conf_module;
 
+extern config_module_t events_conf_module;
+
+extern config_module_t hash_conf_module;
+
+extern config_module_t pesistence_conf_module;
+
 config_module_t *config_modules[]={
 	&listen_conf_module,
 	&thread_conf_module,
 	&connection_conf_module,
+	&events_conf_module,
+	&hash_conf_module,
+	&pesistence_conf_module,
 	NULL
 };
 

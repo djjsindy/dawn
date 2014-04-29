@@ -1,15 +1,16 @@
-  #include "buffer.h"
-  #include "dy_char.h"
-  #include "hash.h"
-  #include "queue.h"
-  #include "item.h"
-  #include "network.h"
-  #include "memory.h"
-  #include "connection.h"
-  #include "thread.h"
-  #include <string.h>
-  #include <stdlib.h>
-  #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "buffer.h"
+#include "dy_char.h"
+#include "hash.h"
+#include "queue.h"
+#include "item.h"
+#include "network.h"
+#include "memory.h"
+#include "connection.h"
+#include "thread.h"
+#include "statistics.h"
 
 static int process_set(connection_t *conn);
 
@@ -20,6 +21,8 @@ static int process_delete(connection_t *conn);
 static void process_client_error(connection_t *conn,const char *message);
 
 static void process_version(connection_t *conn);
+
+static void process_stats(connection_t *conn);
 
 static int parse_set_header(connection_t *conn);
 
@@ -38,16 +41,6 @@ static item_t* fill_get_response_footer();
 static void write_delete_response(connection_t *conn);
 
 static void write_null(connection_t *conn,char *key);
-
-extern hash_t *hash;
-
-extern event_operation_t event_operation;
-
-extern mem_pool_t *pool;
-
-extern void add_set_sync_data(char *key,item_t *i);
-
-extern void add_get_sync_data(char *key,int size);
 
 static const char space=' ';
 
@@ -76,6 +69,18 @@ static const char *version="VERSION 1.0\r\n";
 static const char *empty="";
 
 static const char *deleted="DELETED\r\n";
+
+extern hash_t *hash;
+
+extern event_operation_t event_operation;
+
+extern mem_pool_t *pool;
+
+extern stat_t *stat; 
+
+extern void add_set_sync_data(char *key,item_t *i);
+
+extern void add_get_sync_data(char *key,int size);
 
 int parse_command(connection_t *conn){
   int result=AGAIN;
@@ -116,6 +121,8 @@ int process_command(connection_t *conn){
     result=process_delete(conn);
   }else if(strcmp(data,"quit")==0){
     close_connection(conn);
+  }else if(strcmp(data,"stats")==0){
+    process_stats(conn);
   }else{
    process_client_error(conn,unsupport_command);
  }
@@ -124,8 +131,12 @@ int process_command(connection_t *conn){
 
 static void process_version(connection_t *conn){
   char *c=(char *)alloc_mem(pool,strlen(version)+1);
+  item_t *i=init_item();
+  i->data=c;
+  i->c_size=strlen(version);
+  i->end=1;
   strcpy(c,version);
-  push(conn->wc->w_queue,c);
+  push(conn->wc->w_queue,i);
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }
 
@@ -378,6 +389,7 @@ static int process_delete(connection_t *conn){
       if(i==NULL){
         break;
       }
+      add_get_sync_data(key,i->size);
       destroy_item(i);    
     }
   } 
@@ -430,4 +442,21 @@ static int parse_delete_header(connection_t *conn){
     }
   }
   return AGAIN;
+}
+
+static void process_stats(connection_t *conn){
+  item_t *small_item=init_item();
+  small_item->data=alloc_mem(pool,100);
+  sprintf(small_item->data,"buddy_mem small bin:0:%lu 1:%lu 2:%lu 3:%lu 4:%lu 5:%lu 6:%lu 7:%lu\n",stat->small_buddy_stats[0],
+    stat->small_buddy_stats[1],
+    stat->small_buddy_stats[2],
+    stat->small_buddy_stats[3],
+    stat->small_buddy_stats[4],
+    stat->small_buddy_stats[5],
+    stat->small_buddy_stats[6],
+    stat->small_buddy_stats[7]);
+  small_item->end=1;
+  small_item->c_size=strlen(small_item->data);
+  push(conn->wc->w_queue,small_item);
+  event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }

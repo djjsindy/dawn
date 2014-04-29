@@ -5,6 +5,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_C
   "/Users/jianjundeng/dawn/src/buffer.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/buffer.c.o"
+  "/Users/jianjundeng/dawn/src/common.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/common.c.o"
   "/Users/jianjundeng/dawn/src/config.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/config.c.o"
   "/Users/jianjundeng/dawn/src/connection.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/connection.c.o"
   "/Users/jianjundeng/dawn/src/daemon.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/daemon.c.o"
@@ -23,6 +24,7 @@ SET(CMAKE_DEPENDS_CHECK_C
   "/Users/jianjundeng/dawn/src/protocol.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/protocol.c.o"
   "/Users/jianjundeng/dawn/src/queue.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/queue.c.o"
   "/Users/jianjundeng/dawn/src/select.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/select.c.o"
+  "/Users/jianjundeng/dawn/src/statistics.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/statistics.c.o"
   "/Users/jianjundeng/dawn/src/thread.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/thread.c.o"
   )
 SET(CMAKE_C_COMPILER_ID "Clang")

@@ -5,12 +5,21 @@
 #include "memory.h"
 #include "hash.h"
 #include "my_log.h"
+#include "config.h"
 
 extern mem_pool_t *pool;
 
 static int expand_hash(hash_t* hash);
 
 static unsigned long cal_hash(char *k);
+
+static void set_init_size_value(char_t *value);
+
+static void set_factor_value(char_t *value);
+
+static int init_size=INIT_SIZE;
+
+static float hash_factor=HASH_FACTOR;
 
 /**
  * 初始化hash结构，包括锁，初始化elements空间
@@ -20,14 +29,14 @@ hash_t* init_hash(){
   if(h==NULL){
     my_log(ERROR,"alloc hash struct failed\n");
   }
-  h->elements=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*INIT_SIZE);
+  h->elements=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*init_size);
   if(h->elements==NULL){
     my_log(ERROR,"alloc hash elements failed\n");
   }
   pthread_mutex_t mutex;
   pthread_mutex_init(&mutex, NULL);
   h->mutex=&mutex;
-  h->size=INIT_SIZE;
+  h->size=init_size;
   h->num=0;
   return h;
 }
@@ -47,7 +56,7 @@ int put(char *k,void *data,hash_t *hash){
    * 如果当前hash中元素的数量和hash array的空间之比大于factor，那么对hash进行扩容
    */
 
-  if(factor>HASH_FACTOR){
+  if(factor>hash_factor){
     if(!expand_hash(hash)){
       return 0;
     }
@@ -170,5 +179,24 @@ list_head_t* visit_hash(hash_t *hash){
   }
   pthread_mutex_unlock(hash->mutex);
   return head;
+}
+
+static command_t hash_command[]={
+  {"init_size",set_init_size_value},
+  {"factor",set_factor_value},
+  NULL
+};
+
+config_module_t hash_conf_module={
+  "hash",
+  hash_command
+};
+
+static void set_init_size_value(char_t *value){
+  init_size=atoi(value->data);
+}
+
+static void set_factor_value(char_t *value){
+  hash_factor=atof(value->data);
 }
 

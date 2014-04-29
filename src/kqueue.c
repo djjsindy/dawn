@@ -1,8 +1,4 @@
 #ifdef HAVE_EVENT
-#include "network.h"
-#include "thread.h"
-#include "my_log.h"
-#include "memory.h"
 #include <stdio.h>
 #include <sys/event.h>
 #include <sys/types.h>
@@ -12,6 +8,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include "network.h"
+#include "thread.h"
+#include "my_log.h"
+#include "memory.h"
+#include "config.h"
 
 static void kqueue_init_event(event_context_t *ec);
 
@@ -23,11 +24,17 @@ static void kqueue_process_event(event_context_t *ec);
 
 static void kqueue_close_event(int fd,event_context_t *ec);
 
+static void set_timeout_value(char_t *value);
+
+static void set_max_event_count_value(char_t *value);
+
 extern int server_sock_fd;
 
 extern mem_pool_t *pool;
 
-const struct timespec ts={1,0};
+static int timeout=TIMEOUT;
+
+static int max_event_count=MAX_EVENT_COUNT;
 
 event_operation_t event_operation={
   kqueue_init_event,
@@ -43,7 +50,7 @@ static void kqueue_init_event(event_context_t *ec){
     my_log(ERROR,"create kqueue error\n");
   }
   ec->fd=kq;
-  ec->events=alloc_mem(pool,sizeof(struct kevent)*MAX_EVENT_COUNT);
+  ec->events=alloc_mem(pool,sizeof(struct kevent)*max_event_count);
 }
 
 static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
@@ -78,7 +85,8 @@ static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec,void *d
 
 
 static void kqueue_process_event(event_context_t *ec){
-  int ret = kevent(ec->fd, NULL, 0, (struct kevent *)ec->events, MAX_EVENT_COUNT, &ts);
+  struct timespec ts={timeout,0};
+  int ret = kevent(ec->fd, NULL, 0, (struct kevent *)ec->events, max_event_count, &ts);
   if(ret==-1){
     my_log(ERROR,"kqueue event error\n");
     return;
@@ -110,6 +118,25 @@ static void kqueue_process_event(event_context_t *ec){
 static void kqueue_close_event(int fd,event_context_t *ec){
   //nothing to do ,because kqueue will delete event,when fd is close
 
+}
+
+static command_t events_command[]={
+  {"timeout",set_timeout_value},
+  {"max_event_count",set_max_event_count_value},
+  NULL
+};
+
+config_module_t events_conf_module={
+  "events",
+  events_command
+};
+
+static void set_timeout_value(char_t *value){
+  timeout=atoi(value->data);
+}
+
+static void set_max_event_count_value(char_t *value){
+  max_event_count=atoi(value->data);
 }
 
 #endif

@@ -31,6 +31,8 @@ extern jmp_buf exit_buf;
 
 extern mem_pool_t *pool;
 
+extern int parse_int(char_t *s);
+
 /**
  *  当处理完一个command，那么需要清空read context中得数据，以便处理后面得command
  */
@@ -47,8 +49,8 @@ void reset_read_context(read_context_t *rc){
  */
 connection_t* init_connection(){
   connection_t *co=(connection_t *)alloc_mem(pool,sizeof(connection_t));
-  co->rbuf=alloc_buffer(READ_BUF_SIZE);
-  co->wbuf=alloc_buffer(WRITE_BUF_SIZE);
+  co->rbuf=alloc_buffer(read_buf_size);
+  co->wbuf=alloc_buffer(write_buf_size);
   init_read_context(co);
   init_write_context(co);
   return co;
@@ -114,9 +116,9 @@ config_module_t connection_conf_module={
 };
 
 static void set_read_buf_size_value(char_t *value){
-  // port=atoi(value->data);
+  read_buf_size=parse_int(value);
 }
 
 static void set_write_buf_size_value(char_t *value){
-  // back_log=atoi(value->data);
+  write_buf_size=parse_int(value);
 }

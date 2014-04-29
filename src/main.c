@@ -15,6 +15,7 @@
 #include "network.h"
 #include "connection.h"
 #include "config.h"
+#include "statistics.h"
 
 #define DEFAULT_PORT 10000
 
@@ -49,6 +50,7 @@ int main (int argc, const char * argv[])
   //todo
   // daemonize();
   my_log_init();
+  init_stat();
   pool=init_mem_pool();
   init_conf();
   hash=init_hash();

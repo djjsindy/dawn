@@ -1,9 +1,4 @@
 #ifdef HAVE_SELECT
-#include "network.h"
-#include "thread.h"
-#include "my_log.h"
-#include "memory.h"
-#include "list.h"
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/types.h>
@@ -14,14 +9,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h> 
+#include "network.h"
+#include "thread.h"
+#include "my_log.h"
+#include "memory.h"
+#include "list.h"
 
 struct event_s{
   void *data;
   int fd;
   enum EVENT event;
 };
-
-struct timeval tv={5,0};
 
 typedef struct event_s event_t;
 
@@ -38,6 +36,14 @@ static void select_close_event(int fd,event_context_t *ec);
 static int find_fd_slot(event_t *events,int fd);
 
 static int prepare_fd_set(event_context_t *ec,fd_set *read_set,fd_set *write_set);
+
+static void set_timeout_value(char_t *value);
+
+static void set_max_event_count_value(char_t *value);
+
+static int timeout=TIMEOUT;
+
+static int max_event_count=MAX_EVENT_COUNT;
 
 extern int worker_index;
 
@@ -60,9 +66,9 @@ event_operation_t event_operation={
 };
 
 static void select_init_event(event_context_t *ec){ 
-  event_t *events=alloc_mem(pool,sizeof(event_t)*MAX_EVENT_COUNT);
+  event_t *events=alloc_mem(pool,sizeof(event_t)*max_event_count);
   int index=0;
-  while(index<MAX_EVENT_COUNT){
+  while(index<max_event_count){
     events[index].fd=0;
     index++;
   }
@@ -110,6 +116,7 @@ static void select_del_event(int fd,enum EVENT event,event_context_t *ec,void *d
 }
 
 static void select_process_event(event_context_t *ec){
+  struct timeval tv={timeout,0};
   fd_set read_set;
   fd_set write_set;
   int max=prepare_fd_set(ec,&read_set,&write_set);
@@ -122,7 +129,7 @@ static void select_process_event(event_context_t *ec){
   }
   event_t *events=(event_t *)ec->events;
   int i=0;  
-  for(;i<MAX_EVENT_COUNT;i++){
+  for(;i<max_event_count;i++){
     int fd=events[i].fd;
     if(fd==0){
       continue;
@@ -151,7 +158,7 @@ static int prepare_fd_set(event_context_t *ec,fd_set *read_set,fd_set *write_set
   FD_ZERO(write_set);
   int index=0;
   event_t *events=(event_t *)ec->events;
-  for(;index<MAX_EVENT_COUNT;index++){    
+  for(;index<max_event_count;index++){    
     if(events[index].fd==0){
       continue;
     }
@@ -171,11 +178,30 @@ static int prepare_fd_set(event_context_t *ec,fd_set *read_set,fd_set *write_set
 static void select_close_event(int fd,event_context_t *ec){
   event_t *events=ec->events;
   int index=0;
-  while(index<MAX_EVENT_COUNT){
+  while(index<max_event_count){
     if(events[index].fd==fd){
       events[index].fd=0;
     }
     index++;
   }
+}
+
+static command_t events_command[]={
+  {"timeout",set_timeout_value},
+  {"max_event_count",set_max_event_count_value},
+  NULL
+};
+
+config_module_t events_conf_module={
+  "events",
+  events_command
+};
+
+static void set_timeout_value(char_t *value){
+  timeout=atoi(value->data);
+}
+
+static void set_max_event_count_value(char_t *value){
+  max_event_count=atoi(value->data);
 }
 #endif

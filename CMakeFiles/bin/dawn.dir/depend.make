@@ -7,6 +7,9 @@ CMakeFiles/bin/dawn.dir/src/buffer.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/buffer.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/buffer.c.o: src/buffer.c
 
+CMakeFiles/bin/dawn.dir/src/common.c.o: ./include/dy_char.h
+CMakeFiles/bin/dawn.dir/src/common.c.o: src/common.c
+
 CMakeFiles/bin/dawn.dir/src/config.c.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/config.c.o: ./include/config.h
 CMakeFiles/bin/dawn.dir/src/config.c.o: ./include/dy_char.h
@@ -35,6 +38,7 @@ CMakeFiles/bin/dawn.dir/src/dy_char.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/dy_char.c.o: src/dy_char.c
 
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/config.h
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/item.h
@@ -47,6 +51,8 @@ CMakeFiles/bin/dawn.dir/src/epoll.c.o: src/epoll.c
 
 CMakeFiles/bin/dawn.dir/src/fdop.c.o: src/fdop.c
 
+CMakeFiles/bin/dawn.dir/src/hash.c.o: ./include/config.h
+CMakeFiles/bin/dawn.dir/src/hash.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/hash.c.o: ./include/hash.h
 CMakeFiles/bin/dawn.dir/src/hash.c.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/hash.c.o: ./include/memory.h
@@ -60,6 +66,7 @@ CMakeFiles/bin/dawn.dir/src/item.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/item.c.o: src/item.c
 
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/config.h
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o: ./include/item.h
@@ -85,12 +92,15 @@ CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/queue.h
+CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/statistics.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: ./include/thread.h
 CMakeFiles/bin/dawn.dir/src/main.c.o: src/main.c
 
+CMakeFiles/bin/dawn.dir/src/memory.c.o: ./include/hash.h
 CMakeFiles/bin/dawn.dir/src/memory.c.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/memory.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/memory.c.o: ./include/my_log.h
+CMakeFiles/bin/dawn.dir/src/memory.c.o: ./include/statistics.h
 CMakeFiles/bin/dawn.dir/src/memory.c.o: src/memory.c
 
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/dy_char.h
@@ -98,6 +108,7 @@ CMakeFiles/bin/dawn.dir/src/my_log.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/my_log.c.o: src/my_log.c
 
 CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/config.h
 CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/hash.h
 CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/item.h
@@ -108,6 +119,7 @@ CMakeFiles/bin/dawn.dir/src/persistence.c.o: ./include/queue.h
 CMakeFiles/bin/dawn.dir/src/persistence.c.o: src/persistence.c
 
 CMakeFiles/bin/dawn.dir/src/poll.c.o: ./include/buffer.h
+CMakeFiles/bin/dawn.dir/src/poll.c.o: ./include/config.h
 CMakeFiles/bin/dawn.dir/src/poll.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/poll.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/poll.c.o: ./include/item.h
@@ -128,6 +140,7 @@ CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/list.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/queue.h
+CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/statistics.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: ./include/thread.h
 CMakeFiles/bin/dawn.dir/src/protocol.c.o: src/protocol.c
 
@@ -148,6 +161,12 @@ CMakeFiles/bin/dawn.dir/src/select.c.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/select.c.o: ./include/queue.h
 CMakeFiles/bin/dawn.dir/src/select.c.o: ./include/thread.h
 CMakeFiles/bin/dawn.dir/src/select.c.o: src/select.c
+
+CMakeFiles/bin/dawn.dir/src/statistics.c.o: ./include/hash.h
+CMakeFiles/bin/dawn.dir/src/statistics.c.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/statistics.c.o: ./include/memory.h
+CMakeFiles/bin/dawn.dir/src/statistics.c.o: ./include/statistics.h
+CMakeFiles/bin/dawn.dir/src/statistics.c.o: src/statistics.c
 
 CMakeFiles/bin/dawn.dir/src/thread.c.o: ./include/buffer.h
 CMakeFiles/bin/dawn.dir/src/thread.c.o: ./include/config.h

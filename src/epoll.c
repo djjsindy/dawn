@@ -1,7 +1,4 @@
 #ifdef HAVE_EPOLL
-#include "network.h"
-#include "thread.h"
-#include "my_log.h"
 #include <stdio.h>
 #include <sys/epoll.h>
 #include <sys/types.h>
@@ -11,8 +8,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define MAX_FD_COUNT 1024
+#include "network.h"
+#include "thread.h"
+#include "my_log.h"
+#include "config.h"
 
 static void epoll_init_event(event_context_t *ec);
 
@@ -23,6 +22,14 @@ static void epoll_del_event(int fd,enum EVENT event,event_context_t *ec,void *da
 static void epoll_process_event(event_context_t *ec);
 
 static void epoll_close_event(int fd,event_context_t *ec);
+
+static void set_timeout_value(char_t *value);
+
+static void set_max_event_count_value(char_t *value);
+
+static int timeout=TIMEOUT;
+
+static int max_event_count=MAX_EVENT_COUNT;
 
 extern int server_sock_fd;
 
@@ -39,12 +46,12 @@ event_operation_t event_operation={
 };
 
 static void epoll_init_event(event_context_t *ec){ 
-	int fd = epoll_create(MAX_FD_COUNT);
+	int fd = epoll_create(max_event_count);
 	if (fd == -1) {
 		my_log(ERROR,"create epoll fd\n");
 	}
 	ec->fd=fd;
-	ec->events=alloc_mem(pool,sizeof(struct epoll_event)*MAX_EVENT_COUNT);
+	ec->events=alloc_mem(pool,sizeof(struct epoll_event)*max_event_count);
 }
 
 static void epoll_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
@@ -94,7 +101,7 @@ static void epoll_del_event(int fd,enum EVENT event,event_context_t *ec,void *da
 
 
 static void epoll_process_event(event_context_t *ec){
-	int nfds = epoll_wait(ec->fd,ec->events,MAX_EVENT_COUNT,timeout);
+	int nfds = epoll_wait(ec->fd,ec->events,max_event_count,timeout);
 	if(ret==-1){
 		my_log(ERROR,"epoll event error\n");
 		return;
@@ -126,5 +133,24 @@ static void epoll_process_event(event_context_t *ec){
 static void epoll_close_event(int fd,event_context_t *ec){
   	struct epoll_event ev;
 	epoll_ctl(ec->fd,EPOLL_CTL_DEL,fd,&ev);
+}
+
+static command_t events_command[]={
+  {"timeout",set_timeout_value},
+  {"max_event_count",set_max_event_count_value},
+  NULL
+};
+
+config_module_t events_conf_module={
+  "events",
+  events_command
+};
+
+static void set_timeout_value(char_t *value){
+  timeout=atoi(value->data);
+}
+
+static void set_max_event_count_value(char_t *value){
+  max_event_count=atoi(value->data);
 }
 #endif

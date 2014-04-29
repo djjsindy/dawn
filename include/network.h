@@ -5,6 +5,8 @@
 
 #define MAX_EVENT_COUNT 1024
 
+#define TIMEOUT 1
+
 struct event_context_s{
   #ifdef HAVE_EVENT
     int fd;
