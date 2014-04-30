@@ -64,6 +64,9 @@ enum PARSE_STATE{
 	COMMAND_VALUE_START,
 }; 
 
+/**
+ * 加载配置文件
+ */
 void init_conf(){
 	buffer_t *rbuf=alloc_buffer(CONF_READ_BUF);
 	int fd=open_conf_file();
@@ -128,6 +131,7 @@ void init_conf(){
     				add_char(command_value,c);
     			}else{
     				add_terminal(command_value);
+    				printf("set value %s\n",command_value->data);
     				current_command->set_value(command_value);
     				current_command=NULL;
     				reset_char(command_value);

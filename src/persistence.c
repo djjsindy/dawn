@@ -343,11 +343,11 @@ static void start_recovery(){
 			recovery_sum++;
 			pthread_t tid=0;
 			pthread_create(&tid,NULL,recovery_process,p_dirent);
-			pthread_mutex_lock(&recovery_lock);
-    		wait_recovery_finish();
-    		pthread_mutex_unlock(&recovery_lock);
 		}
 	}
+	pthread_mutex_lock(&recovery_lock);
+    wait_recovery_finish();
+    pthread_mutex_unlock(&recovery_lock);
 	closedir(dir);
 }
 
@@ -449,8 +449,6 @@ static void trancate_queue_file(char *key){
 }
 
 static command_t persistence_command[]={
-  {"queue_directory",set_queue_directory_value},
-  {"file_suffix",set_file_suffix_value},
   {"sync_interval",set_sync_interval_value},
   {"trancate_file_threshold",set_trancate_file_threshold_value},
   {"trancate_radio",set_trancate_radio_value},
@@ -463,13 +461,6 @@ config_module_t pesistence_conf_module={
   persistence_command
 };
 
-static void set_queue_directory_value(char_t *value){
-  queue_dir=value->data;
-}
-
-static void set_file_suffix_value(char_t *value){
-  file_suffix=value->data;
-}
 
 static void set_sync_interval_value(char_t *value){
   sync_interval=atoi(value->data);
