@@ -205,3 +205,4 @@ static void set_max_event_count_value(char_t *value){
   max_event_count=atoi(value->data);
 }
 #endif
+

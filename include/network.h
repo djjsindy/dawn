@@ -8,7 +8,11 @@
 #define TIMEOUT 1
 
 struct event_context_s{
-  #ifdef (HAVE_EVENT)||(HAVE_EPOLL)
+  #ifdef HAVE_EVENT
+    int fd;
+  #endif
+  
+  #ifdef HAVE_EPOLL
     int fd;
   #endif
 

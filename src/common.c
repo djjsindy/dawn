@@ -19,3 +19,4 @@ int parse_int(char_t *s){
 	}
 	return atoi(s->data);
 }
+

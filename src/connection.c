@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <setjmp.h>
+#include <stdint.h>
 #include "network.h"
 #include "dy_char.h"
 #include "buffer.h"

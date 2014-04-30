@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <sys/event.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <arpa/inet.h>
@@ -69,7 +68,7 @@ int main (int argc, const char * argv[])
   hash=init_hash();
 
   //根据持久化文件，初始化数据，开启同步数据线程
-  init_sync();
+  //init_sync();
 
   //启动worker线程
   start_workers();
@@ -95,7 +94,6 @@ static void wait_connection(){
 
 static void start_listen(){  
   struct sockaddr_in server_addr;
-  server_addr.sin_len = sizeof(struct sockaddr_in);
   server_addr.sin_family = AF_INET;
   server_addr.sin_port = htons(port);
   server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");

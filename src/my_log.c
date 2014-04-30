@@ -36,3 +36,4 @@ void my_log(enum log_level level,char *format,...){
   fflush(out);
   va_end(ap);
 }
+

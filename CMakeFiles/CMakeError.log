@@ -14,3 +14,18 @@ make[1]: *** [CMakeFiles/cmTryCompileExec3854962130.dir/CheckIncludeFile.c.o] Er
 make: *** [cmTryCompileExec3854962130/fast] Error 2
 
 
+Determining if the include file sys/event.h exists failed with the following output:
+Change Dir: /root/dawn/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/gmake "cmTryCompileExec2850227936/fast"
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec2850227936.dir/build.make CMakeFiles/cmTryCompileExec2850227936.dir/build
+gmake[1]: Entering directory `/root/dawn/CMakeFiles/CMakeTmp'
+/usr/local/bin/cmake -E cmake_progress_report /root/dawn/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2850227936.dir/CheckIncludeFile.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2850227936.dir/CheckIncludeFile.c.o   -c /root/dawn/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/root/dawn/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:23: 错误：sys/event.h：没有那个文件或目录
+gmake[1]: *** [CMakeFiles/cmTryCompileExec2850227936.dir/CheckIncludeFile.c.o] 错误 1
+gmake[1]: Leaving directory `/root/dawn/CMakeFiles/CMakeTmp'
+gmake: *** [cmTryCompileExec2850227936/fast] 错误 2
+
+

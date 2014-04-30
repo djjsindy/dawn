@@ -12,6 +12,7 @@
 #include "thread.h"
 #include "my_log.h"
 #include "config.h"
+#include "memory.h"
 
 static void epoll_init_event(event_context_t *ec);
 
@@ -35,8 +36,6 @@ extern int server_sock_fd;
 
 extern mem_pool_t *pool;
 
-static const int timeout=1;
-
 event_operation_t event_operation={
 	epoll_init_event,
 	epoll_register_event,
@@ -57,6 +56,7 @@ static void epoll_init_event(event_context_t *ec){
 static void epoll_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
 	connection_t *conn=(connection_t *)data;
 	struct epoll_event ev;
+        int op;
 	if(conn->events==0){
 		op=EPOLL_CTL_ADD;
 		switch(event){
@@ -102,10 +102,10 @@ static void epoll_del_event(int fd,enum EVENT event,event_context_t *ec,void *da
 
 static void epoll_process_event(event_context_t *ec){
 	int nfds = epoll_wait(ec->fd,ec->events,max_event_count,timeout);
-	if(ret==-1){
+	if(nfds==-1){
 		my_log(ERROR,"epoll event error\n");
 		return;
-	}else if(ret==0){
+	}else if(nfds==0){
 		return;
 	}
 	int i=0;
@@ -123,7 +123,7 @@ static void epoll_process_event(event_context_t *ec){
 			}else if(events[i].events|EPOLLOUT>0){
 				int result=handle_write(conn);
 				if(result==OK){
-					event_operation.del_event(sockfd,WRITE,ec);
+					event_operation.del_event(sockfd,WRITE,ec,conn);
 				}
 			}
 		}

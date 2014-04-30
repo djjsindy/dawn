@@ -43,6 +43,7 @@ CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/connection.h
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/dy_char.h
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/item.h
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/list.h
+CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/memory.h
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/my_log.h
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/network.h
 CMakeFiles/bin/dawn.dir/src/epoll.c.o: ./include/queue.h

@@ -3,6 +3,7 @@
 
 #include "list.h"
 #include <pthread.h>
+#include <math.h>
 #define DEFAULT_LEVEL 7
 #define DEFAULT_FLAG_NUM (2<<DEFAULT_LEVEL)-1
 #define SMALL_THRESHOLD 1<<10
