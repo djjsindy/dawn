@@ -1,4 +1,3 @@
-#include "connection.h"
 #include <pthread.h>
 #include <stdlib.h>
 #include <setjmp.h>
@@ -9,13 +8,14 @@
 #include "memory.h"
 #include "my_log.h"
 #include "config.h"
+#include "connection.h"
 
 #define READ_BUF_SIZE 1024*4
 #define WRITE_BUF_SIZE 1024*4
 
-static int read_buf_size=READ_BUF_SIZE;
+static intptr_t read_buf_size=READ_BUF_SIZE;
 
-static int write_buf_size=WRITE_BUF_SIZE;
+static intptr_t write_buf_size=WRITE_BUF_SIZE;
 
 static void destroy_connection(connection_t *conn);
 
