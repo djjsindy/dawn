@@ -71,7 +71,6 @@ static void epoll_register_event(int fd,enum EVENT event,event_context_t *ec,voi
 		op=EPOLL_CTL_MOD;
 		ev.events=EPOLLIN|EPOLLOUT;
 	}
-	ev.data.fd=fd;
 	ev.data.ptr=data;
 	epoll_ctl(ec->fd,op,fd,&ev);
 	conn->events|=event;
@@ -111,13 +110,13 @@ static void epoll_process_event(event_context_t *ec){
 	int i=0;
 	struct epoll_event *events=(struct epoll_event *)ec->events;
 	for(;i<nfds;i++){
-		int sockfd= events[i].data.fd; 
+		connection_t *conn=events[i].data.ptr;
+		int sockfd= conn->fd; 
 		if(sockfd==ec->worker_fd){
 			handle_notify(sockfd,ec);
 		}else if(sockfd==ec->listen_fd){
 			accept_connection();
 		}else{
-			connection_t *conn=(connection_t *)events[i].data.ptr;
 			if(events[i].events|EPOLLIN>0){
 				handle_read(conn);
 			}else if(events[i].events|EPOLLOUT>0){

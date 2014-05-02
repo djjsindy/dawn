@@ -33,8 +33,14 @@ hash_t* init_hash(){
   if(h->elements==NULL){
     my_log(ERROR,"alloc hash elements failed\n");
   }
+  pthread_mutexattr_t attr; 
+  int ret=0;
+  if((ret = pthread_mutexattr_init(&attr)) != 0){  
+    my_log(ERROR, "create mutex attribute error\n");  
+  }  
   pthread_mutex_t mutex;
-  pthread_mutex_init(&mutex, NULL);
+  pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);  
+  pthread_mutex_init(&mutex, &attr);    
   h->mutex=&mutex;
   h->size=init_size;
   h->num=0;

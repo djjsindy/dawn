@@ -83,7 +83,7 @@ static void *worker_loop(void *arg){
   ec->queue=thread->queue;
 
   //加入notifyfd监听，当主线程有连接，会通知相关的worker线程
-  connection_t *conn=init_connection();
+  connection_t *conn=init_connection(notify_fd);
   event_operation.register_event(notify_fd,READ,ec,conn);
 
   //开始处理网络事件
@@ -246,13 +246,12 @@ void handle_notify(int fd,event_context_t *ec){
     case 'c':
       {
 
-        //初始化connection结构
-        connection_t *co=init_connection();
-        co->ec=ec;
-
         //获得fd
         int *i=(int *)pop(ec->queue);
-        co->fd=*i;
+
+        //初始化connection结构
+        connection_t *co=init_connection(*i);
+        co->ec=ec;
         co->events=0;
 
         //注册读事件

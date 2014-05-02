@@ -84,7 +84,7 @@ int main (int argc, const char * argv[])
 static void wait_connection(){
   event_context_t ec;
   ec.listen_fd=server_sock_fd;
-  connection_t *conn=init_connection();
+  connection_t *conn=init_connection(server_sock_fd);
   event_operation.init_event(&ec);
   event_operation.register_event(server_sock_fd,READ,&ec,conn);
   while (1) {

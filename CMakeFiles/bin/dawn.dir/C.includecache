@@ -6,23 +6,9 @@
 
 #IncludeRegexTransform: 
 
-./include/buffer.h
-
 ./include/config.h
 dy_char.h
 ./include/dy_char.h
-
-./include/connection.h
-buffer.h
-./include/buffer.h
-dy_char.h
-./include/dy_char.h
-network.h
-./include/network.h
-queue.h
-./include/queue.h
-item.h
-./include/item.h
 
 ./include/dy_char.h
 
@@ -31,8 +17,6 @@ pthread.h
 -
 list.h
 ./include/list.h
-
-./include/item.h
 
 ./include/list.h
 stdio.h
@@ -52,65 +36,21 @@ math.h
 stdarg.h
 -
 
-./include/network.h
-list.h
-./include/list.h
-queue.h
-./include/queue.h
-
-./include/queue.h
-pthread.h
--
-list.h
-./include/list.h
-
-./include/statistics.h
-hash.h
-./include/hash.h
-memory.h
-./include/memory.h
-
-./include/thread.h
-queue.h
-./include/queue.h
-connection.h
-./include/connection.h
-network.h
-./include/network.h
-
-/root/dawn/src/main.c
+/Users/jianjundeng/dawn/src/hash.c
 stdio.h
 -
 stdlib.h
 -
-netinet/in.h
--
-sys/socket.h
--
-sys/types.h
--
-sys/time.h
--
-arpa/inet.h
--
 string.h
 -
-unistd.h
+pthread.h
 -
-thread.h
-/root/dawn/src/thread.h
 memory.h
-/root/dawn/src/memory.h
+/Users/jianjundeng/dawn/src/memory.h
 hash.h
-/root/dawn/src/hash.h
+/Users/jianjundeng/dawn/src/hash.h
 my_log.h
-/root/dawn/src/my_log.h
-network.h
-/root/dawn/src/network.h
-connection.h
-/root/dawn/src/connection.h
+/Users/jianjundeng/dawn/src/my_log.h
 config.h
-/root/dawn/src/config.h
-statistics.h
-/root/dawn/src/statistics.h
+/Users/jianjundeng/dawn/src/config.h
 

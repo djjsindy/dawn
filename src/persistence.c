@@ -298,15 +298,11 @@ static char_t* queue_temp_file_url(char *key){
 
 static long queue_file_size(char *key){
 	char_t *dir=queue_file_url(key);
-	unsigned long filesize = -1;      
-    struct stat statbuff;  
-    if(stat(dir->data, &statbuff) < 0){  
-        my_log(ERROR,"open dir failed\n");
-    }else{  
-        filesize = statbuff.st_size;  
-    }
-    destroy_char(dir);  
-    return filesize;
+	FILE * fp = fopen(dir->data, "r");  
+    fseek(fp, 0L, SEEK_END);  
+    long size = ftell(fp);  
+    fclose(fp);  
+    return size; 
 }
 
 static DIR* open_queue_dir(){

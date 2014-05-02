@@ -6,16 +6,16 @@ CMakeFiles/bin/dawn.dir/src/buffer.c.o
  ./include/list.h
  ./include/memory.h
  ./include/my_log.h
- /root/dawn/src/buffer.c
+ /Users/jianjundeng/dawn/src/buffer.c
 CMakeFiles/bin/dawn.dir/src/common.c.o
  ./include/dy_char.h
- /root/dawn/src/common.c
+ /Users/jianjundeng/dawn/src/common.c
 CMakeFiles/bin/dawn.dir/src/config.c.o
  ./include/buffer.h
  ./include/config.h
  ./include/dy_char.h
  ./include/my_log.h
- /root/dawn/src/config.c
+ /Users/jianjundeng/dawn/src/config.c
 CMakeFiles/bin/dawn.dir/src/connection.c.o
  ./include/buffer.h
  ./include/config.h
@@ -27,16 +27,16 @@ CMakeFiles/bin/dawn.dir/src/connection.c.o
  ./include/my_log.h
  ./include/network.h
  ./include/queue.h
- /root/dawn/src/connection.c
+ /Users/jianjundeng/dawn/src/connection.c
 CMakeFiles/bin/dawn.dir/src/daemon.c.o
  ./include/my_log.h
- /root/dawn/src/daemon.c
+ /Users/jianjundeng/dawn/src/daemon.c
 CMakeFiles/bin/dawn.dir/src/dy_char.c.o
  ./include/dy_char.h
  ./include/list.h
  ./include/memory.h
  ./include/my_log.h
- /root/dawn/src/dy_char.c
+ /Users/jianjundeng/dawn/src/dy_char.c
 CMakeFiles/bin/dawn.dir/src/epoll.c.o
  ./include/buffer.h
  ./include/config.h
@@ -49,9 +49,9 @@ CMakeFiles/bin/dawn.dir/src/epoll.c.o
  ./include/network.h
  ./include/queue.h
  ./include/thread.h
- /root/dawn/src/epoll.c
+ /Users/jianjundeng/dawn/src/epoll.c
 CMakeFiles/bin/dawn.dir/src/fdop.c.o
- /root/dawn/src/fdop.c
+ /Users/jianjundeng/dawn/src/fdop.c
 CMakeFiles/bin/dawn.dir/src/hash.c.o
  ./include/config.h
  ./include/dy_char.h
@@ -59,13 +59,13 @@ CMakeFiles/bin/dawn.dir/src/hash.c.o
  ./include/list.h
  ./include/memory.h
  ./include/my_log.h
- /root/dawn/src/hash.c
+ /Users/jianjundeng/dawn/src/hash.c
 CMakeFiles/bin/dawn.dir/src/item.c.o
  ./include/item.h
  ./include/list.h
  ./include/memory.h
  ./include/my_log.h
- /root/dawn/src/item.c
+ /Users/jianjundeng/dawn/src/item.c
 CMakeFiles/bin/dawn.dir/src/kqueue.c.o
  ./include/buffer.h
  ./include/config.h
@@ -78,10 +78,10 @@ CMakeFiles/bin/dawn.dir/src/kqueue.c.o
  ./include/network.h
  ./include/queue.h
  ./include/thread.h
- /root/dawn/src/kqueue.c
+ /Users/jianjundeng/dawn/src/kqueue.c
 CMakeFiles/bin/dawn.dir/src/list.c.o
  ./include/list.h
- /root/dawn/src/list.c
+ /Users/jianjundeng/dawn/src/list.c
 CMakeFiles/bin/dawn.dir/src/main.c.o
  ./include/buffer.h
  ./include/config.h
@@ -96,18 +96,18 @@ CMakeFiles/bin/dawn.dir/src/main.c.o
  ./include/queue.h
  ./include/statistics.h
  ./include/thread.h
- /root/dawn/src/main.c
+ /Users/jianjundeng/dawn/src/main.c
 CMakeFiles/bin/dawn.dir/src/memory.c.o
  ./include/hash.h
  ./include/list.h
  ./include/memory.h
  ./include/my_log.h
  ./include/statistics.h
- /root/dawn/src/memory.c
+ /Users/jianjundeng/dawn/src/memory.c
 CMakeFiles/bin/dawn.dir/src/my_log.c.o
  ./include/dy_char.h
  ./include/my_log.h
- /root/dawn/src/my_log.c
+ /Users/jianjundeng/dawn/src/my_log.c
 CMakeFiles/bin/dawn.dir/src/persistence.c.o
  ./include/buffer.h
  ./include/config.h
@@ -118,7 +118,7 @@ CMakeFiles/bin/dawn.dir/src/persistence.c.o
  ./include/memory.h
  ./include/my_log.h
  ./include/queue.h
- /root/dawn/src/persistence.c
+ /Users/jianjundeng/dawn/src/persistence.c
 CMakeFiles/bin/dawn.dir/src/poll.c.o
  ./include/buffer.h
  ./include/config.h
@@ -131,7 +131,7 @@ CMakeFiles/bin/dawn.dir/src/poll.c.o
  ./include/network.h
  ./include/queue.h
  ./include/thread.h
- /root/dawn/src/poll.c
+ /Users/jianjundeng/dawn/src/poll.c
 CMakeFiles/bin/dawn.dir/src/protocol.c.o
  ./include/buffer.h
  ./include/connection.h
@@ -144,13 +144,13 @@ CMakeFiles/bin/dawn.dir/src/protocol.c.o
  ./include/queue.h
  ./include/statistics.h
  ./include/thread.h
- /root/dawn/src/protocol.c
+ /Users/jianjundeng/dawn/src/protocol.c
 CMakeFiles/bin/dawn.dir/src/queue.c.o
  ./include/list.h
  ./include/memory.h
  ./include/my_log.h
  ./include/queue.h
- /root/dawn/src/queue.c
+ /Users/jianjundeng/dawn/src/queue.c
 CMakeFiles/bin/dawn.dir/src/select.c.o
  ./include/buffer.h
  ./include/connection.h
@@ -162,13 +162,13 @@ CMakeFiles/bin/dawn.dir/src/select.c.o
  ./include/network.h
  ./include/queue.h
  ./include/thread.h
- /root/dawn/src/select.c
+ /Users/jianjundeng/dawn/src/select.c
 CMakeFiles/bin/dawn.dir/src/statistics.c.o
  ./include/hash.h
  ./include/list.h
  ./include/memory.h
  ./include/statistics.h
- /root/dawn/src/statistics.c
+ /Users/jianjundeng/dawn/src/statistics.c
 CMakeFiles/bin/dawn.dir/src/thread.c.o
  ./include/buffer.h
  ./include/config.h
@@ -181,4 +181,4 @@ CMakeFiles/bin/dawn.dir/src/thread.c.o
  ./include/network.h
  ./include/queue.h
  ./include/thread.h
- /root/dawn/src/thread.c
+ /Users/jianjundeng/dawn/src/thread.c

@@ -55,7 +55,7 @@ typedef struct connection_s connection_t;
 
 void reset_read_context(read_context_t *rc);
 
-connection_t* init_connection();
+connection_t* init_connection(int fd);
 
 void cancel_connection(connection_t *conn);
 #endif
