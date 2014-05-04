@@ -4,35 +4,36 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_C
-  "/Users/jianjundeng/dawn/src/buffer.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/buffer.c.o"
-  "/Users/jianjundeng/dawn/src/common.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/common.c.o"
-  "/Users/jianjundeng/dawn/src/config.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/config.c.o"
-  "/Users/jianjundeng/dawn/src/connection.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/connection.c.o"
-  "/Users/jianjundeng/dawn/src/daemon.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/daemon.c.o"
-  "/Users/jianjundeng/dawn/src/dy_char.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/dy_char.c.o"
-  "/Users/jianjundeng/dawn/src/epoll.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/epoll.c.o"
-  "/Users/jianjundeng/dawn/src/fdop.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/fdop.c.o"
-  "/Users/jianjundeng/dawn/src/hash.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/hash.c.o"
-  "/Users/jianjundeng/dawn/src/item.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/item.c.o"
-  "/Users/jianjundeng/dawn/src/kqueue.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/kqueue.c.o"
-  "/Users/jianjundeng/dawn/src/list.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/list.c.o"
-  "/Users/jianjundeng/dawn/src/main.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/main.c.o"
-  "/Users/jianjundeng/dawn/src/memory.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/memory.c.o"
-  "/Users/jianjundeng/dawn/src/my_log.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/my_log.c.o"
-  "/Users/jianjundeng/dawn/src/persistence.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/persistence.c.o"
-  "/Users/jianjundeng/dawn/src/poll.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/poll.c.o"
-  "/Users/jianjundeng/dawn/src/protocol.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/protocol.c.o"
-  "/Users/jianjundeng/dawn/src/queue.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/queue.c.o"
-  "/Users/jianjundeng/dawn/src/select.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/select.c.o"
-  "/Users/jianjundeng/dawn/src/statistics.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/statistics.c.o"
-  "/Users/jianjundeng/dawn/src/thread.c" "/Users/jianjundeng/dawn/CMakeFiles/bin/dawn.dir/src/thread.c.o"
+  "/root/dawn/src/buffer.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/buffer.c.o"
+  "/root/dawn/src/common.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/common.c.o"
+  "/root/dawn/src/config.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/config.c.o"
+  "/root/dawn/src/connection.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/connection.c.o"
+  "/root/dawn/src/daemon.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/daemon.c.o"
+  "/root/dawn/src/dy_char.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/dy_char.c.o"
+  "/root/dawn/src/epoll.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/epoll.c.o"
+  "/root/dawn/src/fdop.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/fdop.c.o"
+  "/root/dawn/src/hash.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/hash.c.o"
+  "/root/dawn/src/item.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/item.c.o"
+  "/root/dawn/src/kqueue.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/kqueue.c.o"
+  "/root/dawn/src/list.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/list.c.o"
+  "/root/dawn/src/main.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/main.c.o"
+  "/root/dawn/src/memory.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/memory.c.o"
+  "/root/dawn/src/my_log.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/my_log.c.o"
+  "/root/dawn/src/persistence.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/persistence.c.o"
+  "/root/dawn/src/poll.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/poll.c.o"
+  "/root/dawn/src/protocol.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/protocol.c.o"
+  "/root/dawn/src/queue.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/queue.c.o"
+  "/root/dawn/src/select.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/select.c.o"
+  "/root/dawn/src/statistics.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/statistics.c.o"
+  "/root/dawn/src/thread.c" "/root/dawn/CMakeFiles/bin/dawn.dir/src/thread.c.o"
   )
-SET(CMAKE_C_COMPILER_ID "Clang")
+SET(CMAKE_C_COMPILER_ID "GNU")
 
 # Preprocessor definitions for this target.
 SET(CMAKE_TARGET_DEFINITIONS
-  "DAWN_HOME=\"/Users/jianjundeng/dawn\""
-  "HAVE_EVENT"
+  "DAWN_HOME=\"/root/dawn\""
+  "HAVE_EPOLL"
+  "_GNU_SOURCE"
   )
 
 # Targets to which this target links.

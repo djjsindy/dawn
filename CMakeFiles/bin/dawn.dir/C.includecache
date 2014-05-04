@@ -36,7 +36,7 @@ math.h
 stdarg.h
 -
 
-/Users/jianjundeng/dawn/src/hash.c
+/root/dawn/src/hash.c
 stdio.h
 -
 stdlib.h
@@ -46,11 +46,11 @@ string.h
 pthread.h
 -
 memory.h
-/Users/jianjundeng/dawn/src/memory.h
+/root/dawn/src/memory.h
 hash.h
-/Users/jianjundeng/dawn/src/hash.h
+/root/dawn/src/hash.h
 my_log.h
-/Users/jianjundeng/dawn/src/my_log.h
+/root/dawn/src/my_log.h
 config.h
-/Users/jianjundeng/dawn/src/config.h
+/root/dawn/src/config.h
 

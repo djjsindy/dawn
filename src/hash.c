@@ -38,10 +38,10 @@ hash_t* init_hash(){
   if((ret = pthread_mutexattr_init(&attr)) != 0){  
     my_log(ERROR, "create mutex attribute error\n");  
   }  
-  pthread_mutex_t mutex;
+  pthread_mutex_t *mutex=(pthread_mutex_t *)alloc_mem(pool,sizeof(pthread_mutex_t));
   pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);  
-  pthread_mutex_init(&mutex, &attr);    
-  h->mutex=&mutex;
+  pthread_mutex_init(mutex, &attr);    
+  h->mutex=mutex;
   h->size=init_size;
   h->num=0;
   return h;
@@ -157,7 +157,7 @@ static int expand_hash(hash_t *hash){
 static unsigned long cal_hash(char *key){
   int index=0;
   int length=(int)strlen(key);
-  unsigned long hash;
+  unsigned long hash=0l;
   while(index<length){
     hash+=*(key+index);
     index++;

@@ -68,7 +68,7 @@ int main (int argc, const char * argv[])
   hash=init_hash();
 
   //根据持久化文件，初始化数据，开启同步数据线程
-  //init_sync();
+  init_sync();
 
   //启动worker线程
   start_workers();
