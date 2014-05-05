@@ -82,7 +82,8 @@ static void epoll_del_event(intptr_t fd,enum EVENT event,event_context_t *ec,voi
 	struct epoll_event ev;
 	if(conn->events|READ>0){
 		ev.events|=EPOLLIN;
-	}else if(conn->events|WRITE>0){
+	}
+	if(conn->events|WRITE>0){
 		ev.events|=EPOLLOUT;
 	}
 	switch(event){
@@ -119,7 +120,8 @@ static void epoll_process_event(event_context_t *ec){
 		}else{
 			if(events[i].events|EPOLLIN>0){
 				handle_read(conn);
-			}else if(events[i].events|EPOLLOUT>0){
+			}
+                        if(events[i].events|EPOLLOUT>0){
 				int result=handle_write(conn);
 				if(result==OK){
 					event_operation.del_event(sockfd,WRITE,ec,conn);

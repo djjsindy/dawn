@@ -41,10 +41,10 @@ hash_t* init_hash(){
   if((ret = pthread_mutexattr_init(&attr)) != 0){  
     my_log(ERROR, "create mutex attribute error\n");  
   }  
-  pthread_mutex_t mutex;
+  pthread_mutex_t *mutex=(pthread_mutex_t *)alloc_mem(pool,sizeof(pthread_mutex_t));
   pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);  
-  pthread_mutex_init(&mutex, &attr);    
-  h->mutex=&mutex;
+  pthread_mutex_init(mutex, &attr);    
+  h->mutex=mutex;
   h->size=init_size;
   h->num=0;
   return h;
@@ -157,10 +157,11 @@ static intptr_t expand_hash(hash_t *hash){
 /**
  *  hash函数，计算key值的hash，现在的做法是把每个char叠加在一起，后面需要改善
  */
+
 static intptr_t cal_hash(char *key){
   intptr_t index=0;
   intptr_t length=(int)strlen(key);
-  intptr_t hash;
+  intptr_t hash=0l;
   while(index<length){
     hash+=*(key+index);
     index++;
