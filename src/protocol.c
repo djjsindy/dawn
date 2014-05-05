@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include "buffer.h"
 #include "dy_char.h"
 #include "hash.h"
@@ -14,11 +15,11 @@
 
 #define STAT_LINE_BUFFER_SIZE 100
 
-static int process_set(connection_t *conn);
+static intptr_t process_set(connection_t *conn);
 
-static int process_get(connection_t *conn);
+static intptr_t process_get(connection_t *conn);
 
-static int process_delete(connection_t *conn);
+static intptr_t process_delete(connection_t *conn);
 
 static void process_client_error(connection_t *conn,const char *message);
 
@@ -26,17 +27,17 @@ static void process_version(connection_t *conn);
 
 static void process_stats(connection_t *conn);
 
-static int parse_set_header(connection_t *conn);
+static intptr_t parse_set_header(connection_t *conn);
 
-static int parse_get_header(connection_t *conn);
+static intptr_t parse_get_header(connection_t *conn);
 
-static int parse_delete_header(connection_t *conn);
+static intptr_t parse_delete_header(connection_t *conn);
 
-static int process_set_body(connection_t *conn);
+static intptr_t process_set_body(connection_t *conn);
 
 static void write_set_response(connection_t *conn);
 
-static item_t* fill_get_response_header(char *c,int bytes);
+static item_t* fill_get_response_header(char *c,intptr_t bytes);
 
 static item_t* fill_get_response_footer();
 
@@ -44,7 +45,7 @@ static void write_delete_response(connection_t *conn);
 
 static void write_null(connection_t *conn,char *key);
 
-static item_t *get_buddy_stat(unsigned long *data,const char *type);
+static item_t *get_buddy_stat(intptr_t *data,const char *type);
 
 static item_t *get_direct_stat();
 
@@ -92,10 +93,10 @@ extern stat_t *stat;
 
 extern void add_set_sync_data(char *key,item_t *i);
 
-extern void add_get_sync_data(char *key,int size);
+extern void add_get_sync_data(char *key,intptr_t size);
 
-int parse_command(connection_t *conn){
-  int result=AGAIN;
+intptr_t parse_command(connection_t *conn){
+  intptr_t result=AGAIN;
   read_context_t *rc=conn->rc;
   buffer_t *buf=conn->rbuf;
   while(has_remaining(buf)){
@@ -120,8 +121,8 @@ int parse_command(connection_t *conn){
   return result;
 }
 
-int process_command(connection_t *conn){
-  int result=OK;
+intptr_t process_command(connection_t *conn){
+  intptr_t result=OK;
   char *data=conn->rc->command->data;
   if(strcmp(data,"get")==0){
     result=process_get(conn);
@@ -153,17 +154,17 @@ static void process_version(connection_t *conn){
 }
 
 static void process_client_error(connection_t *conn,const char *message){
-  int length=strlen(client_error)-2+strlen(message)+1;
+  intptr_t length=strlen(client_error)-2+strlen(message)+1;
   char *c=(char *)alloc_mem(pool,length);
   sprintf(c,client_error,message);
   push(conn->wc->w_queue,c);
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }
 
-static int process_get(connection_t *conn){
+static intptr_t process_get(connection_t *conn){
   read_context_t *rc=conn->rc;
   if(rc->read_process!=READ_COMMAND_END){
-    int result=parse_get_header(conn);
+    intptr_t result=parse_get_header(conn);
       //表示set command第一行没有read全
     if(result==AGAIN){
       return AGAIN;
@@ -172,7 +173,7 @@ static int process_get(connection_t *conn){
   char *key=rc->key->data;
   queue_t *q=(queue_t *)get(key,hash);
   if(q!=NULL){
-    int first=1;
+    intptr_t first=1;
     while(1){
       item_t *i=(item_t *)pop(q);
       if(i==NULL){
@@ -198,7 +199,7 @@ static int process_get(connection_t *conn){
 }
 
 static void write_null(connection_t *conn,char *key){
-  int length=strlen(data_end);
+  intptr_t length=strlen(data_end);
   char *s=(char *)alloc_mem(pool,length);
   memcpy(s,data_end,length);
   item_t *i=(item_t *)alloc_mem(pool,length);
@@ -207,7 +208,7 @@ static void write_null(connection_t *conn,char *key){
   push(conn->wc->w_queue,i);
 }
 
-static int parse_get_header(connection_t *conn){
+static intptr_t parse_get_header(connection_t *conn){
   read_context_t *rc=conn->rc;
   buffer_t *buf=conn->rbuf;
   while(buf->current<buf->limit){
@@ -235,10 +236,10 @@ static int parse_get_header(connection_t *conn){
   return AGAIN;
 }
 
-static int process_set(connection_t *conn){
+static intptr_t process_set(connection_t *conn){
 
   if(conn->rc->read_process!=READ_COMMAND_END){
-    int result=parse_set_header(conn);
+    intptr_t result=parse_set_header(conn);
       //表示set command第一行没有read全
     if(result==AGAIN){
       return AGAIN;
@@ -247,10 +248,10 @@ static int process_set(connection_t *conn){
   return process_set_body(conn);
 
 } 
-static int process_set_body(connection_t *conn){ 
+static intptr_t process_set_body(connection_t *conn){ 
     //check一下当前buffer数据的剩余多少
   buffer_t *b=conn->rbuf;
-  int count=b->limit-b->current;
+  intptr_t count=b->limit-b->current;
   if(count==0){
     return AGAIN;
   }
@@ -269,8 +270,8 @@ static int process_set_body(connection_t *conn){
     //开始统计这个队列
     start_queue_stat(q_name);
   }  
-  int fill=0;
-  int result=AGAIN;
+  intptr_t fill=0;
+  intptr_t result=AGAIN;
   item_t *i=init_item();
   i->size=rc->last_bytes-2;
     //如果当前buffer的数据包含了所有的set数据包括最后的/r/n
@@ -298,7 +299,7 @@ static int process_set_body(connection_t *conn){
   return result;
 }
 
-static int parse_set_header(connection_t *conn){
+static intptr_t parse_set_header(connection_t *conn){
   read_context_t *rc=conn->rc;
   buffer_t *buf=conn->rbuf;
   while(has_remaining(buf)){
@@ -346,7 +347,7 @@ static int parse_set_header(connection_t *conn){
 }
 
 static void write_set_response(connection_t *conn){
-  int length=strlen(set_response);
+  intptr_t length=strlen(set_response);
   char *c=(char *)alloc_mem(pool,length);
   memcpy(c,set_response,length);
   item_t *i=init_item();
@@ -356,18 +357,18 @@ static void write_set_response(connection_t *conn){
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }
 
-static item_t* fill_get_response_header(char *key ,int bytes){
+static item_t* fill_get_response_header(char *key ,intptr_t bytes){
   char *s=(char *)alloc_mem(pool,20);
-  sprintf(s,"%d",bytes);
-  int first_length=strlen(first_get_response);
-  int key_length=strlen(key);
-  int middle_length=strlen(middle);
-  int s_length=strlen(s);
-  int command_end_length=strlen(command_end);
-  int length=first_length+key_length+middle_length+s_length+command_end_length;
+  sprintf(s,"%ld",bytes);
+  intptr_t first_length=strlen(first_get_response);
+  intptr_t key_length=strlen(key);
+  intptr_t middle_length=strlen(middle);
+  intptr_t s_length=strlen(s);
+  intptr_t command_end_length=strlen(command_end);
+  intptr_t length=first_length+key_length+middle_length+s_length+command_end_length;
   char *c=(char *)alloc_mem(pool,length);
   memset(c,0,length);
-  int index=0;
+  intptr_t index=0;
   memcpy(c,first_get_response,first_length);
   index+=first_length;
   memcpy(c+index,key,key_length);
@@ -387,7 +388,7 @@ static item_t* fill_get_response_header(char *key ,int bytes){
 }
 
 static item_t* fill_get_response_footer(){
-  int length=strlen(data_end);
+  intptr_t length=strlen(data_end);
   char *c=(char *)alloc_mem(pool,length);
   memcpy(c,data_end,length);
   item_t *i=init_item();
@@ -396,10 +397,10 @@ static item_t* fill_get_response_footer(){
   return i;
 }
 
-static int process_delete(connection_t *conn){
+static intptr_t process_delete(connection_t *conn){
   read_context_t *rc=conn->rc;
   if(rc->read_process!=READ_COMMAND_END){
-    int result=parse_delete_header(conn);
+    intptr_t result=parse_delete_header(conn);
     if(result==AGAIN){
       return AGAIN;
     }
@@ -423,7 +424,7 @@ static int process_delete(connection_t *conn){
 
 static void write_delete_response(connection_t *conn){
   item_t *i=init_item();
-  int length=strlen(deleted);
+  intptr_t length=strlen(deleted);
   char *del=(char *)alloc_mem(pool,length);
   memcpy(del,deleted,length);
   i->data=del;
@@ -431,7 +432,7 @@ static void write_delete_response(connection_t *conn){
   push(conn->wc->w_queue,i);
 }
 
-static int parse_delete_header(connection_t *conn){
+static intptr_t parse_delete_header(connection_t *conn){
   read_context_t *rc=conn->rc;
   buffer_t *buf=conn->rbuf;
   while(has_remaining(buf)){
@@ -475,7 +476,7 @@ static void process_stats(connection_t *conn){
   event_operation.register_event(conn->fd,WRITE,conn->ec,conn);
 }
 
-static item_t *get_buddy_stat(unsigned long *data,const char *type){
+static item_t *get_buddy_stat(intptr_t *data,const char *type){
   item_t *i=init_item();
   i->data=alloc_mem(pool,STAT_LINE_BUFFER_SIZE);
   snprintf(i->data,STAT_LINE_BUFFER_SIZE,"buddy_mem-%s 0:%lu 1:%lu 2:%lu 3:%lu 4:%lu 5:%lu 6:%lu 7:%lu\n",type,*data,

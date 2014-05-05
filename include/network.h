@@ -1,5 +1,6 @@
 #ifndef NETWORK_H
 #define NETWORK_H
+#include <stdint.h>
 #include "list.h"
 #include "queue.h"
 
@@ -9,15 +10,15 @@
 
 struct event_context_s{
   #ifdef HAVE_EVENT
-    int fd;
+    intptr_t fd;
   #endif
   
   #ifdef HAVE_EPOLL
-    int fd;
+    intptr_t fd;
   #endif
 
-  int listen_fd;
-  int worker_fd;
+  intptr_t listen_fd;
+  intptr_t worker_fd;
   queue_t *queue;
   void *events;
   #ifdef HAVE_POLL
@@ -35,13 +36,13 @@ enum EVENT{
 struct event_operation_s{
    void (*init_event)(event_context_t *ec);
 
-   void (*register_event)(int fd,enum EVENT event,event_context_t *ec,void *data);
+   void (*register_event)(intptr_t fd,enum EVENT event,event_context_t *ec,void *data);
 
-   void (*del_event)(int fd,enum EVENT event,event_context_t *ec,void *data);
+   void (*del_event)(intptr_t fd,enum EVENT event,event_context_t *ec,void *data);
 
    void (*process_event)(event_context_t *ec);
 
-   void (*close_event)(int fd,event_context_t *ec);
+   void (*close_event)(intptr_t fd,event_context_t *ec);
 };
 
 typedef struct event_operation_s event_operation_t;

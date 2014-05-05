@@ -1,6 +1,7 @@
 #ifndef HASH_H
 #define HASH_H
 #include <pthread.h>
+#include <stdint.h>
 #include "list.h"
 #define HASH_FACTOR 0.75f
 #define INIT_SIZE 4
@@ -22,8 +23,8 @@ typedef struct hash_entry_s hash_entry_t;
 
 struct hash_s{
   hash_element_t **elements;
-  int size;
-  int num;
+  intptr_t size;
+  intptr_t num;
   pthread_mutex_t *mutex;
 };
 
@@ -31,7 +32,7 @@ typedef struct hash_s hash_t;
 
 hash_t* init_hash();
 
-int put(char *key,void *data,hash_t *hash);
+intptr_t put(char *key,void *data,hash_t *hash);
 
 void* get(char *key,hash_t *hash);
 

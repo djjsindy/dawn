@@ -2,6 +2,7 @@
 #define LIST_H
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 struct list_head_s{
   struct list_head_s *next,*prev;
 };
@@ -24,7 +25,7 @@ void list_add_data(list_head_t *n,list_head_t *prev,list_head_t *next);
 list_head_t* list_del_data(list_head_t *prev,list_head_t *next);
 
 
-int list_is_empty(list_head_t *head);
+intptr_t list_is_empty(list_head_t *head);
 
 
 #define offsetof(type, member)  (size_t)(&((type*)0)->member)

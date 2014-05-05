@@ -4,6 +4,7 @@
 #include "list.h"
 #include <pthread.h>
 #include <math.h>
+#include <stdint.h>
 #define DEFAULT_LEVEL 7
 #define DEFAULT_FLAG_NUM (2<<DEFAULT_LEVEL)-1
 #define SMALL_THRESHOLD 1<<10
@@ -65,17 +66,17 @@ struct buddy_s{
   /**
    * buddy 的标志位
    */
-  int flags[DEFAULT_FLAG_NUM];
+  intptr_t flags[DEFAULT_FLAG_NUM];
 
   /**
    * 当时buddy能分配的最大空间
    */
-  int max;
+  intptr_t max;
 
   /**
    * buddy初始空间的大小
    */
-  int size;
+  intptr_t size;
 
   /**
    * buddy 分配空间的启示地址
@@ -107,7 +108,7 @@ struct mem_buddy_chunk_s{
   /**
    * 方便及时找到buddy的flag的层级，然后根据地址offset，来确定具体的flag index
    */
-   int level;
+   intptr_t level;
   /**
    * 方便free的时候找到mutex
    */
@@ -116,12 +117,12 @@ struct mem_buddy_chunk_s{
    /**
     * 该chunk分配的内存的大小，包括当前struct的空间，记录这个字段主要是为了realloc的时候，侦测当前level下，chunk还有多少可以分配的内存
     */
-   int size;
+   intptr_t size;
 
    /**
    * 标志这段空间是否是malloc直接分配，如果是，释放的时候直接调用free函数
    */
-   int is_direct;
+   intptr_t is_direct;
 
 };
 typedef struct mem_buddy_chunk_s mem_buddy_chunk_t;
@@ -143,7 +144,7 @@ struct mem_direct_chunk_s{
   /**
    * 标志这段空间是否是malloc直接分配，如果是，释放的时候直接调用free函数
    */ 
-  int is_direct;
+  intptr_t is_direct;
 
 };
 
@@ -151,9 +152,9 @@ typedef struct mem_direct_chunk_s mem_direct_chunk_t;
 
 mem_pool_t* init_mem_pool();
 
-void* alloc_mem(mem_pool_t *pool,int size);
+void* alloc_mem(mem_pool_t *pool,intptr_t size);
 
-void* realloc_mem(void *origin,int new_size);
+void* realloc_mem(void *origin,intptr_t new_size);
 
 void free_mem(void *mem);
 

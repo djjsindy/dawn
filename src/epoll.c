@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include "network.h"
 #include "thread.h"
 #include "my_log.h"
@@ -16,23 +17,23 @@
 
 static void epoll_init_event(event_context_t *ec);
 
-static void epoll_register_event(int fd,enum EVENT event,event_context_t *ec,void *data);
+static void epoll_register_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data);
 
-static void epoll_del_event(int fd,enum EVENT event,event_context_t *ec,void *data);
+static void epoll_del_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data);
 
 static void epoll_process_event(event_context_t *ec);
 
-static void epoll_close_event(int fd,event_context_t *ec);
+static void epoll_close_event(intptr_t fd,event_context_t *ec);
 
 static void set_timeout_value(char_t *value);
 
 static void set_max_event_count_value(char_t *value);
 
-static int timeout=TIMEOUT;
+static intptr_t timeout=TIMEOUT;
 
-static int max_event_count=MAX_EVENT_COUNT;
+static intptr_t max_event_count=MAX_EVENT_COUNT;
 
-extern int server_sock_fd;
+extern intptr_t server_sock_fd;
 
 extern mem_pool_t *pool;
 
@@ -45,7 +46,7 @@ event_operation_t event_operation={
 };
 
 static void epoll_init_event(event_context_t *ec){ 
-	int fd = epoll_create(max_event_count);
+	intptr_t fd = epoll_create(max_event_count);
 	if (fd == -1) {
 		my_log(ERROR,"create epoll fd\n");
 	}
@@ -53,10 +54,10 @@ static void epoll_init_event(event_context_t *ec){
 	ec->events=alloc_mem(pool,sizeof(struct epoll_event)*max_event_count);
 }
 
-static void epoll_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+static void epoll_register_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data){
 	connection_t *conn=(connection_t *)data;
 	struct epoll_event ev;
-        int op;
+    intptr_t op;
 	if(conn->events==0){
 		op=EPOLL_CTL_ADD;
 		switch(event){
@@ -76,7 +77,7 @@ static void epoll_register_event(int fd,enum EVENT event,event_context_t *ec,voi
 	conn->events|=event;
 }
 
-static void epoll_del_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+static void epoll_del_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data){
 	connection_t *conn=(connection_t *)data;
 	struct epoll_event ev;
 	if(conn->events|READ>0){
@@ -92,7 +93,6 @@ static void epoll_del_event(int fd,enum EVENT event,event_context_t *ec,void *da
 			ev.events&=~EPOLLOUT;
 			break;
 	}
-	ev.data.fd=fd;
 	ev.data.ptr=data;
 	epoll_ctl(ec->fd,EPOLL_CTL_MOD,fd,&ev);
 	conn->events&=~event;
@@ -100,14 +100,14 @@ static void epoll_del_event(int fd,enum EVENT event,event_context_t *ec,void *da
 
 
 static void epoll_process_event(event_context_t *ec){
-	int nfds = epoll_wait(ec->fd,ec->events,max_event_count,timeout);
+	intptr_t nfds = epoll_wait(ec->fd,ec->events,max_event_count,timeout);
 	if(nfds==-1){
 		my_log(ERROR,"epoll event error\n");
 		return;
 	}else if(nfds==0){
 		return;
 	}
-	int i=0;
+	intptr_t i=0;
 	struct epoll_event *events=(struct epoll_event *)ec->events;
 	for(;i<nfds;i++){
 		connection_t *conn=events[i].data.ptr;

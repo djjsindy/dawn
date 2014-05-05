@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <math.h>
+#include <stdint.h>
 #include "memory.h"
 #include "my_log.h"
 #include "statistics.h"
@@ -39,41 +40,41 @@
  *
  */
 
-static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *pool);
+static void* get_available(list_head_t **bin,intptr_t size,intptr_t bin_size,mem_pool_t *pool);
 
-static int bin_index(int size,int bin_size);
+static intptr_t bin_index(intptr_t size,intptr_t bin_size);
 
-static buddy_t* init_buddy(int size,mem_pool_t *pool);
+static buddy_t* init_buddy(intptr_t size,mem_pool_t *pool);
 
-static mem_buddy_chunk_t* get_buddy_mem(buddy_t *buddy,int level);
+static mem_buddy_chunk_t* get_buddy_mem(buddy_t *buddy,intptr_t level);
 
 static void update_buddy_max(buddy_t *buddy);
 
-static int adjust_bin(buddy_t *buddy);
+static intptr_t adjust_bin(buddy_t *buddy);
 
-static void* direct_alloc(list_head_t *head,int size,mem_pool_t *pool);
+static void* direct_alloc(list_head_t *head,intptr_t size,mem_pool_t *pool);
 
 static void free_buddy_chunk(mem_buddy_chunk_t *chunk);
 
 static void free_direct_chunk(mem_direct_chunk_t *chunk);
 
-static void update_child_flag(buddy_t *buddy,int index,int flag);
+static void update_child_flag(buddy_t *buddy,intptr_t index,intptr_t flag);
 
-static void update_buddy_flag_inuse(buddy_t *buddy,int index);
+static void update_buddy_flag_inuse(buddy_t *buddy,intptr_t index);
 
-static void update_buddy_flag_unuse(buddy_t *buddy,int index);
+static void update_buddy_flag_unuse(buddy_t *buddy,intptr_t index);
 
 static void free_buddy_bin(list_head_t **bin);
 
 static void free_direct_list(list_head_t *head);
 
-static int head_size();
+static intptr_t head_size();
 
-static void init_pool_list(list_head_t **base,int num);
+static void init_pool_list(list_head_t **base,intptr_t num);
 
 static void init_pthread_mutex(mem_pool_t *pool);
 
-static void * realloc_direct_chunk(mem_direct_chunk_t *old_chunk,int new_size);
+static void * realloc_direct_chunk(mem_direct_chunk_t *old_chunk,intptr_t new_size);
 
 extern stat_t *stat;
 
@@ -82,7 +83,7 @@ extern stat_t *stat;
  *  初始化内存池内存结构，初始化small bin，big bin，和direct队列,初始化每个bin中的第一个元素（list_head_t）,初始化每个bin的锁
  */
 mem_pool_t* init_mem_pool(){
-  int num=DEFAULT_LEVEL+1;
+  intptr_t num=DEFAULT_LEVEL+1;
   mem_pool_t* pool=(mem_pool_t *)malloc(sizeof(mem_pool_t));
   assert(pool!=NULL);
   pool->small_bin=(list_head_t **)malloc(sizeof(list_head_t *)*(num));  
@@ -109,8 +110,8 @@ static void init_pthread_mutex(mem_pool_t *pool){
 /**
  * 初始化为bin每一个位置链表初始化一个head
  */
-static void init_pool_list(list_head_t **base,int num){
-  int index=0;
+static void init_pool_list(list_head_t **base,intptr_t num){
+  intptr_t index=0;
   for(;index<num;){
     list_head_t *head=(list_head_t *)malloc(sizeof(list_head_t));
     if(head==NULL){
@@ -154,7 +155,7 @@ static void free_direct_list(list_head_t *head){
  * 释放bin中所有buddy占有的内存
  */
 static void free_buddy_bin(list_head_t **bin){
-  int index=0;
+  intptr_t index=0;
   while(index<=DEFAULT_LEVEL){
     list_head_t *head=(list_head_t *)*(bin+index);
     if(!list_is_empty(head)){
@@ -174,8 +175,8 @@ static void free_buddy_bin(list_head_t **bin){
 /**
  * 根据request size来决定是通过small bin还是big bin还是direct 来分配内存
  */
-void* alloc_mem(mem_pool_t *pool,int size){
-  int real_size=size+head_size();
+void* alloc_mem(mem_pool_t *pool,intptr_t size){
+  intptr_t real_size=size+head_size();
   void *p;
   if(real_size<=SMALL_THRESHOLD){
     pthread_mutex_lock(&(pool->small_mutex));
@@ -196,16 +197,16 @@ void* alloc_mem(mem_pool_t *pool,int size){
 /**
  * 每段内存之前是所对应结构体的数据结构，需要分配一个统一大小的头，那么取最大值
  */
-static int head_size(){
-  int buddy_s_size=sizeof(mem_buddy_chunk_t);
-  int direct_s_size=sizeof(mem_direct_chunk_t);
+static intptr_t head_size(){
+  intptr_t buddy_s_size=sizeof(mem_buddy_chunk_t);
+  intptr_t direct_s_size=sizeof(mem_direct_chunk_t);
   return buddy_s_size>direct_s_size?buddy_s_size:direct_s_size;
 }
 
 /**
  * 初始化一个buddy
  */
-static buddy_t* init_buddy(int size,mem_pool_t *pool){
+static buddy_t* init_buddy(intptr_t size,mem_pool_t *pool){
 
   buddy_t *buddy=(buddy_t *)malloc(sizeof(buddy_t));
 
@@ -214,9 +215,9 @@ static buddy_t* init_buddy(int size,mem_pool_t *pool){
     return NULL;
   }
 
-  int i=0;
+  intptr_t i=0;
   //flag置为1，表示可用
-  for(;i<sizeof(buddy->flags)/sizeof(int);i++){
+  for(;i<sizeof(buddy->flags)/sizeof(intptr_t);i++){
     buddy->flags[i]=1;
   }
   void *mem=malloc(size);
@@ -236,11 +237,11 @@ static buddy_t* init_buddy(int size,mem_pool_t *pool){
  * 确定了buddy，那么肯定可以从这个buddy分配内存，level已经确定，那么直接更新所对应的
  * flag，然后返回内存起始地址
  */
-static mem_buddy_chunk_t* get_buddy_mem(buddy_t *buddy,int level){
-  int size=buddy->size;
-  int start=LEVEL_START(level);
-  int end=LEVEL_END(level);
-  int index=start;
+static mem_buddy_chunk_t* get_buddy_mem(buddy_t *buddy,intptr_t level){
+  intptr_t size=buddy->size;
+  intptr_t start=LEVEL_START(level);
+  intptr_t end=LEVEL_END(level);
+  intptr_t index=start;
   mem_buddy_chunk_t *chunk;
 
   //寻找这个level可用的位置，肯定能找到
@@ -267,9 +268,9 @@ static mem_buddy_chunk_t* get_buddy_mem(buddy_t *buddy,int level){
 /**
  * 更新buddy的index位置所对应的内存为占用状态，先更新父节点的状态
  */
-static void update_buddy_flag_unuse(buddy_t *buddy,int index){
-  int parent;
-  int source=index;
+static void update_buddy_flag_unuse(buddy_t *buddy,intptr_t index){
+  intptr_t parent;
+  intptr_t source=index;
 
   //递归更新父节点的状态
   while(index>0&&(parent=PARENT(index))>=0){
@@ -298,12 +299,12 @@ static void update_buddy_flag_unuse(buddy_t *buddy,int index){
 /**
  * 更新flag为占用状态
  */
-static void update_buddy_flag_inuse(buddy_t *buddy,int index){
+static void update_buddy_flag_inuse(buddy_t *buddy,intptr_t index){
 
   /**
    * 更新parent flag
    */
-  int parent=PARENT(index);
+  intptr_t parent=PARENT(index);
   while(parent>=0){
     if(buddy->flags[parent]==0){
       break;
@@ -321,8 +322,8 @@ static void update_buddy_flag_inuse(buddy_t *buddy,int index){
 /**
  * 递归更新子节点状态
  */
-static void update_child_flag(buddy_t *buddy,int index,int flag){  
-  if(index>sizeof(buddy->flags)/sizeof(int)-1){
+static void update_child_flag(buddy_t *buddy,intptr_t index,intptr_t flag){  
+  if(index>sizeof(buddy->flags)/sizeof(intptr_t)-1){
     return;
   }
   buddy->flags[index]=flag;
@@ -336,10 +337,10 @@ static void update_child_flag(buddy_t *buddy,int index,int flag){
  * 后一层，那么max就是0
  */
 static void update_buddy_max(buddy_t *buddy){
-  int level=0;
+  intptr_t level=0;
   while(level<DEFAULT_LEVEL){
-    int start=LEVEL_START(level);
-    int end=LEVEL_END(level);
+    intptr_t start=LEVEL_START(level);
+    intptr_t end=LEVEL_END(level);
     while(start<=end){
       if(buddy->flags[start]!=0){
         buddy->max=buddy->size>>level;
@@ -355,11 +356,11 @@ static void update_buddy_max(buddy_t *buddy){
 /**
  * 确定bin_size的第几层能满足分配size的需求
  */
-static int bin_index(int size,int bin_size){
+static intptr_t bin_index(intptr_t size,intptr_t bin_size){
   if(size==0)
     return 0;
   assert(bin_size>=size);
-  int i=DEFAULT_LEVEL;
+  intptr_t i=DEFAULT_LEVEL;
   while(i>0){
     if(size==bin_size){
       return i;
@@ -375,9 +376,9 @@ static int bin_index(int size,int bin_size){
 /**
  * 从bin中获得mem
  */
-static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *pool){
+static void* get_available(list_head_t **bin,intptr_t size,intptr_t bin_size,mem_pool_t *pool){
   buddy_t *buddy=NULL;
-  unsigned long *buddy_stat;
+  intptr_t *buddy_stat;
 
   //初始化统计
   if(bin==pool->small_bin){
@@ -385,10 +386,10 @@ static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *p
   }else{
     buddy_stat=stat->big_buddy_stats;
   }
-  int level=bin_index(size,bin_size);
+  intptr_t level=bin_index(size,bin_size);
 
   //找合适的buddy
-  int test=level;
+  intptr_t test=level;
   while(test<=DEFAULT_LEVEL){
     list_head_t *head=(list_head_t *)*(bin+test);
     if(!list_is_empty(head)){
@@ -399,7 +400,7 @@ static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *p
     test++;
   }
 
-  int create=0;
+  intptr_t create=0;
   //如果没有找到，就创建一个，暂时不入双链表
   if(buddy==NULL){  
     buddy=init_buddy(bin_size,pool);
@@ -408,7 +409,7 @@ static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *p
   }
 
   //从这个buddy中获得mem
-  int max=buddy->max;
+  intptr_t max=buddy->max;
   mem_buddy_chunk_t *chunk=get_buddy_mem(buddy,DEFAULT_LEVEL-level);
   chunk->size=size;
 
@@ -417,12 +418,12 @@ static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *p
 
     //如果不是新创建的，那么就调整buddy的位置
     if(!create){
-      int new_level=adjust_bin(buddy);
+      intptr_t new_level=adjust_bin(buddy);
       *(buddy_stat+level)-=1;
       *(buddy_stat+new_level)+=1;
     }else{
       //插入双链表
-      int level=bin_index(buddy->max,buddy->size);
+      intptr_t level=bin_index(buddy->max,buddy->size);
       list_head_t *head=*(bin+level);
       list_add_data(&buddy->list,head,head->next);
       *(buddy_stat+level)+=1;
@@ -434,13 +435,13 @@ static void* get_available(list_head_t **bin,int size,int bin_size,mem_pool_t *p
 /**
  * 如果max和获得mem后的buddy max不一致，那么就要调整buddy的位置，调整到应该的位置
  */
-static int adjust_bin(buddy_t *buddy){
+static intptr_t adjust_bin(buddy_t *buddy){
 
   //从当前双链表中删除
   list_del_data(buddy->list.prev,buddy->list.next);
 
   //添加到新的双链表中
-  int new_index=bin_index(buddy->max,buddy->size);
+  intptr_t new_index=bin_index(buddy->max,buddy->size);
   list_head_t *head=*(buddy->bin+new_index);
   list_add_data(&buddy->list,head,head->next);
   return new_index;
@@ -449,7 +450,7 @@ static int adjust_bin(buddy_t *buddy){
 /**
  * 直接调用malloc分配内存
  */
-static void* direct_alloc(list_head_t *list, int size,mem_pool_t *pool){
+static void* direct_alloc(list_head_t *list, intptr_t size,mem_pool_t *pool){
   mem_direct_chunk_t *chunk=(mem_direct_chunk_t *)malloc(size);
   chunk->is_direct=1;
   chunk->pool=pool;
@@ -462,7 +463,7 @@ static void* direct_alloc(list_head_t *list, int size,mem_pool_t *pool){
  * 释放空间，mem首地址之前的int表示是否是buddy分配还是direct分配
  */
 void free_mem(void *mem){
-  int flag=*(FLAG_MEM(mem));
+  intptr_t flag=*(FLAG_MEM(mem));
   if(flag==1){
     mem_direct_chunk_t *chunk=CHUNK_DIRECT_MEM(mem);
     free_direct_chunk(chunk);
@@ -487,7 +488,7 @@ static void free_direct_chunk(mem_direct_chunk_t *chunk){
  * 释放buddy内存
  */
 static void free_buddy_chunk(mem_buddy_chunk_t *chunk){
-  unsigned long *buddy_stat;
+  intptr_t *buddy_stat;
   buddy_t *buddy=chunk->buddy;
   pthread_mutex_t *mutex;
 
@@ -500,11 +501,11 @@ static void free_buddy_chunk(mem_buddy_chunk_t *chunk){
     buddy_stat=stat->big_buddy_stats;
   }
   pthread_mutex_lock(mutex);
-  int max=buddy->max;
-  int level=bin_index(buddy->max,buddy->size);
+  intptr_t max=buddy->max;
+  intptr_t level=bin_index(buddy->max,buddy->size);
   //计算level下，分配的内存是属于哪个flag控制
-  int diff=((void*)chunk - buddy->base)/(buddy->size>>chunk->level);
-  int index=LEVEL_START(chunk->level)+diff;
+  intptr_t diff=((void*)chunk - buddy->base)/(buddy->size>>chunk->level);
+  intptr_t index=LEVEL_START(chunk->level)+diff;
 
   //当然更新flag和max
   update_buddy_flag_unuse(buddy,index);  
@@ -512,7 +513,7 @@ static void free_buddy_chunk(mem_buddy_chunk_t *chunk){
 
   //更新buddy的位置
   if(max!=buddy->max){
-    int new_level=adjust_bin(buddy);
+    intptr_t new_level=adjust_bin(buddy);
     *(buddy_stat+level)-=1;
     *(buddy_stat+new_level)+=1;
   }

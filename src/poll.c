@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include "network.h"
 #include "thread.h"
 #include "my_log.h"
@@ -18,31 +19,31 @@
 
 static void poll_init_event(event_context_t *ec);
 
-static void poll_register_event(int fd,enum EVENT event,event_context_t *ec,void *data);
+static void poll_register_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data);
 
-static void poll_del_event(int fd,enum EVENT event,event_context_t *ec,void *data);
+static void poll_del_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data);
 
 static void poll_process_event(event_context_t *ec);
 
-static void poll_close_event(int fd,event_context_t *ec);
+static void poll_close_event(intptr_t fd,event_context_t *ec);
 
-static int find_fd_slot(event_t *events,int fd);
+static intptr_t find_fd_slot(event_t *events,intptr_t fd);
 
 static void set_timeout_value(char_t *value);
 
 static void set_max_event_count_value(char_t *value);
 
-static int timeout=TIMEOUT;
+static intptr_t timeout=TIMEOUT;
 
-static int max_event_count=MAX_EVENT_COUNT;
+static intptr_t max_event_count=MAX_EVENT_COUNT;
 
-extern int worker_index;
+extern intptr_t worker_index;
 
-extern int server_sock_fd;
+extern intptr_t server_sock_fd;
 
 extern thread_t threads[WORKER_NUM];
 
-extern int set_noblocking(int fd);
+extern intptr_t set_noblocking(intptr_t fd);
 
 extern mem_pool_t *pool;
 
@@ -56,7 +57,7 @@ event_operation_t event_operation={
 
 static void poll_init_event(event_context_t *ec){ 
   struct pollfd *events=alloc_mem(pool,sizeof(struct pollfd)*max_event_count);
-  int index=0;
+  intptr_t index=0;
   while(index<max_event_count){
     events[index].fd=0;
     index++;
@@ -65,9 +66,9 @@ static void poll_init_event(event_context_t *ec){
   ec->data=alloc_mem(poll,sizeof(void*)*max_event_count);
 }
 
-static void poll_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+static void poll_register_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data){
   connection_t *conn=(connection_t *)data;
-  int index=find_fd_slot(ec->events,fd);
+  intptr_t index=find_fd_slot(ec->events,fd);
   event_t *events=ec->events;
   if(index!=-1){
     events[index].fd=fd;
@@ -83,9 +84,9 @@ static void poll_register_event(int fd,enum EVENT event,event_context_t *ec,void
   conn->events|=event;
 }
 
-static int find_fd_slot(event_t *events,int fd){
-  int index=0;
-  int empty_index=-1;
+static intptr_t find_fd_slot(event_t *events,intptr_t fd){
+  intptr_t index=0;
+  intptr_t empty_index=-1;
   while(index<max_event_count){
     if(events[index].fd==fd){
       return index;
@@ -97,9 +98,9 @@ static int find_fd_slot(event_t *events,int fd){
   return empty_index;
 }
 
-static void poll_del_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+static void poll_del_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data){
   connection_t *conn=(connection_t *)data;
-  int index=find_fd_slot(ec->events,fd);
+  intptr_t index=find_fd_slot(ec->events,fd);
   event_t *events=ec->events;
   if(index!=-1){
     switch(event){
@@ -115,19 +116,19 @@ static void poll_del_event(int fd,enum EVENT event,event_context_t *ec,void *dat
 }
 
 static void poll_process_event(event_context_t *ec){
-  int index=0;
+  intptr_t index=0;
   event_t *events=ec->events;
-  int max=0;
+  intptr_t max=0;
   while(index<max_event_count){
     if(events[index].fd!=0){
-      int fd=events[index].fd;
+      intptr_t fd=events[index].fd;
       if(fd>max){
       	max=fd;
       }
     }
     index++;
   }
-  int ret = poll(ec->events,max,timeout);
+  intptr_t ret = poll(ec->events,max,timeout);
   if(ret==-1){
     my_log(ERROR,"poll event error\n");
     return;
@@ -135,9 +136,9 @@ static void poll_process_event(event_context_t *ec){
     return;
   }
   event_t *events=(event_t *)ec->events;
-  int i=0;  
+  intptr_t i=0;  
   for(;i<max_event_count;i++){
-    int fd=events[i].fd;
+    intptr_t fd=events[i].fd;
     if(fd==0){
       continue;
     }
@@ -151,7 +152,7 @@ static void poll_process_event(event_context_t *ec){
       }
     }
     if(events[i].revents & POLLOUT>0){
-      int result=handle_write((connection_t *)*(ec->data+i));
+      intptr_t result=handle_write((connection_t *)*(ec->data+i));
       if(result==OK){
         event_operation.del_event(fd,WRITE,ec);
       }
@@ -159,9 +160,9 @@ static void poll_process_event(event_context_t *ec){
   }
 }
 
-static void poll_close_event(int fd,event_context_t *ec){
+static void poll_close_event(intptr_t fd,event_context_t *ec){
   event_t *events=ec->events;
-  int index=0;
+  intptr_t index=0;
   while(index<max_event_count){
     if(events[index].fd==fd){
       events[index].fd=0;

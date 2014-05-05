@@ -1,11 +1,12 @@
 #ifndef ITEM_H
 #define ITEM_H
+#include <stdint.h>
 
 struct item_s{
   char *data;
-  int end;
-  int size;
-  int c_size;
+  intptr_t end;
+  intptr_t size;
+  intptr_t c_size;
 };
 
 typedef struct item_s item_t;

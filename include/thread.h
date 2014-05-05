@@ -1,12 +1,13 @@
 #ifndef THREAD_H
 #define THREAD_H
+#include <stdint.h>
 #include "queue.h"
 #include "connection.h"
 #include "network.h"
 
 struct pipe_channel_s{
-    int masterfd;
-    int workerfd;
+    intptr_t masterfd;
+    intptr_t workerfd;
 };
 
 typedef struct pipe_channel_s pipe_channel_t;
@@ -19,11 +20,11 @@ typedef struct thread_s thread_t;
 
 void start_workers();
  
-void handle_notify(int fd,event_context_t *ec);
+void handle_notify(intptr_t fd,event_context_t *ec);
 
 void handle_read(connection_t *conn);
 
-int handle_write(connection_t *conn);
+intptr_t handle_write(connection_t *conn);
 
 void accept_connection();
 

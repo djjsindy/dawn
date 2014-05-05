@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <stdint.h>
 #include "memory.h"
 #include "hash.h"
 #include "my_log.h"
@@ -9,15 +10,15 @@
 
 extern mem_pool_t *pool;
 
-static int expand_hash(hash_t* hash);
+static intptr_t expand_hash(hash_t* hash);
 
-static unsigned long cal_hash(char *k);
+static intptr_t cal_hash(char *k);
 
 static void set_init_size_value(char_t *value);
 
 static void set_factor_value(char_t *value);
 
-static int init_size=INIT_SIZE;
+static intptr_t init_size=INIT_SIZE;
 
 static float hash_factor=HASH_FACTOR;
 
@@ -29,12 +30,14 @@ hash_t* init_hash(){
   if(h==NULL){
     my_log(ERROR,"alloc hash struct failed\n");
   }
-  h->elements=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*init_size);
+  intptr_t space=sizeof(hash_element_t *)*init_size;
+  h->elements=(hash_element_t **)alloc_mem(pool,space);
+  memset(h->elements,0,space);
   if(h->elements==NULL){
     my_log(ERROR,"alloc hash elements failed\n");
   }
   pthread_mutexattr_t attr; 
-  int ret=0;
+  intptr_t ret=0;
   if((ret = pthread_mutexattr_init(&attr)) != 0){  
     my_log(ERROR, "create mutex attribute error\n");  
   }  
@@ -50,7 +53,7 @@ hash_t* init_hash(){
 /**
  * 向hash结构中put数据
  */
-int put(char *k,void *data,hash_t *hash){
+intptr_t put(char *k,void *data,hash_t *hash){
   pthread_mutex_lock(hash->mutex);
   void *d=get(k,hash);
   if(d!=NULL){
@@ -67,7 +70,7 @@ int put(char *k,void *data,hash_t *hash){
       return 0;
     }
   }
-  int index=cal_hash(k)%hash->size;
+  intptr_t index=cal_hash(k)%hash->size;
   hash_element_t *nelement=(hash_element_t *)alloc_mem(pool,sizeof(hash_element_t));
   if(nelement==NULL){
     my_log(ERROR,"alloc hash element failed\n");
@@ -88,8 +91,8 @@ int put(char *k,void *data,hash_t *hash){
  */
 void* get(char* key,hash_t *hash){
   pthread_mutex_lock(hash->mutex);
-  int index=cal_hash(key)%hash->size;
-  hash_element_t *e=hash->elements[index];
+  intptr_t index=cal_hash(key)%hash->size;
+  hash_element_t *e=*((hash->elements)+index);
   void *result=NULL;
   while(e!=NULL){    
     if(strcmp(e->key,key)==0){
@@ -107,7 +110,7 @@ void* get(char* key,hash_t *hash){
  */
 void delete(char* key,hash_t *hash){ 
   pthread_mutex_lock(hash->mutex);
-  int index=cal_hash(key)%hash->size;
+  intptr_t index=cal_hash(key)%hash->size;
   hash_element_t *e=hash->elements[index];
   hash_element_t *prev;
   while(e!=NULL){
@@ -128,17 +131,17 @@ void delete(char* key,hash_t *hash){
 /**
  *  扩容hash结构，当存储元素的个数大于size*factor的时候需要expand，避免退化链表结构，每次扩容2倍的size
  */
-static int expand_hash(hash_t *hash){
+static intptr_t expand_hash(hash_t *hash){
   hash_element_t **temp=(hash_element_t **)alloc_mem(pool,sizeof(hash_element_t *)*(hash->size*2));
   if(temp==NULL){
     my_log(ERROR,"expand hash data failed\n");
     return 0;
   }
-  int index=0;
+  intptr_t index=0;
   for(;index<hash->size;index++){
     hash_element_t *element=hash->elements[index];
     while(element!=NULL){
-      int i=cal_hash(element->key)%(hash->size*2);
+      intptr_t i=cal_hash(element->key)%(hash->size*2);
       element->next=temp[i];
       temp[i]=element;
       element=element->next; 
@@ -154,10 +157,10 @@ static int expand_hash(hash_t *hash){
 /**
  *  hash函数，计算key值的hash，现在的做法是把每个char叠加在一起，后面需要改善
  */
-static unsigned long cal_hash(char *key){
-  int index=0;
-  int length=(int)strlen(key);
-  unsigned long hash;
+static intptr_t cal_hash(char *key){
+  intptr_t index=0;
+  intptr_t length=(int)strlen(key);
+  intptr_t hash;
   while(index<length){
     hash+=*(key+index);
     index++;
@@ -172,7 +175,7 @@ list_head_t* visit_hash(hash_t *hash){
   pthread_mutex_lock(hash->mutex);
   list_head_t* head=(list_head_t *)alloc_mem(pool,sizeof(list_head_t));
   init_list(head);
-  int index=0;
+  intptr_t index=0;
   for(;index<hash->size;index++){
     hash_element_t *element=hash->elements[index];
     while(element!=NULL){

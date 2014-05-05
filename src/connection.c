@@ -32,7 +32,7 @@ extern jmp_buf exit_buf;
 
 extern mem_pool_t *pool;
 
-extern int parse_int(char_t *s);
+extern intptr_t parse_int(char_t *s);
 
 /**
  *  当处理完一个command，那么需要清空read context中得数据，以便处理后面得command
@@ -48,7 +48,7 @@ void reset_read_context(read_context_t *rc){
 /**
  *  初始化connection，包括读buf，写buf，读写context
  */
-connection_t* init_connection(int fd){
+connection_t* init_connection(intptr_t fd){
   connection_t *co=(connection_t *)alloc_mem(pool,sizeof(connection_t));
   co->rbuf=alloc_buffer(read_buf_size);
   co->wbuf=alloc_buffer(write_buf_size);

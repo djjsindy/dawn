@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #include "thread.h"
 #include "memory.h"
 #include "hash.h"
@@ -28,21 +29,21 @@ static void set_port_value(char_t *value);
 
 static void set_back_log_value(char_t *value);
 
-extern int daemonize();
+extern intptr_t daemonize();
 
 extern void init_sync();
 
 extern void init_conf();
 
-int server_sock_fd;
+intptr_t server_sock_fd;
 
 hash_t *hash;
 
 mem_pool_t *pool;
 
-static int port=DEFAULT_PORT;
+static intptr_t port=DEFAULT_PORT;
 
-static int back_log=DEFAULT_BACKLOG;
+static intptr_t back_log=DEFAULT_BACKLOG;
 
 int main (int argc, const char * argv[])
 { 
@@ -68,7 +69,7 @@ int main (int argc, const char * argv[])
   hash=init_hash();
 
   //根据持久化文件，初始化数据，开启同步数据线程
-  //init_sync();
+  init_sync();
 
   //启动worker线程
   start_workers();

@@ -1,6 +1,7 @@
 #include <fcntl.h>
+#include <stdint.h>
 int set_noblocking(int fd){
-  int flags=0;
+  intptr_t flags=0;
   if((flags = fcntl(fd, F_GETFL)) < 0)
     return -1;
   flags|= O_NONBLOCK;

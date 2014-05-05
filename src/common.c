@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <dy_char.h>
-int parse_int(char_t *s){
+intptr_t parse_int(char_t *s){
 	char c=*(s->data+s->current-1);
-	int radio=1;
+	intptr_t radio=1;
 	switch(c){
 		case 'k':
 		case 'K':

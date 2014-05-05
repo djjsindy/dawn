@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdint.h>
 #include "my_log.h"
 int daemonize()
 {
-    int fd;
+    intptr_t fd;
 
     switch (fork()) {
     case -1:

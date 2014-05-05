@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <arpa/inet.h>
+#include <stdint.h>
 #include "connection.h"
 #include "thread.h"
 #include "network.h"
@@ -22,41 +23,41 @@
 
 #define WORKER_NUM 8
 
-static int worker_num=WORKER_NUM;
+static intptr_t worker_num=WORKER_NUM;
 
 static thread_t **threads;
 
-static int worker_index=0;
+static intptr_t worker_index=0;
 
 static pthread_mutex_t init_lock;
 
 static pthread_cond_t init_cond;
 
-static int init_count=0;
+static intptr_t init_count=0;
 
 extern mem_pool_t *pool;
 
-extern int server_sock_fd;
+extern intptr_t server_sock_fd;
 
 static void *worker_loop(void *arg);
 
-static int no_block_write(int fd,buffer_t *wbuf);
+static intptr_t no_block_write(intptr_t fd,buffer_t *wbuf);
 
 static void init_thread(thread_t *t);
 
 static void set_worker_num_value(char_t *value);
 
-extern int parse_command(connection_t *conn);
+extern intptr_t parse_command(connection_t *conn);
 
-extern int process_command(connection_t *conn);
+extern intptr_t process_command(connection_t *conn);
 
-extern int set_noblocking(int fd);
+extern intptr_t set_noblocking(intptr_t fd);
 
 /**
  * 启动worker线程
  */
 void start_workers(){
-  int i=0;
+  intptr_t i=0;
   threads=(thread_t **)alloc_mem(pool,sizeof(thread_t *)*worker_num);
   for(;i<worker_num;i++){
     pthread_t tid=0;
@@ -117,10 +118,10 @@ static void init_thread(thread_t *t){
 /**
  * 写事件回调函数
  */
-int handle_write(connection_t *conn){
+intptr_t handle_write(connection_t *conn){
   write_context_t *wc=conn->wc;
   buffer_t *wbuf=conn->wbuf;
-  int result;
+  intptr_t result;
 
   //每次写数据都是先发到w_queue中，写的时候先pop
   while(1){
@@ -138,10 +139,10 @@ int handle_write(connection_t *conn){
     }
 
     //计算最多容量
-    int avilable=wbuf->size-wbuf->limit;
+    intptr_t avilable=wbuf->size-wbuf->limit;
 
     //计算数据量
-    int copy=wc->w_data->c_size-wc->w_index;
+    intptr_t copy=wc->w_data->c_size-wc->w_index;
     if(avilable<copy){
       copy=avilable;
     }
@@ -164,7 +165,7 @@ int handle_write(connection_t *conn){
     if(!has_space(wbuf)){
 
       //wbuf满了，开始write
-      int result=no_block_write(conn->fd,wbuf);
+      intptr_t result=no_block_write(conn->fd,wbuf);
 
       //如果没写完，返回等待写事件，否则继续填充wbuf
       if(result==ENOUGH){
@@ -178,9 +179,9 @@ int handle_write(connection_t *conn){
 /**
  * 非阻塞写操作
  */
-static int no_block_write(int fd,buffer_t *wbuf){
-  int want=wbuf->limit-wbuf->current;
-  int count=write(fd,wbuf->data+wbuf->current,want);
+static intptr_t no_block_write(intptr_t fd,buffer_t *wbuf){
+  intptr_t want=wbuf->limit-wbuf->current;
+  intptr_t count=write(fd,wbuf->data+wbuf->current,want);
   wbuf->current+=count;
   compact(wbuf);
 
@@ -197,7 +198,7 @@ static int no_block_write(int fd,buffer_t *wbuf){
  */
 void handle_read(connection_t *conn){
   buffer_t *rbuf=conn->rbuf;
-  int count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
+  intptr_t count=read(conn->fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
   if(count<0){
     return;
   }else if(count==0){
@@ -239,7 +240,7 @@ void handle_read(connection_t *conn){
 /**
  * 当主线程有连接。通知worker线程去处理
  */
-void handle_notify(int fd,event_context_t *ec){
+void handle_notify(intptr_t fd,event_context_t *ec){
   char notify_buf[1];
   read(fd,notify_buf,1);
   switch(notify_buf[0]){
@@ -247,7 +248,7 @@ void handle_notify(int fd,event_context_t *ec){
       {
 
         //获得fd
-        int *i=(int *)pop(ec->queue);
+        intptr_t *i=(intptr_t *)pop(ec->queue);
 
         //初始化connection结构
         connection_t *co=init_connection(*i);
@@ -269,7 +270,7 @@ void handle_notify(int fd,event_context_t *ec){
 void accept_connection(){
   struct sockaddr_in client_address;
   socklen_t address_len;
-  int client_socket_fd = accept(server_sock_fd, (struct sockaddr *)&client_address, &address_len);
+  intptr_t client_socket_fd = accept(server_sock_fd, (struct sockaddr *)&client_address, &address_len);
 
   //设置非阻塞模式
   if(set_noblocking(client_socket_fd)<0){
@@ -279,12 +280,12 @@ void accept_connection(){
   //选取一个worker，向管道写入通知
   char notify_buf='c';
   thread_t *t=*(threads+worker_index);
-  int *i=(int *)alloc_mem(pool,sizeof(int));
+  intptr_t *i=(intptr_t *)alloc_mem(pool,sizeof(int));
   *i=client_socket_fd;
 
   //把连接fd写入这个线程的连接队列中
   push(t->queue,i);
-  int fd=t->pipe_channel->masterfd;
+  intptr_t fd=t->pipe_channel->masterfd;
   write(fd,&notify_buf,1);
 
   //更新轮询worker

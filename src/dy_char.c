@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
+#include <stdint.h>
 #include "memory.h"
 #include "dy_char.h"
 #include "my_log.h"
@@ -37,8 +38,8 @@ void add_char(char_t *t,char c){
 }
 
 void add_chars(char_t *t,char *s){
-  int index=0;
-  int sum=strlen(s);
+  intptr_t index=0;
+  intptr_t sum=strlen(s);
   for(;index<sum;index++){
     add_char(t,*(s+index));
   }
@@ -52,7 +53,7 @@ void add_terminal(char_t *t){
   t->current+=1;
 }
 static void expand_char(char_t *t){
-  int size=t->size;
+  intptr_t size=t->size;
   char *temp=(char *)alloc_mem(pool,size*2);
   if(temp==NULL){
     my_log(ERROR,"expand dynamic char failed\n");

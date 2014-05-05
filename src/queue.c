@@ -1,7 +1,8 @@
+#include <stdlib.h>
+#include <stdint.h>
 #include "queue.h"
 #include "memory.h"
 #include "my_log.h"
-#include <stdlib.h>
 
 extern mem_pool_t *pool;
 
@@ -22,7 +23,7 @@ queue_t *init_queue(){
   return q;
 }
 
-int push(queue_t *q,void *data){
+intptr_t push(queue_t *q,void *data){
   pthread_mutex_lock(&(q->mutex));
   queue_item_t *item=(queue_item_t *)alloc_mem(pool,sizeof(queue_item_t));
   if(item==NULL){
@@ -50,8 +51,8 @@ void* pop(queue_t *q){
   return data;
 }
 
-int queue_size(queue_t *q){
-  int size=0;
+intptr_t queue_size(queue_t *q){
+  intptr_t size=0;
   pthread_mutex_lock(&(q->mutex));
   size=q->size;
   pthread_mutex_unlock(&(q->mutex));

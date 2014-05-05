@@ -6,6 +6,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdint.h>
 #include "queue.h"
 #include "list.h"
 #include "hash.h"
@@ -32,9 +33,9 @@
 
 static void *data_sync_loop(void *arg);
 
-static int open_queue_file(char *key);
+static intptr_t open_queue_file(char *key);
 
-static int open_queue_temp_file(char *key);
+static intptr_t open_queue_temp_file(char *key);
 
 static void sync_set();
 
@@ -52,7 +53,7 @@ static void remove_queue_file(char *key);
 
 static void *recovery_process(void *arg);
 
-static long queue_file_size(char *key);
+static intptr_t queue_file_size(char *key);
 
 static char_t* queue_file_url(char *key);
 
@@ -96,13 +97,13 @@ static char *file_suffix=FILE_SUFFIX;
 
 static char *temp_file_suffix=TEMP_FILE_SUFFIX;
 
-static int sync_interval=SYNC_INTERVAL;
+static intptr_t sync_interval=SYNC_INTERVAL;
 
-static int trancate_file_threshold=TRANCATE_FILE_THRESHOLD;
+static intptr_t trancate_file_threshold=TRANCATE_FILE_THRESHOLD;
 
-static int trancate_radio=TRANCATE_RADIO;
+static intptr_t trancate_radio=TRANCATE_RADIO;
 
-static int file_size=BUFFER_SIZE;
+static intptr_t file_size=BUFFER_SIZE;
 
 static buffer_t *rbuf;
 
@@ -112,11 +113,11 @@ static pthread_mutex_t recovery_lock;
 
 static pthread_cond_t recovery_cond;
 
-static int recovery_count=0;
+static intptr_t recovery_count=0;
 
-static int recovery_sum=0;
+static intptr_t recovery_sum=0;
 
-extern int parse_int(char_t *s);
+extern intptr_t parse_int(char_t *s);
 
 enum RECOVERY_STATUS{
 	START,
@@ -167,9 +168,9 @@ static void sync_set(){
 		hash_entry_t *entry=(hash_entry_t *)list_entry(head->next,hash_entry_t,list);
 		queue_t *q=(queue_t *)entry->data;
 		if(queue_size(q)>0){
-			int fd=open_queue_file(entry->key);
+			intptr_t fd=open_queue_file(entry->key);
 			lseek(fd,0,SEEK_END);
-			int first=1;
+			intptr_t first=1;
 			while(1){
 				item_t *i=pop(q);
 				if(i==NULL){
@@ -199,7 +200,7 @@ static void sync_get(){
 		hash_entry_t *entry=(hash_entry_t *)list_entry(head->next,hash_entry_t,list);
 		queue_t *q=(queue_t *)entry->data;
 		if(queue_size(q)>0){
-			int fd=open_queue_file(entry->key);
+			intptr_t fd=open_queue_file(entry->key);
 			off_t *o=(off_t *)get(entry->key,sync_get_offset_hash);
 			if(o==NULL){
 				o=alloc_mem(pool,sizeof(off_t));
@@ -207,7 +208,7 @@ static void sync_get(){
 				put(entry->key,o,sync_get_offset_hash);
 			}
 			while(1){
-				int *i=pop(q);
+				intptr_t *i=pop(q);
 				if(i==NULL){
 					break;
 				}
@@ -218,7 +219,7 @@ static void sync_get(){
 				free_mem(i);
 			}
 			close(fd);
-			int size=queue_file_size(entry->key);
+			intptr_t size=queue_file_size(entry->key);
 			if(size>=trancate_file_threshold&&(*o)*trancate_radio>trancate_file_threshold){
 				trancate_queue_file(entry->key);
 			}
@@ -242,7 +243,7 @@ void add_set_sync_data(char *key,item_t *i){
 	push(q,i);
 }
 
-void add_get_sync_data(char *key,int size){
+void add_get_sync_data(char *key,intptr_t size){
 	queue_t *q=get(key,sync_get_hash);
 	if(q==NULL){
 		char_t *s=init_char();
@@ -251,14 +252,14 @@ void add_get_sync_data(char *key,int size){
 		q=init_queue();
 		put(s->data,q,sync_get_hash);
 	}
-	int *i=(int *)alloc_mem(pool,sizeof(int));
+	intptr_t *i=(intptr_t *)alloc_mem(pool,sizeof(intptr_t));
 	*i=size;
 	push(q,i);
 }
 
-static int open_queue_file(char *key){
+static intptr_t open_queue_file(char *key){
 	char_t *dir=queue_file_url(key);
-	int fd=open(dir->data,O_RDWR|O_CREAT);
+	intptr_t fd=open(dir->data,O_RDWR|O_CREAT);
 	if(fd==-1){
 		my_log(ERROR,"open queue file error\n");
 	}
@@ -266,9 +267,9 @@ static int open_queue_file(char *key){
 	return fd;
 }
 
-static int open_queue_temp_file(char *key){
+static intptr_t open_queue_temp_file(char *key){
 	char_t *dir=queue_temp_file_url(key);
-	int fd=open(dir->data,O_RDWR|O_CREAT);
+	intptr_t fd=open(dir->data,O_RDWR|O_CREAT);
 	if(fd==-1){
 		my_log(ERROR,"open queue file error\n");
 	}
@@ -296,11 +297,11 @@ static char_t* queue_temp_file_url(char *key){
 	return s;
 }
 
-static long queue_file_size(char *key){
+static intptr_t queue_file_size(char *key){
 	char_t *dir=queue_file_url(key);
 	FILE * fp = fopen(dir->data, "r");  
     fseek(fp, 0L, SEEK_END);  
-    long size = ftell(fp);  
+    intptr_t size = ftell(fp);  
     fclose(fp);  
     return size; 
 }
@@ -350,7 +351,7 @@ static void start_recovery(){
 static void* recovery_process(void *arg){
 	struct dirent *p_dirent=(struct dirent *)arg;
 	char *key=strtok(p_dirent->d_name,".");
-	int fd=open_queue_file(key);
+	intptr_t fd=open_queue_file(key);
 	if(fd==-1){
 		my_log(ERROR,"open queue file error\n");
 		return NULL;
@@ -358,7 +359,7 @@ static void* recovery_process(void *arg){
 	enum RECOVERY_STATUS status=START;
 	char_t *dy_char=init_char();
 	while(1){
-		int count=read(fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
+		intptr_t count=read(fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
 		if(count<=0){
 			break;
 		}
@@ -400,7 +401,7 @@ static void* recovery_process(void *arg){
 }
 
 static void store_data(char_t *dy_char,char *key){
-	int size=dy_char->current;
+	intptr_t size=dy_char->current;
 	item_t *i=init_item();
 	char *c=(char *)alloc_mem(pool,size);
 	memcpy(c,dy_char->data,size);
@@ -419,12 +420,12 @@ static void store_data(char_t *dy_char,char *key){
 }
 
 static void trancate_queue_file(char *key){
-	int fd=open_queue_file(key);
-	int tmp_fd=open_queue_temp_file(key);
+	intptr_t fd=open_queue_file(key);
+	intptr_t tmp_fd=open_queue_temp_file(key);
 	off_t *o=(off_t *)get(key,sync_get_offset_hash);
 	lseek(fd,*o,SEEK_SET);
 	while(1){
-		int count=read(fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
+		intptr_t count=read(fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
 		if(count<=0){
 			break;
 		}

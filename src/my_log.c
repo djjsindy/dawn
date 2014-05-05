@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+#include <stdint.h>
 #include "my_log.h"
 #include "dy_char.h"
 
@@ -10,8 +11,8 @@ static FILE *out;
 
 void my_log_init(){
  char *log_dir=LOG_DIR;
- int length=strlen(DAWN_HOME);
- int log_length=strlen(log_dir);
+ intptr_t length=strlen(DAWN_HOME);
+ intptr_t log_length=strlen(log_dir);
  char dir[length+log_length+1];
  memcpy(dir,DAWN_HOME,length);
  memcpy(dir+length,log_dir,log_length);

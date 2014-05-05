@@ -19,7 +19,7 @@ list_head_t* list_del_data(list_head_t *prev,list_head_t *next){
   return result;
 }
 
-int list_is_empty(list_head_t *head){
+intptr_t list_is_empty(list_head_t *head){
   return head->next==head;
 }
 

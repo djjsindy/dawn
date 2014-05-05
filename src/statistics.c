@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include "statistics.h"
 #include "memory.h"
 #include "hash.h"
@@ -10,9 +11,9 @@ extern mem_pool_t *pool;
 
 void init_stat(){
 	stat=(stat_t *)malloc(sizeof(stat_t));
-	int size=sizeof(unsigned long)*(DEFAULT_LEVEL+1);
-	stat->small_buddy_stats=calloc(DEFAULT_LEVEL+1,sizeof(unsigned long));
-	stat->big_buddy_stats=calloc(DEFAULT_LEVEL+1,sizeof(unsigned long));
+	intptr_t size=sizeof(unsigned long)*(DEFAULT_LEVEL+1);
+	stat->small_buddy_stats=calloc(DEFAULT_LEVEL+1,sizeof(intptr_t));
+	stat->big_buddy_stats=calloc(DEFAULT_LEVEL+1,sizeof(intptr_t));
 }
 
 void init_queue_stat(){
@@ -27,13 +28,13 @@ void start_queue_stat(char *key){
 	qs->bytes=0;
 }
 
-void increase_queue_stat(char *key,int delta_bytes){
+void increase_queue_stat(char *key,intptr_t delta_bytes){
 	queue_stat_t *qs=get(key,stat->queue_data_hash);
 	qs->size++;
 	qs->bytes+=delta_bytes;
 }
 
-void decrease_queue_stat(char *key,int delta_bytes){
+void decrease_queue_stat(char *key,intptr_t delta_bytes){
 	queue_stat_t *qs=get(key,stat->queue_data_hash);
 	qs->size--;
 	qs->bytes-=delta_bytes;

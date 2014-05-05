@@ -8,7 +8,7 @@
 
 extern mem_pool_t *pool;
 
-buffer_t* alloc_buffer(int size){
+buffer_t* alloc_buffer(intptr_t size){
   buffer_t *b=(buffer_t *)alloc_mem(pool,sizeof(buffer_t));
   if(b==NULL){
     my_log(ERROR,"alloc buffer struct failed\n");
@@ -38,11 +38,11 @@ void reset(buffer_t *b){
   b->limit=0;
 }
 
-int has_space(buffer_t *b){
+intptr_t has_space(buffer_t *b){
   return b->limit<b->size;
 }
 
-int has_remaining(buffer_t *b){
+intptr_t has_remaining(buffer_t *b){
   return b->current<b->limit;
 }
 

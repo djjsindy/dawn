@@ -1,10 +1,11 @@
 #ifndef CHAR_H
 #define CHAR_H
+#include <stdint.h>
 #define CHAR_SIZE 16
 struct char_s{
   char *data;
-  int size;
-  int current;
+  intptr_t size;
+  intptr_t current;
 };
 
 typedef struct char_s char_t;

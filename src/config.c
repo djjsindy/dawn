@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <stdint.h>
 #include "config.h"
 #include "buffer.h"
 #include "my_log.h"
@@ -11,13 +12,13 @@
 
 #define CONF_READ_BUF 1024*4
 
-static int open_conf_file();
+static intptr_t open_conf_file();
 
 static config_module_t *find_config_module(char_t *module_name);
 
 static command_t *find_config_command(char_t *command_key,config_module_t *current_module);
 
-static int char_is_special(char c);
+static intptr_t char_is_special(char c);
 
 extern config_module_t listen_conf_module;
 
@@ -78,7 +79,7 @@ void init_conf(){
 	char_t *command_value=init_char();
 	while(1){
 		if(has_space(rbuf)){
-			int count=read(fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
+			intptr_t count=read(fd,rbuf->data+rbuf->limit,rbuf->size-rbuf->limit);
 			if(count<=0){
 				goto CONFIG_END;
 			}
@@ -144,18 +145,18 @@ CONFIG_END:
 	destroy_buffer(rbuf);
 }
 
-static int char_is_special(char c){
+static intptr_t char_is_special(char c){
 	if(c==special_r||c==special_n||c==special_t||c==space)
 		return 1;
 	return 0;
 }
 
-static int open_conf_file(){
+static intptr_t open_conf_file(){
 	char_t *s=init_char();
 	add_chars(s,DAWN_HOME);
 	add_chars(s,CONF_FILE);
 	add_terminal(s);
-	int fd=open(s->data,O_RDWR);
+	intptr_t fd=open(s->data,O_RDWR);
 	if(fd==-1){
 		my_log(ERROR,"open config file error\n");
 	}
@@ -164,7 +165,7 @@ static int open_conf_file(){
 }
 
 static config_module_t *find_config_module(char_t *module_name){
-	int index=0;
+	intptr_t index=0;
 	while(*(config_modules+index)!=NULL){
 		config_module_t *c_module=*(config_modules+index);
 		if(strcmp(c_module->name,module_name->data)==0){
@@ -177,7 +178,7 @@ static config_module_t *find_config_module(char_t *module_name){
 
 static command_t *find_config_command(char_t *command_key,config_module_t *current_module){
 	command_t *commands=current_module->commands;
-	int index=0;
+	intptr_t index=0;
 	while(commands+index!=NULL){
 		command_t cm=*(commands+index);
 		if(strcmp(cm.name,command_key->data)==0){

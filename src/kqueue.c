@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include "network.h"
 #include "thread.h"
 #include "my_log.h"
@@ -16,25 +17,25 @@
 
 static void kqueue_init_event(event_context_t *ec);
 
-static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,void *data);
+static void kqueue_register_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data);
 
-static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec,void *data);
+static void kqueue_del_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data);
 
 static void kqueue_process_event(event_context_t *ec);
 
-static void kqueue_close_event(int fd,event_context_t *ec);
+static void kqueue_close_event(intptr_t fd,event_context_t *ec);
 
 static void set_timeout_value(char_t *value);
 
 static void set_max_event_count_value(char_t *value);
 
-extern int server_sock_fd;
+extern intptr_t server_sock_fd;
 
 extern mem_pool_t *pool;
 
-static int timeout=TIMEOUT;
+static intptr_t timeout=TIMEOUT;
 
-static int max_event_count=MAX_EVENT_COUNT;
+static intptr_t max_event_count=MAX_EVENT_COUNT;
 
 event_operation_t event_operation={
   kqueue_init_event,
@@ -45,7 +46,7 @@ event_operation_t event_operation={
 };
 
 static void kqueue_init_event(event_context_t *ec){ 
-  int kq = kqueue();
+  intptr_t kq = kqueue();
   if (kq == -1) {
     my_log(ERROR,"create kqueue error\n");
   }
@@ -53,7 +54,7 @@ static void kqueue_init_event(event_context_t *ec){
   ec->events=alloc_mem(pool,sizeof(struct kevent)*max_event_count);
 }
 
-static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+static void kqueue_register_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data){
   connection_t *conn=(connection_t *)data;
   struct kevent kev;
   switch(event){
@@ -68,7 +69,7 @@ static void kqueue_register_event(int fd,enum EVENT event,event_context_t *ec,vo
   conn->events|=event;
 }
 
-static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec,void *data){
+static void kqueue_del_event(intptr_t fd,enum EVENT event,event_context_t *ec,void *data){
   connection_t *conn=(connection_t *)data;
   struct kevent kev;
   switch(event){
@@ -86,17 +87,17 @@ static void kqueue_del_event(int fd,enum EVENT event,event_context_t *ec,void *d
 
 static void kqueue_process_event(event_context_t *ec){
   struct timespec ts={timeout,0};
-  int ret = kevent(ec->fd, NULL, 0, (struct kevent *)ec->events, max_event_count, &ts);
+  intptr_t ret = kevent(ec->fd, NULL, 0, (struct kevent *)ec->events, max_event_count, &ts);
   if(ret==-1){
     my_log(ERROR,"kqueue event error\n");
     return;
   }else if(ret==0){
     return;
   }
-  int i=0;
+  intptr_t i=0;
   struct kevent *events=(struct kevent *)ec->events;
   for(;i<ret;i++){
-    int sockfd= events[i].ident; 
+    intptr_t sockfd= events[i].ident; 
     if(sockfd==ec->worker_fd){
       handle_notify(sockfd,ec);
     }else if(sockfd==ec->listen_fd){
@@ -115,7 +116,7 @@ static void kqueue_process_event(event_context_t *ec){
   }
 }
 
-static void kqueue_close_event(int fd,event_context_t *ec){
+static void kqueue_close_event(intptr_t fd,event_context_t *ec){
   //nothing to do ,because kqueue will delete event,when fd is close
 
 }
